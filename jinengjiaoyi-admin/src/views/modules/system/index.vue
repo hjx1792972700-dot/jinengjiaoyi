@@ -29,12 +29,12 @@ export default {
 		return {
 			activeTab: 'jinengfenlei',
 			tabs: [
-				{ name: 'jinengfenlei', label: '技能分类', icon: Menu },
-				{ name: 'ziliaoleixing', label: '资料类型', icon: Folder },
-				{ name: 'newstype', label: '资讯分类', icon: Notebook },
-				{ name: 'forumtype', label: '论坛类型', icon: ChatDotSquare },
-				{ name: 'news', label: '公告资讯', icon: Document },
-				{ name: 'messages', label: '留言反馈', icon: Message },
+				{ name: 'jinengfenlei', label: '技能分类', icon: 'Menu' },
+				{ name: 'ziliaoleixing', label: '资料类型', icon: 'Folder' },
+				{ name: 'newstype', label: '资讯分类', icon: 'Notebook' },
+				{ name: 'forumtype', label: '论坛类型', icon: 'ChatDotSquare' },
+				{ name: 'news', label: '公告资讯', icon: 'Document' },
+				{ name: 'messages', label: '留言反馈', icon: 'Message' },
 			]
 		}
 	},

@@ -71,8 +71,7 @@
 
 
 		},
-		components: {
-		},
+		components: {},
 		created() {
 		},
 		methods: {

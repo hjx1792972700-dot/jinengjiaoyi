@@ -58,8 +58,8 @@
 					</div>
 					<div class="fd-cm-list">
 						<template v-if="commentList && commentList.length">
-							<template v-for="item in commentList" :key="item.id">
-							<div v-if="item.sfsh=='是'" class="fd-cm-item" @mouseenter="commentEnter(item.id)" @mouseleave="commentLeave">
+						<template v-for="item in commentList">
+						<div :key="item.id" v-if="item.sfsh=='是'" class="fd-cm-item" @mouseenter="commentEnter(item.id)" @mouseleave="commentLeave">
 								<div class="fd-cm-user">
 									<img v-if="item.avatarurl" :src="baseUrl + item.avatarurl">
 									<img v-else :src="defaultAvatar">

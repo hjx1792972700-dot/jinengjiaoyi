@@ -157,8 +157,7 @@
 
 
 		},
-		components: {
-		},
+		components: {},
 		created() {
 		},
 		methods: {

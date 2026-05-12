@@ -87,7 +87,7 @@
 					<el-button :disabled="chatForm.content?false:true" type="primary" @click="addChat(null)">发送</el-button>
 					<el-button
 						type="warning" 
-						:icon="isRecording ? VideoPause : Microphone"
+						:icon="isRecording ? 'el-icon-video-pause' : 'el-icon-microphone'"
 						@click="toggleRecord"
 						:class="{'voice-record-btn': true, 'voice-recording': isRecording}"
 						style="margin: 0 0 0 6px;">
@@ -119,7 +119,7 @@
 	} from '@/mixins/WebsocketMixin'
 	export default {
 		mixins: [WebsocketMixin],
-		components: { Microphone, VideoPause },
+		components: {},
 		data() {
 			return {
 				dialogVisible: false,

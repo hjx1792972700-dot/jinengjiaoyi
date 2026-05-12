@@ -330,8 +330,7 @@
 
 
 		},
-		components: {
-		},
+		components: {},
 		created() {
 			this.ruleForm.fabushijian = this.getCurDate()
 		},

@@ -139,8 +139,7 @@
 
 
 		},
-		components: {
-		},
+		components: {},
 		created() {
 		},
 		methods: {

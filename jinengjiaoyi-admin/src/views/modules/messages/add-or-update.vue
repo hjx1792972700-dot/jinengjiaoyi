@@ -137,13 +137,7 @@
 
 
 		},
-		components: {
-			User,
-			ChatDotRound,
-			Check,
-			Close,
-			Back,
-		},
+		components: {},
 		created() {
 		},
 		methods: {

@@ -1,7 +1,7 @@
 <template>
 	<div class="tech-sidebar">
 		<div class="sidebar-logo">
-			<el-icon class="logo-elicon"><Cpu /></el-icon>
+			<i class="el-icon-s-platform logo-elicon"></i>
 			<span class="logo-text">技能交易系统</span>
 		</div>
 		<div class="sidebar-user" v-if="user">
@@ -23,18 +23,17 @@
 <script>
 import menu from '@/utils/menu'
 export default {
-	components: { Cpu },
 	data() {
 		return {
 			menuList: [],
 			user: null,
 			avatar: '',
 			navItems: [
-				{ path: '', label: '工作台', icon: 'Monitor' },
-				{ path: 'statisticsDashboard', label: '数据统计', icon: 'DataAnalysis' },
-				{ path: 'userManagement', label: '用户管理', icon: 'UserFilled' },
-				{ path: 'businessManagement', label: '业务管理', icon: 'CircleCheck' },
-				{ path: 'systemConfig', label: '系统配置', icon: 'Setting' },
+				{ path: '', label: '工作台', icon: 'monitor' },
+				{ path: 'statisticsDashboard', label: '数据统计', icon: 's-data' },
+				{ path: 'userManagement', label: '用户管理', icon: 'user-solid' },
+				{ path: 'businessManagement', label: '业务管理', icon: 'circle-check' },
+				{ path: 'systemConfig', label: '系统配置', icon: 'setting' },
 			]
 		}
 	},
@@ -156,7 +155,7 @@ $border: rgba(255,255,255,0.06);
 	position: relative;
 	transition: all 0.25s;
 	color: $text2;
-	.el-icon {
+	i[class^="el-icon"] {
 		font-size: 18px;
 		transition: color 0.25s;
 	}
@@ -167,12 +166,12 @@ $border: rgba(255,255,255,0.06);
 	&:hover {
 		background: $accent-glow;
 		color: $text;
-		.el-icon { color: $accent; }
+		i[class^="el-icon"] { color: $accent; }
 	}
 	&.active {
 		background: linear-gradient(135deg, rgba(0,180,216,0.12), rgba(167,139,250,0.08));
 		color: #fff;
-		.el-icon { color: $accent; filter: drop-shadow(0 0 4px rgba(0,180,216,0.5)); }
+		i[class^="el-icon"] { color: $accent; filter: drop-shadow(0 0 4px rgba(0,180,216,0.5)); }
 		span { font-weight: 600; }
 		.active-bar {
 			position: absolute;

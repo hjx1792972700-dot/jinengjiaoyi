@@ -178,8 +178,7 @@
 		},
 		components: {
 			AddOrUpdate,
-			pingjiafankuiCrossAddOrUpdate,
-		},
+			pingjiafankuiCrossAddOrUpdate},
 		methods: {
 			statChartClick() {
 				if(this.isAuth('jiaohuanjilu','交换量统计')) {

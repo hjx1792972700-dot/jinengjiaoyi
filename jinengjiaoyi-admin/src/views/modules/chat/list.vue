@@ -121,10 +121,7 @@
 	import AddOrUpdate from "./chat-add-or-update.vue";
 	export default {
 		components: {
-			AddOrUpdate,
-			Search,
-			RefreshRight,
-		},
+			AddOrUpdate},
 		data() {
 			return {
 				layouts: ["total","prev","pager","next","jumper"],

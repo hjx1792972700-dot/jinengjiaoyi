@@ -331,8 +331,7 @@
 
 
 		},
-		components: {
-		},
+		components: {},
 		created() {
 			this.ruleForm.pingjiashijian = this.getCurDate()
 		},

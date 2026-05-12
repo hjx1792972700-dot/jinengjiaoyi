@@ -26,8 +26,8 @@ export default {
 		return {
 			activeTab: 'yonghu',
 			tabs: [
-				{ name: 'yonghu', label: '用户管理', icon: User },
-				{ name: 'huiyuanchongzhi', label: '会员充值', icon: Wallet },
+				{ name: 'yonghu', label: '用户管理', icon: 'User' },
+				{ name: 'huiyuanchongzhi', label: '会员充值', icon: 'Wallet' },
 			]
 		}
 	}

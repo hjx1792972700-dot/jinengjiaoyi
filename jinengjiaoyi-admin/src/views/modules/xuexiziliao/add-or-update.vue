@@ -241,19 +241,7 @@
 
 
 		},
-		components: {
-			Document,
-			Picture,
-			Camera,
-			VideoCamera,
-			VideoPlay,
-			Folder,
-			Download,
-			EditPen,
-			Check,
-			Close,
-			Back,
-		},
+		components: {},
 		created() {
 			this.ruleForm.fabushijian = this.getCurDate()
 		},

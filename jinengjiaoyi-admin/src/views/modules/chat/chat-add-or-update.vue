@@ -110,9 +110,7 @@
 				return `/${this.$base.name}/` + 'file/upload';
 			}
 		},
-		components:{
-			
-		},
+		components:{},
 		mounted() {
 			this.myHeaders = {
 				'Token': storage.get("Token")

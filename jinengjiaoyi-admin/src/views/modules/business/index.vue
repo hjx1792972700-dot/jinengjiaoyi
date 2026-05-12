@@ -36,19 +36,18 @@ export default {
 		jiaohuanshenqing,
 		jiaohuanjilu,
 		forum,
-		xuexiziliao,
-	},
+		xuexiziliao},
 	data() {
 		return {
 			activeTab: 'jinengxuqiu',
 			tabs: [
-				{ name: 'jinengxuqiu', label: '技能市场', icon: Tickets, auth: 'jinengxuqiu', badge: 0 },
-				{ name: 'skill-audit', label: '技能审核', icon: CircleCheck, auth: 'jinengxuqiu', badge: 0 },
-				{ name: 'demand-audit', label: '需求审核', icon: DocumentChecked, auth: 'jinengxuqiu', badge: 0 },
-				{ name: 'jiaohuanshenqing', label: '交换申请', icon: Promotion, auth: 'jiaohuanshenqing', badge: 0 },
-				{ name: 'jiaohuanjilu', label: '交换记录', icon: Document, auth: 'jiaohuanjilu', badge: 0 },
-				{ name: 'forum', label: '技能社区', icon: ChatDotRound, auth: 'forum', badge: 0 },
-				{ name: 'xuexiziliao', label: '学习资料', icon: Reading, auth: 'xuexiziliao', badge: 0 },
+				{ name: 'jinengxuqiu', label: '技能市场', icon: 'Tickets', auth: 'jinengxuqiu', badge: 0 },
+				{ name: 'skill-audit', label: '技能审核', icon: 'CircleCheck', auth: 'jinengxuqiu', badge: 0 },
+				{ name: 'demand-audit', label: '需求审核', icon: 'DocumentChecked', auth: 'jinengxuqiu', badge: 0 },
+				{ name: 'jiaohuanshenqing', label: '交换申请', icon: 'Promotion', auth: 'jiaohuanshenqing', badge: 0 },
+				{ name: 'jiaohuanjilu', label: '交换记录', icon: 'Document', auth: 'jiaohuanjilu', badge: 0 },
+				{ name: 'forum', label: '技能社区', icon: 'ChatDotRound', auth: 'forum', badge: 0 },
+				{ name: 'xuexiziliao', label: '学习资料', icon: 'Reading', auth: 'xuexiziliao', badge: 0 },
 			]
 		}
 	},

@@ -61,13 +61,7 @@ import * as echarts from 'echarts'
 const COLORS = ['#4f6ef7','#10b981','#f59e0b','#ec4899','#8b5cf6','#06b6d4','#ef4444','#84cc16','#f97316','#14b8a6']
 
 export default {
-	components: {
-		UserFilled,
-		Grid,
-		List,
-		Promotion,
-		Reading,
-	},
+	components: {},
 	data() {
 		return {
 			charts: {},

@@ -335,8 +335,7 @@
 		},
 		components: {
 			AddOrUpdate,
-			jiaohuanshenqingCrossAddOrUpdate,
-		},
+			jiaohuanshenqingCrossAddOrUpdate},
 	methods: {
 		statChartClick() {
 				if(this.isAuth('jinengxuqiu','技能需求类型')) {

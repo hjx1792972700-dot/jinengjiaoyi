@@ -253,8 +253,7 @@
 
 
 		},
-		components: {
-		},
+		components: {},
 		created() {
 			this.ruleForm.shenqingshijian = this.getCurDateTime()
 		},

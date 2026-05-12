@@ -1,9 +1,9 @@
 const base = {
 	get() {
 		return {
-			url : "http://localhost:48081/",
+			url : "/",
 			name: "jinengjiaoyi",
-			indexUrl: '/index'
+			indexUrl: '/index.html'
 		};
 	},
 	getProjectName(){

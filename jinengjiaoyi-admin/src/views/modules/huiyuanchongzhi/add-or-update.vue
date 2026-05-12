@@ -187,8 +187,7 @@
 
 
 		},
-		components: {
-		},
+		components: {},
 		created() {
 			this.ruleForm.chongzhiriqi = this.getCurDate()
 		},

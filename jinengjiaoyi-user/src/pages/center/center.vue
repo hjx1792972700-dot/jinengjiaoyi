@@ -22,11 +22,11 @@
 			<div class="nav-item" :class="activeName=='修改密码'?'is-active':''" @click="handleClick('修改密码')">
 				<el-icon class="nav-icon"><Lock /></el-icon><span>修改密码</span>
 			</div>
-			<template v-for="(item,index) in accountMenuItems" :key="'acc-'+index">
-				<div class="nav-item" :class="activeName==item.child[0].menu?'is-active':''" v-if="hasBack(item.menu,item.child[0].tableName)" @mouseenter="centerTabEnter(item.child[0].tableName)" @mouseleave="centerTabEnter('')" @click="menuClick(item.child[0],item.child.length)">
-					<el-icon class="nav-icon"><component :is="getMenuIcon(item.child[0].menu)" /></el-icon><span>{{item.child[0].menu}}</span>
-				</div>
-			</template>
+		<template v-for="(item,index) in accountMenuItems">
+			<div :key="'acc-'+index" class="nav-item" :class="activeName==item.child[0].menu?'is-active':''" v-if="hasBack(item.menu,item.child[0].tableName)" @mouseenter="centerTabEnter(item.child[0].tableName)" @mouseleave="centerTabEnter('')" @click="menuClick(item.child[0],item.child.length)">
+				<el-icon class="nav-icon"><component :is="getMenuIcon(item.child[0].menu)" /></el-icon><span>{{item.child[0].menu}}</span>
+			</div>
+		</template>
 
 		<!-- 技能交换 -->
 		<div class="nav-section-label" v-if="exchangeMenuItems.length">技能交换</div>
@@ -53,11 +53,11 @@
 
 			<!-- 我的内容 -->
 			<div class="nav-section-label">我的内容</div>
-			<template v-for="(item,index) in myContentMenuItems" :key="'my-'+index">
-				<div class="nav-item" :class="activeName==item.child[0].menu?'is-active':''" v-if="hasBack(item.menu,item.child[0].tableName)" @mouseenter="centerTabEnter(item.child[0].tableName)" @mouseleave="centerTabEnter('')" @click="menuClick(item.child[0],item.child.length)">
-					<el-icon class="nav-icon"><component :is="getMenuIcon(item.child[0].menu)" /></el-icon><span>{{item.child[0].menu}}</span>
-				</div>
-			</template>
+		<template v-for="(item,index) in myContentMenuItems">
+			<div :key="'my-'+index" class="nav-item" :class="activeName==item.child[0].menu?'is-active':''" v-if="hasBack(item.menu,item.child[0].tableName)" @mouseenter="centerTabEnter(item.child[0].tableName)" @mouseleave="centerTabEnter('')" @click="menuClick(item.child[0],item.child.length)">
+				<el-icon class="nav-icon"><component :is="getMenuIcon(item.child[0].menu)" /></el-icon><span>{{item.child[0].menu}}</span>
+			</div>
+		</template>
 			<div class="nav-item" :class="activeName=='我的发布'?'is-active':''" @click="handleClick('我的发布')">
 				<el-icon class="nav-icon"><EditPen /></el-icon><span>我的发布</span>
 			</div>

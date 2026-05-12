@@ -408,11 +408,11 @@
 			return str && str.substr(0,4)=='http';
 		},
 
-		async getSession() {
-			await this.$http.get(`${localStorage.getItem('UserTableName')}/session`).then(async res => {
-				if (res.data.code == 0) {
-					localStorage.setItem('sessionForm',JSON.stringify(res.data.data))
-					localStorage.setItem('frontUserid', res.data.data.id);
+	async getSession() {
+		await this.$http.get(`${localStorage.getItem('UserTableName')}/session`).then(async res => {
+			if (res.data.code == 0 && res.data.data) {
+				localStorage.setItem('sessionForm',JSON.stringify(res.data.data))
+				localStorage.setItem('frontUserid', res.data.data.id);
 					if(res.data.data.yonghuxingming) {
 						localStorage.setItem('displayName', res.data.data.yonghuxingming);
 						this.username = res.data.data.yonghuxingming;
@@ -701,7 +701,7 @@
 			this.showType4 = index
 		},
 	goMenu(path) {
-		this.$router.push(path);
+		this.$router.push(path).catch(() => {});
 		this.$nextTick(() => {
 			window.scrollTo(0, 0);
 			const body = document.querySelector('.body-containers');

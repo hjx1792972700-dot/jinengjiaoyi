@@ -211,11 +211,7 @@
 			}
 		},
 		components: {
-			AddOrUpdate,
-			Plus,
-			Search,
-			Refresh,
-		},
+			AddOrUpdate},
 		methods: {
 			htmlfilter(val) {
 				return String(val == null ? '' : val).replace(/<[^>]*>/g, '').replace(/undefined/g, '');

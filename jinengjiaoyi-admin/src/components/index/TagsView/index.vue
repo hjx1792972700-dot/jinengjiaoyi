@@ -39,9 +39,7 @@
 	
 	export default {
 		components: {
-			ScrollPane,
-			Close
-		},
+			ScrollPane},
 		data() {
 			return {
 				visible: false,

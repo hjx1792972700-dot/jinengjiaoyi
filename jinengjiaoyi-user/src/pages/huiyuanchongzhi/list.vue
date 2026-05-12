@@ -31,15 +31,17 @@
 				</div>
 
 				<div class="perk-section">
-					<div class="section-title">我的特权</div>
-					<div class="perk-grid">
-						<div class="perk-item" v-for="p in perks" :key="p.name">
-							<div class="perk-ic" :class="p.cls"><i :class="'el-icon-' + p.icon"></i></div>
-							<div class="perk-name">{{p.name}}</div>
-							<div class="perk-desc">{{p.desc}}</div>
+				<div class="section-title">我的特权</div>
+				<div class="perk-grid">
+					<div class="perk-item" v-for="p in perks" :key="p.name">
+						<div class="perk-ic" :class="p.cls">
+							<span class="perk-emoji">{{p.emoji}}</span>
 						</div>
+						<div class="perk-name">{{p.name}}</div>
+						<div class="perk-desc">{{p.desc}}</div>
 					</div>
 				</div>
+			</div>
 
 				<div class="record-section" v-if="dataList.length">
 					<div class="section-title">充值记录</div>
@@ -123,7 +125,7 @@
 					<div class="section-title">会员特权</div>
 					<div class="perk-row-inline">
 						<div class="perk-inline" v-for="p in perks" :key="p.name">
-							<el-icon class="perk-inline-ic"><component :is="p.icon" /></el-icon>
+							<span class="perk-inline-emoji">{{p.emoji}}</span>
 							<span>{{p.name}}</span>
 						</div>
 					</div>
@@ -328,10 +330,10 @@ export default {
 				{ id: 'forever', name: '永久会员', price: 298, unit: '', badge: '最划算', hot: false, original: 599, avg: null },
 			],
 			perks: [
-				{ name: '发布技能', icon: 'EditPen', cls: 'bg-blue', desc: '发布个人技能到市场' },
-				{ name: '优先推荐', icon: 'Promotion', cls: 'bg-purple', desc: '技能在首页优先展示' },
-				{ name: 'VIP标识', icon: 'Medal', cls: 'bg-amber', desc: '专属VIP身份标识' },
-				{ name: '智能匹配', icon: 'Opportunity', cls: 'bg-green', desc: 'AI智能匹配合适技能' },
+				{ name: '发布技能', emoji: '🚀', cls: 'bg-blue', desc: '发布个人技能到市场' },
+				{ name: '优先推荐', emoji: '⭐', cls: 'bg-purple', desc: '技能在首页优先展示' },
+				{ name: 'VIP标识', emoji: '👑', cls: 'bg-amber', desc: '专属VIP身份标识' },
+				{ name: '智能匹配', emoji: '🤖', cls: 'bg-green', desc: 'AI智能匹配合适技能' },
 			],
 		}
 	},
@@ -613,23 +615,65 @@ $red: #ef4444;
 .perk-section { margin-bottom: 12px; }
 .perk-section.compact { margin-bottom: 8px; }
 .perk-grid {
-	display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+	display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
 }
 .perk-item {
-	text-align: center; padding: 14px 6px; border-radius: 10px;
-	background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);
+	text-align: center; padding: 28px 12px 22px; border-radius: 16px;
+	background: rgba(255,255,255,0.03);
+	border: 1px solid rgba(255,255,255,0.06);
+	transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+	position: relative; overflow: hidden;
+	&::before {
+		content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+		opacity: 0; transition: opacity 0.35s;
+	}
+	&:hover {
+		background: rgba(255,255,255,0.06);
+		border-color: rgba(255,255,255,0.1);
+		transform: translateY(-4px);
+		box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+		&::before { opacity: 1; }
+	}
+	&:nth-child(1)::before { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
+	&:nth-child(2)::before { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+	&:nth-child(3)::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+	&:nth-child(4)::before { background: linear-gradient(90deg, #10b981, #34d399); }
 }
 .perk-ic {
-	width: 36px; height: 36px; border-radius: 10px; margin: 0 auto 8px;
+	width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 14px;
 	display: flex; align-items: center; justify-content: center;
-	i, :deep(.el-icon) { font-size: 18px; color: #fff; }
-	&.bg-blue { background: linear-gradient(135deg, $blue, #38bdf8); }
-	&.bg-purple { background: linear-gradient(135deg, $purple, #a78bfa); }
-	&.bg-amber { background: linear-gradient(135deg, $gold, $gold-light); }
-	&.bg-green { background: linear-gradient(135deg, $green, #4ade80); }
+	position: relative;
+	&::after {
+		content: ''; position: absolute; inset: -4px; border-radius: 22px;
+		opacity: 0.15; z-index: 0;
+	}
+	&.bg-blue {
+		background: linear-gradient(145deg, #0284c7, #38bdf8);
+		box-shadow: 0 6px 20px rgba(14,165,233,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+		&::after { background: linear-gradient(145deg, #0ea5e9, #38bdf8); }
+	}
+	&.bg-purple {
+		background: linear-gradient(145deg, #6d28d9, #a78bfa);
+		box-shadow: 0 6px 20px rgba(124,58,237,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+		&::after { background: linear-gradient(145deg, #7c3aed, #a78bfa); }
+	}
+	&.bg-amber {
+		background: linear-gradient(145deg, #d97706, #fbbf24);
+		box-shadow: 0 6px 20px rgba(245,158,11,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+		&::after { background: linear-gradient(145deg, #f59e0b, #fbbf24); }
+	}
+	&.bg-green {
+		background: linear-gradient(145deg, #059669, #34d399);
+		box-shadow: 0 6px 20px rgba(16,185,129,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+		&::after { background: linear-gradient(145deg, #10b981, #34d399); }
+	}
 }
-.perk-name { font-size: 12px; color: #e2e8f0; font-weight: 600; margin-bottom: 2px; }
-.perk-desc { font-size: 10px; color: #64748b; }
+.perk-emoji {
+	font-size: 30px; line-height: 1; position: relative; z-index: 1;
+	filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+.perk-name { font-size: 14px; color: #e2e8f0; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.5px; }
+.perk-desc { font-size: 11px; color: #64748b; line-height: 1.5; }
 
 .perk-row-inline { display: flex; flex-wrap: wrap; gap: 8px; }
 .perk-inline {
@@ -638,7 +682,7 @@ $red: #ef4444;
 	background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);
 	span { font-size: 11px; color: #cbd5e1; }
 }
-.perk-inline-ic { font-size: 13px; color: $gold-light; }
+.perk-inline-emoji { font-size: 14px; line-height: 1; }
 
 /* ===================== 协议勾选 ===================== */
 .agreement-row {

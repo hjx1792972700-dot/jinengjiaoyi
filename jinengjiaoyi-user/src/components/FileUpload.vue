@@ -164,9 +164,9 @@
 				let _this = this;
 				fileList.forEach(function(item, index) {
 					var url = item.url.split("?")[0];
-					if (!url.startsWith("http")) {
-						url = (_this.baseUrl + url).replace(/\/\//g, '/')
-					}
+				if (!url.startsWith("http")) {
+					url = _this.baseUrl + url
+				}
 					var name = item.name;
 					var file = {
 						name: name,

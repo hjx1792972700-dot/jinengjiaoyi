@@ -232,8 +232,7 @@
 			}
 		},
 		components: {
-			AddOrUpdate,
-		},
+			AddOrUpdate},
 		methods: {
 			statChartClick() {
 				if(this.isAuth('pingjiafankui','评价统计')) {

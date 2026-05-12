@@ -5,7 +5,7 @@ import base from '@/utils/base'
 const http = axios.create({
 	timeout: 1000 * 86400,
 	withCredentials: true,
-	baseURL: 'http://localhost:48081/',
+	baseURL: '/',
 	headers: {
 		'Content-Type': 'application/json; charset=utf-8'
 	}

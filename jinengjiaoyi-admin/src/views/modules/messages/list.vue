@@ -128,7 +128,7 @@
 			tablename() { return this.$storage.get('sessionTable') },
 			role() { return this.$storage.get('role') },
 		},
-		components: { AddOrUpdate, Search, RefreshRight, Clock, ChatDotRound, Delete },
+		components: { AddOrUpdate },
 		methods: {
 			stripHtml(val) {
 				if (!val) return '';

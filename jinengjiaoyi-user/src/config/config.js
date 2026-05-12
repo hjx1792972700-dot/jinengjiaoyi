@@ -1,5 +1,5 @@
 export default {
-	baseUrl: 'http://localhost:48081/',
+	baseUrl: '/',
 	name: '/',
 	indexNav: [
 		{

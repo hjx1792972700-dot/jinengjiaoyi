@@ -210,8 +210,7 @@
 		},
 		components: {
 			AddOrUpdate,
-			jiaohuanjiluCrossAddOrUpdate,
-		},
+			jiaohuanjiluCrossAddOrUpdate},
 		methods: {
 			queryChange(arr){
 				for(let x in arr) {

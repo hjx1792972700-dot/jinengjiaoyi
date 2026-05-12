@@ -2,7 +2,7 @@ package com.controller;
 
 import com.annotation.IgnoreAuth;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -11,8 +11,8 @@ import java.io.IOException;
 public class IndexController {
 
     @IgnoreAuth
-    @RequestMapping({"/", "/index"})
+    @GetMapping("/")
     public void index(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/front/index.html");
+        response.sendRedirect("/index.html");
     }
 }

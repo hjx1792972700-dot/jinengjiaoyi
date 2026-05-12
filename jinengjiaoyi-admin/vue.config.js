@@ -5,7 +5,7 @@ function resolve(dir) {
 }
 
 module.exports = {
-	publicPath: '/',
+	publicPath: '/admin/',
 	lintOnSave: false,
 	configureWebpack: {
 		resolve: {

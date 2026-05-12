@@ -12,7 +12,7 @@ const http = axios.create({
 })
 
 http.interceptors.request.use(config => {
-	config.headers['Token'] = storage.get('Token')
+	config.headers['Token'] = localStorage.getItem('frontToken') || storage.get('Token')
 	return config
 }, error => {
 	return Promise.reject(error)

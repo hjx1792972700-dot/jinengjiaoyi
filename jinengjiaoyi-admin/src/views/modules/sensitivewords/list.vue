@@ -108,12 +108,7 @@
 			},
 		},
 		components: {
-			AddOrUpdate,
-			Search,
-			RefreshRight,
-			Plus,
-			Delete,
-		},
+			AddOrUpdate},
 		methods: {
 			refreshClick(){
 				this.searchForm = {}

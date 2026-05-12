@@ -307,8 +307,7 @@
 
 
 		},
-		components: {
-		},
+		components: {},
 		created() {
 			this.ruleForm.jiaohuanshijian = this.getCurDate()
 		},

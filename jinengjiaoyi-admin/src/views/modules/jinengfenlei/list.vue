@@ -66,11 +66,7 @@
 	import AddOrUpdate from "./add-or-update.vue";
 	export default {
 		components: {
-			AddOrUpdate,
-			Search,
-			Refresh,
-			Plus,
-		},
+			AddOrUpdate},
 		data() {
 			return {
 				indexQueryCondition: '',

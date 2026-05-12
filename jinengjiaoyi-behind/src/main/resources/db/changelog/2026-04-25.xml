@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- 更新数据统计菜单配置 -->
+    <changeSet id="update-statistics-menu-2026-04-25" author="system">
+        <comment>
+            重构数据统计模块前端菜单和页面：
+            1. 新增统计仪表盘页面(statisticsDashboard)，整合用户统计、技能需求统计、交换记录统计、评价反馈统计、学习资料统计五大模块
+            2. 二级菜单调整为单一"统计总览"入口，通过Tab切换查看各项统计
+            3. 优化图表展示交互，提升数据可视化体验
+        </comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+SELECT 1;
+        ]]></sql>
+    </changeSet>
+
+</databaseChangeLog>

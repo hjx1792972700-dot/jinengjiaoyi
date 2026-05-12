@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-table-chat" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `chat` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `userid` bigint NOT NULL COMMENT '用户id',
+  `adminid` bigint DEFAULT NULL COMMENT '管理员id',
+  `ask` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '提问',
+  `reply` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '回复',
+  `isreply` int DEFAULT NULL COMMENT '是否回复',
+  `isread` int DEFAULT '0' COMMENT '已读/未读(1:已读,0:未读)',
+  `uname` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户名',
+  `uimage` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '用户头像',
+  `type` int DEFAULT '1' COMMENT '内容类型(1:文本,2:图片,3:视频,4:文件,5:表情)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AI智能问答';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-chathelper" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `chathelper` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `ask` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '提问',
+  `reply` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '回复',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='聊天助手表';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-chatmessage" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `chatmessage` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `uid` bigint NOT NULL COMMENT '用户ID',
+  `fid` bigint NOT NULL COMMENT '好友用户ID',
+  `content` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '内容',
+  `format` int DEFAULT NULL COMMENT '格式(1:文字，2:图片)',
+  `isread` int DEFAULT '0' COMMENT '消息已读(0:未读，1:已读)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='消息表';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-config" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `config` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(100) NOT NULL COMMENT '配置参数名称',
+  `value` varchar(200) DEFAULT NULL COMMENT '配置参数值',
+  `url` varchar(500) DEFAULT NULL COMMENT 'url',
+  `type` int DEFAULT NULL COMMENT '参数类型',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='配置文件';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-discussjinengxuqiu" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `discussjinengxuqiu` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `refid` bigint NOT NULL COMMENT '关联表id',
+  `userid` bigint NOT NULL COMMENT '用户id',
+  `avatarurl` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '头像',
+  `nickname` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户名',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '评论内容',
+  `score` double DEFAULT NULL COMMENT '评分',
+  `reply` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '回复内容',
+  `thumbsupnum` int DEFAULT '0' COMMENT '赞',
+  `crazilynum` int DEFAULT '0' COMMENT '踩',
+  `istop` int DEFAULT '0' COMMENT '置顶(1:置顶,0:非置顶)',
+  `tuserids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '赞用户ids',
+  `cuserids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '踩用户ids',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='技能需求评论';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-discussxuexiziliao" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `discussxuexiziliao` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `refid` bigint NOT NULL COMMENT '关联表id',
+  `userid` bigint NOT NULL COMMENT '用户id',
+  `avatarurl` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '头像',
+  `nickname` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户名',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '评论内容',
+  `reply` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '回复内容',
+  `thumbsupnum` int DEFAULT '0' COMMENT '赞',
+  `crazilynum` int DEFAULT '0' COMMENT '踩',
+  `istop` int DEFAULT '0' COMMENT '置顶(1:置顶,0:非置顶)',
+  `tuserids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '赞用户ids',
+  `cuserids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '踩用户ids',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='学习资料评论';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-forum" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `forum` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `typename` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '分类名称',
+  `title` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '帖子标题',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '帖子内容',
+  `parentid` bigint DEFAULT NULL COMMENT '父节点id',
+  `username` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户名',
+  `avatarurl` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '头像',
+  `isdone` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '状态',
+  `istop` int DEFAULT '0' COMMENT '是否置顶',
+  `toptime` datetime DEFAULT NULL COMMENT '置顶时间',
+  `cover` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '封面',
+  `isanon` int DEFAULT '0' COMMENT '是否匿名(1:是,0:否)',
+  `delflag` int DEFAULT '0' COMMENT '是否删除(1:是,0:否)',
+  `sfsh` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '待审核' COMMENT '是否审核',
+  `shhf` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '审核回复',
+  `userid` bigint DEFAULT NULL COMMENT '用户id',
+  PRIMARY KEY (`id`),
+  KEY `typename` (`typename`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='技能社区';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-forumtype" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `forumtype` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `typename` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '分类名称',
+  PRIMARY KEY (`id`),
+  KEY `forumtype_ba7j` (`typename`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='论坛类型';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-friend" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `friend` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `uid` bigint NOT NULL COMMENT '用户ID',
+  `fid` bigint NOT NULL COMMENT '好友用户ID',
+  `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '名称',
+  `picture` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图片',
+  `role` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '角色',
+  `tablename` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '表名',
+  `alias` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '别名',
+  `type` int DEFAULT '0' COMMENT '类型(0:好友申请，1:好友，2:消息)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='好友表';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-huiyuanchongzhi" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `huiyuanchongzhi` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `chongzhibianhao` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '充值编号',
+  `tupian` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '图片',
+  `chongzhijine` int DEFAULT NULL COMMENT '充值金额',
+  `chongzhiriqi` date DEFAULT NULL COMMENT '充值日期',
+  `yonghuzhanghao` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户账号',
+  `yonghuxingming` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户姓名',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `chongzhibianhao` (`chongzhibianhao`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='会员充值';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-jiaohuanjilu" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `jiaohuanjilu` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `yonghuzhanghao` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户账号',
+  `yonghuxingming` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户姓名',
+  `shoujihao` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机号',
+  `biaoti` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '标题',
+  `jinengfenlei` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '技能分类',
+  `gongjitupian` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '供给图片',
+  `jiaohuanjineng` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '交换技能',
+  `gongjishipin` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '供给视频',
+  `gongjifujian` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '供给附件',
+  `jiaohuanshijian` date DEFAULT NULL COMMENT '交换时间',
+  `gongjineirong` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '供给内容',
+  `gongjirenzhanghao` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '供给人账号',
+  `gongjirenxingming` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '供给人姓名',
+  `lianxifangshi` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '联系方式',
+  `crossuserid` bigint DEFAULT NULL COMMENT '跨表用户id',
+  `crossrefid` bigint DEFAULT NULL COMMENT '跨表主键id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='交换记录';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-jiaohuanshenqing" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `jiaohuanshenqing` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `xuqiubianhao` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '需求编号',
+  `yonghuzhanghao` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户账号',
+  `yonghuxingming` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户姓名',
+  `shoujihao` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机号',
+  `xuqiubiaoti` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '需求标题',
+  `jinengfenlei` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '技能分类',
+  `xuqiufeiyong` double DEFAULT NULL COMMENT '需求费用',
+  `fengmian` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '封面',
+  `shenqingshijian` datetime DEFAULT NULL COMMENT '申请时间',
+  `shenqingbeizhu` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '申请备注',
+  `gongjirenzhanghao` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '供给人账号',
+  `gongjirenxingming` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '供给人姓名',
+  `lianxifangshi` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '联系方式',
+  `xinyu` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '信誉',
+  `sfsh` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '待审核' COMMENT '是否审核',
+  `shhf` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '审核回复',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='交换申请';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-jinengfenlei" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `jinengfenlei` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `jinengfenlei` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '技能分类',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `jinengfenlei` (`jinengfenlei`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='技能分类';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-jinengxuqiu" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `jinengxuqiu` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `xuqiubianhao` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '需求编号',
+  `xuqiubiaoti` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '需求标题',
+  `jinengfenlei` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '技能分类',
+  `fengmian` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '封面',
+  `fabushijian` date DEFAULT NULL COMMENT '发布时间',
+  `xuqiufeiyong` double DEFAULT NULL COMMENT '需求费用',
+  `xuqiumiaoshu` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '需求描述',
+  `xuqiuxiangqing` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '需求详情',
+  `yonghuzhanghao` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户账号',
+  `yonghuxingming` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户姓名',
+  `shoujihao` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机号',
+  `xinyuzhishu` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '信誉指数',
+  `sfsh` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '待审核' COMMENT '是否审核',
+  `shhf` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '审核回复',
+  `thumbsupnum` int DEFAULT '0' COMMENT '赞',
+  `crazilynum` int DEFAULT '0' COMMENT '踩',
+  `clicktime` datetime DEFAULT NULL COMMENT '最近点击时间',
+  `clicknum` int DEFAULT '0' COMMENT '点击次数',
+  `discussnum` int DEFAULT '0' COMMENT '评论数',
+  `totalscore` double DEFAULT '0' COMMENT '评分',
+  `storeupnum` int DEFAULT '0' COMMENT '收藏数',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `xuqiubianhao` (`xuqiubianhao`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='技能需求';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-messages" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `messages` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `userid` bigint NOT NULL COMMENT '留言人id',
+  `username` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户名',
+  `avatarurl` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '头像',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '留言内容',
+  `cpicture` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '留言图片',
+  `reply` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '回复内容',
+  `rpicture` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '回复图片',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='留言反馈';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-news" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `news` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `title` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标题',
+  `introduction` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '简介',
+  `picture` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图片',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
+  `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '发布人',
+  `headportrait` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '头像',
+  `typename` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '分类名称',
+  PRIMARY KEY (`id`),
+  KEY `typename` (`typename`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='公告资讯';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-newstype" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `newstype` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `typename` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '分类名称',
+  PRIMARY KEY (`id`),
+  KEY `newstype_gz94` (`typename`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='资讯分类';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-pingjiafankui" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `pingjiafankui` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `yonghuzhanghao` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户账号',
+  `yonghuxingming` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户姓名',
+  `shoujihao` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机号',
+  `biaoti` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '标题',
+  `jinengfenlei` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '技能分类',
+  `huifutupian` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '回复图片',
+  `jiaohuanjineng` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '交换技能',
+  `pingjiashijian` date DEFAULT NULL COMMENT '评价时间',
+  `jiaohuanbeizhu` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '交换备注',
+  `jiaohuanrenzhanghao` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '交换人账号',
+  `jiaohuanrenxingming` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '交换人姓名',
+  `lianxifangshi` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '联系方式',
+  `huifuneirong` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '回复内容',
+  `pingjiajieguo` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '评价结果',
+  `huifushipin` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '回复视频',
+  `huifufujian` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '回复附件',
+  `sfsh` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '待审核' COMMENT '是否审核',
+  `shhf` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '审核回复',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='评价反馈';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-sensitivewords" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `sensitivewords` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `content` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '傻逼' COMMENT '内容',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='敏感词';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-storeup" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `storeup` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `userid` bigint NOT NULL COMMENT '用户id',
+  `refid` bigint DEFAULT NULL COMMENT '外键id',
+  `tablename` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '表名',
+  `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '名称',
+  `picture` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '图片',
+  `type` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '1' COMMENT '类型',
+  `inteltype` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '推荐类型',
+  `remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='收藏表';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-syslog" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `syslog` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `username` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
+  `operation` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户操作',
+  `method` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '请求方法',
+  `params` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '请求参数',
+  `time` bigint DEFAULT NULL COMMENT '请求时长(毫秒)',
+  `ip` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'IP地址',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统日志';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-token" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `token` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `userid` bigint NOT NULL COMMENT '用户id',
+  `username` varchar(100) NOT NULL COMMENT '用户名',
+  `tablename` varchar(100) DEFAULT NULL COMMENT '表名',
+  `role` varchar(100) DEFAULT NULL COMMENT '角色',
+  `token` varchar(500) NOT NULL COMMENT '密码',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '新增时间',
+  `expiratedtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '过期时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='token表';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-users" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `username` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
+  `password` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '密码',
+  `role` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '管理员' COMMENT '角色',
+  `image` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '头像',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='管理员';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-xuexiziliao" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `xuexiziliao` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `ziliaobiaoti` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '资料标题',
+  `ziliaoleixing` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '资料类型',
+  `ziliaofengmian` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '资料封面',
+  `ziliaoshipin` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '资料视频',
+  `ziliaofujian` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '资料附件',
+  `ziliaoxiangqing` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '资料详情',
+  `fabushijian` date DEFAULT NULL COMMENT '发布时间',
+  `clicktime` datetime DEFAULT NULL COMMENT '最近点击时间',
+  `clicknum` int DEFAULT '0' COMMENT '点击次数',
+  `discussnum` int DEFAULT '0' COMMENT '评论数',
+  `storeupnum` int DEFAULT '0' COMMENT '收藏数',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='学习资料';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-yonghu" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `yonghu` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `yonghuzhanghao` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户账号',
+  `yonghuxingming` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户姓名',
+  `mima` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '密码',
+  `xingbie` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '性别',
+  `idcard` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '身份证',
+  `age` int DEFAULT NULL COMMENT '年龄',
+  `xinyuzhishu` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '信誉指数',
+  `shoujihao` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机号',
+  `touxiang` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '头像',
+  `sfsh` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '待审核' COMMENT '是否审核',
+  `shhf` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '审核回复',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `yonghuzhanghao` (`yonghuzhanghao`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="create-table-ziliaoleixing" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+CREATE TABLE IF NOT EXISTS `ziliaoleixing` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `ziliaoleixing` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '资料类型',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='资料类型';
+        ]]></sql>
+    </changeSet>
+
+</databaseChangeLog>

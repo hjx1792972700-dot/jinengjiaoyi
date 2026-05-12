@@ -1,0 +1,40 @@
+{
+	"name": "front",
+	"version": "0.2.0",
+	"private": true,
+	"scripts": {
+		"dev": "vue-cli-service serve",
+		"build": "vue-cli-service build",
+		"lint": "vue-cli-service lint"
+	},
+	"dependencies": {
+		"@amap/amap-jsapi-loader": "^1.0.1",
+		"animate.css": "^4.1.1",
+		"axios": "^1.7.2",
+		"core-js": "^3.37.0",
+		"dplayer": "^1.26.0",
+		"echarts": "^5.5.0",
+		"echarts-wordcloud": "^2.1.0",
+		"element-ui": "^2.15.14",
+		"html2canvas": "^1.4.1",
+		"print-js": "^1.6.0",
+		"qrcode2": "^1.2.3",
+		"swiper": "^5.4.5",
+		"vue": "^2.7.16",
+		"vue-json-excel": "^0.3.0",
+		"vue-quill-editor": "^3.0.6",
+		"vue-router": "^3.6.5",
+		"vuex": "^3.6.2",
+		"watermark-dom": "^2.3.0"
+	},
+	"devDependencies": {
+		"@vue/cli-plugin-babel": "^5.0.8",
+		"@vue/cli-plugin-router": "^5.0.8",
+		"@vue/cli-plugin-vuex": "^5.0.8",
+		"@vue/cli-service": "^5.0.8",
+		"sass": "^1.77.0",
+		"sass-loader": "^10.5.2",
+		"svg-sprite-loader": "^6.0.11",
+		"vue-template-compiler": "^2.7.16"
+	}
+}

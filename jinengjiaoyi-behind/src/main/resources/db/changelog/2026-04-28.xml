@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- 修复wanghao头像路径（允许旧checksum通过验证） -->
+    <changeSet id="fix-wanghao-avatar" author="system">
+        <validCheckSum>8:61894a3ae8aae7a4a08e302ea221d0e2</validCheckSum>
+        <update tableName="yonghu">
+            <column name="touxiang" value="upload/yonghu_touxiang8.jpg"/>
+            <where>yonghuzhanghao = 'wanghao'</where>
+        </update>
+    </changeSet>
+
+    <!-- ==================== 修复leixing字段 ==================== -->
+
+    <!-- 2026-04-12初始数据全是技能市场记录，应为'技能' -->
+    <changeSet id="fix-initial-jinengxuqiu-leixing" author="system">
+        <sql><![CDATA[
+UPDATE jinengxuqiu SET leixing = '技能'
+WHERE xuqiubianhao IN ('1111111111','2222222222','3333333333','4444444444','5555555555','6666666666','7777777777','8888888888','9999999999','0000000000');
+        ]]></sql>
+    </changeSet>
+
+    <!-- wanghao在2026-04-26添加的是技能发布 -->
+    <changeSet id="fix-wanghao-skill-leixing" author="system">
+        <sql><![CDATA[
+UPDATE jinengxuqiu SET leixing = '技能'
+WHERE yonghuzhanghao = 'wanghao'
+  AND xuqiubianhao IN ('XQ20260425001', 'XQ20260425002');
+        ]]></sql>
+    </changeSet>
+
+    <!-- 2026-04-27添加的确认为'技能' -->
+    <changeSet id="fix-20260427-skill-leixing" author="system">
+        <sql><![CDATA[
+UPDATE jinengxuqiu SET leixing = '技能'
+WHERE xuqiubianhao IN ('JN20260427001','JN20260427002','JN20260427003','JN20260427004');
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 为wanghao添加需求记录 ==================== -->
+
+    <changeSet id="add-wanghao-needs" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `jinengxuqiu` (`addtime`, `xuqiubianhao`, `xuqiubiaoti`, `jinengfenlei`, `fengmian`, `fabushijian`, `xuqiufeiyong`, `xuqiumiaoshu`, `xuqiuxiangqing`, `yonghuzhanghao`, `yonghuxingming`, `shoujihao`, `xinyuzhishu`, `leixing`, `sfsh`, `shhf`, `thumbsupnum`, `crazilynum`, `clicktime`, `clicknum`, `discussnum`, `totalscore`, `storeupnum`) VALUES
+('2026-04-17 09:00:00','XQ20260428N01','想学PR视频剪辑','工具','upload/jinengxuqiu_短视频剪辑1.jpg','2026-04-17',0,'对PR剪辑很感兴趣，想系统学习从素材导入到调色输出的全流程','<p>希望学习Premiere Pro视频剪辑：</p><ul><li>软件基础操作与工作流程</li><li>剪辑节奏和转场技巧</li><li>调色基础（Lumetri Color）</li><li>音频同步与简单特效</li></ul><p>可以用吉他弹唱教学或英语口语陪练来交换。每周2次线上学习。</p>','wanghao','王浩','13290125678','86','需求','是','',0,0,'2026-04-17 09:00:00',49,0,0,0),
+('2026-04-19 10:00:00','XQ20260428N02','想学配音和有声书录制','艺术','upload/jinengxuqiu_配音技巧教学1.jpg','2026-04-19',0,'想学有声书录制技巧和基础配音，提升声音表现力','<p>对有声书录制和配音很感兴趣：</p><ul><li>气息控制与发声训练</li><li>角色配音的情感表达</li><li>录音设备选择和环境搭建</li><li>后期音频处理（降噪、均衡）</li></ul><p>可以提供英语口语陪练作为交换，时间灵活。</p>','wanghao','王浩','13290125678','86','需求','是','',0,0,'2026-04-19 10:00:00',35,0,0,0),
+('2026-04-22 08:30:00','XQ20260428N03','PPT设计美化求教','学习','upload/jinengxuqiu_PPT美化设计1.jpg','2026-04-22',0,'课程汇报PPT需要美化，想学配色和排版技巧','<p>经常需要做课程汇报PPT，希望提升设计水平：</p><ul><li>PPT配色方案与色彩搭配</li><li>版式设计和信息层次</li><li>图表美化与数据可视化</li><li>动画和转场的恰当使用</li></ul><p>可以教吉他基础作为回报，也可以提供英语学习辅导。</p>','wanghao','王浩','13290125678','86','需求','是','',0,0,'2026-04-22 08:30:00',28,0,0,0);
+        ]]></sql>
+    </changeSet>
+
+    <!-- 需求记录审核状态全部设为已通过 -->
+    <changeSet id="auto-approve-all-needs" author="system">
+        <validCheckSum>8:0b38431e5d2b69381974f7363888cd89</validCheckSum>
+        <sql>UPDATE jinengxuqiu SET sfsh = '是' WHERE leixing = '需求' AND (sfsh IS NULL OR sfsh = '待审核')</sql>
+    </changeSet>
+
+    <!-- ==================== 补充好友关系：周凯、赵阳、吴芳 ==================== -->
+
+    <changeSet id="add-missing-friend-records" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `friend` (`addtime`, `uid`, `fid`, `name`, `picture`, `role`, `tablename`, `alias`, `type`) VALUES
+('2026-04-20 15:00:00',18,16,'周凯','upload/yonghu_touxiang6.jpg','用户','yonghu',NULL,1),
+('2026-04-20 15:00:00',16,18,'王浩','upload/yonghu_touxiang8.jpg','用户','yonghu',NULL,1),
+('2026-04-25 09:00:00',18,11,'赵阳','upload/yonghu_touxiang1.jpg','用户','yonghu',NULL,1),
+('2026-04-25 09:00:00',11,18,'王浩','upload/yonghu_touxiang8.jpg','用户','yonghu',NULL,1),
+('2026-04-26 07:30:00',18,12,'吴芳','upload/yonghu_touxiang2.jpg','用户','yonghu',NULL,1),
+('2026-04-26 07:30:00',12,18,'王浩','upload/yonghu_touxiang8.jpg','用户','yonghu',NULL,1);
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 丰富聊天记录 ==================== -->
+
+    <!-- 先清除旧的稀疏聊天数据，重新写入完整时间线 -->
+    <changeSet id="clear-old-wanghao-chat" author="system">
+        <sql>DELETE FROM chatmessage WHERE uid = 18 OR fid = 18</sql>
+    </changeSet>
+
+    <changeSet id="enrich-chat-wanghao-zhangqiang" author="system">
+        <comment>王浩(18)↔张强(15)：认识→申请PR剪辑→交换完成→持续交流</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `chatmessage` (`addtime`, `uid`, `fid`, `content`, `format`, `isread`) VALUES
+('2026-04-14 10:05:00',18,15,'张强你好！我在技能市场看到你发布的短视频剪辑技能，感觉特别专业，想请教一下。',1,1),
+('2026-04-14 10:08:00',15,18,'你好王浩！谢谢关注，你具体想了解哪方面呢？我主要教PR的基础操作和进阶剪辑技巧。',1,1),
+('2026-04-14 10:12:00',18,15,'我最近在拍vlog，但是剪辑这块一直不太行，特别是转场和调色。你一般怎么收费？',1,1),
+('2026-04-14 10:15:00',15,18,'其实咱们可以技能交换呀，我看你会吉他弹唱，我一直想学来着！你教我吉他，我教你PR，怎么样？',1,1),
+('2026-04-14 10:18:00',18,15,'哈哈太好了，我正想找人交换呢！那我们约个时间见面聊聊具体怎么安排？',1,1),
+('2026-04-14 10:22:00',15,18,'这周六下午两点图书馆一楼咖啡厅怎么样？我先给你准备一份PR快速入门的资料。',1,1),
+('2026-04-14 10:25:00',18,15,'没问题！我也准备一下吉他教学的计划，到时候我带吉他过去。',1,1),
+('2026-04-17 10:30:00',18,15,'强哥，我刚在平台上提交了交换申请，你看看有没有收到？',1,1),
+('2026-04-17 10:35:00',15,18,'收到了！我刚同意了，那我们周六正式开始第一次交换教学吧。',1,1),
+('2026-04-18 18:00:00',18,15,'今天的PR课太实用了！特别是你教的快捷键和时间线操作，效率提升太多了。',1,1),
+('2026-04-18 18:10:00',15,18,'你的吉他课也超棒，C和弦我已经能按住了！回去多练习，下次争取换弦不卡顿。',1,1),
+('2026-04-18 18:15:00',18,15,'加油！我回去用你教的方法剪了一段素材，比以前好太多了。对了，调色那个Lumetri面板下次教我好不好？',1,1),
+('2026-04-18 18:20:00',15,18,'必须安排上！下次我带几个调色预设给你，先用预设再慢慢学手动调色，上手更快。',1,1),
+('2026-04-20 14:00:00',18,15,'上次学到的PR技巧已经用在我新剪的vlog里了，室友都说我进步太大了哈哈。',1,1),
+('2026-04-20 14:10:00',15,18,'太好了！发给我看看呗。这周三晚上继续吗？我想学《小星星》的指弹版。',1,1),
+('2026-04-20 14:15:00',18,15,'好的，我今晚把vlog链接发你。周三没问题，《小星星》指弹版不难，一节课就能学会。',1,1),
+('2026-04-24 11:00:00',18,15,'强哥，我按你教的方法给vlog加了字幕和BGM，你帮我看看节奏对不对？',1,1),
+('2026-04-24 11:15:00',15,18,'刚看完了，整体不错！建议转场再快0.5秒，BGM音量再降一点，人声会更清晰。',1,1),
+('2026-04-24 11:20:00',18,15,'明白，我去调一下。你《小星星》练得怎么样了？',1,1),
+('2026-04-24 11:25:00',15,18,'已经能完整弹下来了！不过有几个地方换弦还不太流畅，周末再教我练练吧。',1,1),
+('2026-04-27 09:00:00',18,15,'我又剪了一个运动会的视频，这次还加了速度曲线变化，你看看效果怎么样。',1,1),
+('2026-04-27 09:20:00',15,18,'进步很大啊！速度曲线用得很自然，转场也比之前流畅多了。再学几次你就可以自己接单了。',1,1);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="enrich-chat-wanghao-chenxi" author="system">
+        <comment>王浩(18)↔陈曦(13)：认识→申请配音教学→交换完成→后续交流</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `chatmessage` (`addtime`, `uid`, `fid`, `content`, `format`, `isread`) VALUES
+('2026-04-16 15:05:00',18,13,'陈曦同学你好，我对配音很感兴趣，看到你发布的配音技巧教学，想了解一下。',1,1),
+('2026-04-16 15:10:00',13,18,'你好王浩！我可以教基础发声和情感表达，你有什么想学的方向吗？比如动漫配音还是有声书？',1,1),
+('2026-04-16 15:15:00',18,13,'我比较想学有声书录制，平时喜欢读书，想把一些好文章录成音频分享。',1,1),
+('2026-04-16 15:20:00',13,18,'有声书录制很棒！我可以教你气息控制和朗读节奏。你用英语口语陪练来交换怎么样？我正好在准备六级口语。',1,1),
+('2026-04-16 15:25:00',18,13,'完全没问题，我英语六级580分，口语练习是我的强项。那我们怎么安排时间？',1,1),
+('2026-04-16 15:30:00',13,18,'每周二和周四晚上七点到八点半怎么样？前半段我教你配音，后半段你陪我练口语。',1,1),
+('2026-04-16 15:35:00',18,13,'这个安排很合理，那就这么定了！我先去平台上提交申请。',1,1),
+('2026-04-19 14:45:00',18,13,'申请提交了，你看看方便的话通过一下。',1,1),
+('2026-04-19 14:50:00',13,18,'刚通过了！那我们明天周二晚上正式开始第一节课？',1,1),
+('2026-04-19 15:00:00',18,13,'好的，我准备一下录音设备。对了，需要提前准备什么吗？',1,1),
+('2026-04-19 15:05:00',13,18,'你先下载一个Audacity软件，免费的。另外找一段你喜欢的散文，300字左右就行，上课直接练。',1,1),
+('2026-04-21 20:30:00',18,13,'今天的课太有收获了！原来气息控制这么重要，以前读书总感觉气不够用，现在知道怎么换气了。',1,1),
+('2026-04-21 20:40:00',13,18,'你的声线条件很好，低音很有磁性，特别适合录散文。你今天教的口语发音纠正方法也很实用，th音终于对了！',1,1),
+('2026-04-21 20:45:00',18,13,'哈哈谢谢夸奖！那个th音确实是中国学生通病，多练几次就好了。我回去按你说的方法每天练15分钟朗读。',1,1),
+('2026-04-22 10:00:00',18,13,'我录了一段朱自清的《春》，你有空帮我听听看有什么要改进的？',1,1),
+('2026-04-22 10:05:00',13,18,'刚听了，整体节奏很好！有两个小建议：段落之间的停顿可以再长一点，另外描写花香那段可以语速放慢，让听众有画面感。',1,1),
+('2026-04-22 10:10:00',18,13,'明白了，我重新录一版。对了你六级口语模考做了吗？有什么不确定的可以问我。',1,1),
+('2026-04-22 10:15:00',13,18,'做了一套，小组讨论那个部分不太有把握，能不能这周四模拟练一次？',1,1),
+('2026-04-22 10:18:00',18,13,'没问题，我准备几个常考话题，到时候咱们模拟一下。',1,1),
+('2026-04-26 19:00:00',13,18,'王浩，告诉你一个好消息，六级口语成绩出来了，B+！比上次提高了一个档次！',1,1),
+('2026-04-26 19:05:00',18,13,'恭喜恭喜！你本来就有底子，口语多练练肯定能上去。我这边有声书也录了好几期了，朋友们反馈都不错。',1,1),
+('2026-04-26 19:10:00',13,18,'太棒了！你声音确实好听，继续加油。下次试试小说播读，可以挑战一下角色配音。',1,0);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="enrich-chat-wanghao-lina" author="system">
+        <comment>李娜(14)→王浩(18)：李娜想学吉他弹唱，用手工DIY交换</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `chatmessage` (`addtime`, `uid`, `fid`, `content`, `format`, `isread`) VALUES
+('2026-04-19 11:05:00',14,18,'王浩同学你好呀！我在技能市场看到你的吉他弹唱教学，弹得好棒，请问还在招学生吗？',1,1),
+('2026-04-19 11:10:00',18,14,'你好李娜！当然欢迎，你有吉他基础吗？',1,1),
+('2026-04-19 11:15:00',14,18,'完全零基础的小白，但是超级想学！我看到可以技能交换，我会手工DIY，毛线钩织、手工皂那些，你感兴趣吗？',1,1),
+('2026-04-19 11:20:00',18,14,'手工钩织正好我想学！之前想给妈妈做个手工礼物一直没机会。那我们互相教吧？',1,1),
+('2026-04-19 11:25:00',14,18,'太好了！那我提交交换申请咯，你什么时候有空我们先见面聊聊？',1,1),
+('2026-04-19 11:30:00',18,14,'这周末都行，你定时间就好。',1,1),
+('2026-04-23 11:30:00',18,14,'李娜，你的申请我刚通过了，周末第一次教学你准备好了吗？',1,1),
+('2026-04-23 11:35:00',14,18,'准备好啦！我买了毛线和钩针，带给你一起用。你带吉他就行，我自己也买了一把便宜的练习琴。',1,1),
+('2026-04-23 16:00:00',18,14,'今天教你的C和Am两个和弦记住了吗？刚开始按弦手指会疼，多练几天就好了。',1,1),
+('2026-04-23 16:05:00',14,18,'记住了！手指确实有点疼，不过很有成就感。你做的杯垫怎么样，有没有困难的地方？',1,1),
+('2026-04-23 16:10:00',18,14,'杯垫已经做出来了！就是锁针的时候拉线松紧不太均匀，需要多练习。室友看到都说好看。',1,1),
+('2026-04-23 16:15:00',14,18,'刚开始都这样，多做几个手感就稳了。下次教你短针组合花样，可以做杯套哦。',1,1),
+('2026-04-24 15:00:00',18,14,'刚做完第二个杯垫，比第一个均匀多了！你吉他练得怎么样？',1,1),
+('2026-04-24 15:10:00',14,18,'C和弦已经能按住了！Am还差一点，手指老按不到位。对了我想学弹《生日快乐》，下次能教我吗？',1,1),
+('2026-04-24 15:15:00',18,14,'当然可以，《生日快乐》只需要C、G、F三个和弦，下次一起教你G和弦，加上节奏就能弹了。',1,1),
+('2026-04-27 10:00:00',14,18,'王浩！我能弹《生日快乐》了，虽然换弦还不太流畅，但是室友生日的时候弹给她听了，她超感动！',1,1),
+('2026-04-27 10:10:00',18,14,'太棒了！有实际演出经验进步会更快的。我这边也用你教的方法做了一个手工包，打算送给我妈当母亲节礼物。',1,0);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="enrich-chat-wanghao-liumin" author="system">
+        <comment>王浩(18)↔刘敏(17)：PPT设计交换</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `chatmessage` (`addtime`, `uid`, `fid`, `content`, `format`, `isread`) VALUES
+('2026-04-22 09:05:00',18,17,'刘敏你好，你的PPT设计作品看起来很专业！我最近要做课程汇报PPT，想请你帮忙指导一下。',1,1),
+('2026-04-22 09:10:00',17,18,'你好王浩！当然可以。你先把PPT大纲或者初稿发我看看，我帮你规划整体设计方向。',1,1),
+('2026-04-22 09:15:00',18,17,'好的，我待会整理好发给你。对了，我可以用吉他教学来交换，你有兴趣吗？',1,1),
+('2026-04-22 09:20:00',17,18,'真的吗？我一直想学吉他！那太好了，我先帮你看PPT，然后你教我弹琴，完美交换。',1,1),
+('2026-04-22 09:30:00',18,17,'交换申请提交好了，你有空通过一下。大纲我也整理好了，一共12页，内容是关于协同过滤算法的课程汇报。',1,1),
+('2026-04-22 09:35:00',17,18,'收到，申请通过了。大纲我看了，信息量比较大，建议用深色系科技风格，图表可视化要重点做。我下午帮你出三套配色方案你选。',1,1),
+('2026-04-22 15:00:00',17,18,'方案做好了：方案A蓝黑科技风、方案B紫蓝渐变风、方案C极简白底风。你觉得哪个好？',1,1),
+('2026-04-22 15:10:00',18,17,'方案A太酷了！蓝黑科技风跟我的主题很搭。你连图标风格都配好了，太细心了。',1,1),
+('2026-04-22 15:15:00',17,18,'那就定方案A。字体建议标题用阿里巴巴普惠体Bold，正文用微软雅黑，层次会更清晰。',1,1),
+('2026-04-23 16:00:00',18,17,'按你的方案改完了，你帮我最终检查一下？特别是第7页的数据图表，不确定颜色搭配对不对。',1,1),
+('2026-04-23 16:10:00',17,18,'看了看，整体不错！第7页图表建议柱状图用渐变蓝，折线用亮青色做对比。第10页的动画转场太多了，减掉一半会更专业。',1,1),
+('2026-04-23 16:15:00',18,17,'明白，我去改。对了这周末你有空吗？吉他第一课可以安排上了。',1,1),
+('2026-04-23 16:20:00',17,18,'周日下午可以！我先在B站看了些教程，知道要学和弦，但自己按不下去。',1,1),
+('2026-04-25 20:00:00',18,17,'跟你说个好消息，PPT汇报完了，老师给了很高的评价，说视觉效果是全班最好的！',1,1),
+('2026-04-25 20:10:00',17,18,'耶！恭喜恭喜，老师有眼光。以后有PPT的事随时找我。你什么时候教我弹吉他呀？上次学的和弦我还在练。',1,1),
+('2026-04-25 20:15:00',18,17,'哈哈好，这周末继续安排。你先把C和弦按熟，我们从最简单的弹唱开始。',1,0);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="enrich-chat-wanghao-zhoukai" author="system">
+        <comment>周凯(16)→王浩(18)：周凯想学吉他弹唱，用硬笔书法交换</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `chatmessage` (`addtime`, `uid`, `fid`, `content`, `format`, `isread`) VALUES
+('2026-04-20 15:05:00',16,18,'王浩学长好！我叫周凯，大一的，看到你的吉他弹唱教学特别心动，我可以用硬笔书法教学来交换吗？',1,1),
+('2026-04-20 15:10:00',18,16,'你好周凯！硬笔书法我正好想练，之前写字被室友吐槽太丑了哈哈。你书法学了多久？',1,1),
+('2026-04-20 15:15:00',16,18,'从小学三年级开始练的，练了快十年了。楷书、行书都可以教你，我还拿过省级书法比赛二等奖。',1,1),
+('2026-04-20 15:20:00',18,16,'厉害！那我们交换吧。你有吉他吗？没有的话我可以推荐一个性价比高的入门琴。',1,1),
+('2026-04-20 15:25:00',16,18,'我刚买了一把雅马哈F310！已经在平台提交交换申请了，你看看。',1,1),
+('2026-04-20 16:10:00',18,16,'通过了！F310是好琴，音色不错。那这周末我们约个教学吧，你方便吗？',1,1),
+('2026-04-20 16:15:00',16,18,'周六下午三点怎么样？在操场旁边的小树林那边，安静又有氛围。我带字帖和笔过来。',1,1),
+('2026-04-21 17:00:00',18,16,'今天教你的姿势和C和弦手型记住了吗？刚开始手指疼是正常的。',1,1),
+('2026-04-21 17:05:00',16,18,'记住了！手指确实好疼，指尖都压出印了。不过看到能弹出声音就很开心。你的楷书作业写了吗？',1,1),
+('2026-04-21 17:10:00',18,16,'写了两页，你帮我看看。横画总是写不平，有什么技巧吗？',1,1),
+('2026-04-21 17:15:00',16,18,'横画要注意"起笔重、行笔轻、收笔顿"。你先在米字格上练，每天写30分钟，一周就能看到进步。',1,1),
+('2026-04-24 20:00:00',16,18,'学长！我按你的方法每天练20分钟，现在C和弦和Am和弦都能按住了，是不是可以学一首歌了？',1,1),
+('2026-04-24 20:10:00',18,16,'可以啊！那学《小星星》吧，只要三个和弦就够了。你把节奏练稳，周末教你。你的书法作业我写了，看看进步没？',1,1),
+('2026-04-24 20:15:00',16,18,'看了看，比上次好多了！特别是"永"字八画已经有模有样了。继续保持每天练字的习惯。',1,1),
+('2026-04-27 15:00:00',16,18,'学长，我能弹唱《晴天》的副歌了！虽然换弦还有点慢，但是太有成就感了！',1,1),
+('2026-04-27 15:10:00',18,16,'哈哈你进步也太快了吧，才学了一周多就弹《晴天》了。我硬笔楷书也写得越来越顺了，谢谢你的指导。',1,0);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="enrich-chat-wanghao-zhaoyang" author="system">
+        <comment>赵阳(11)→王浩(18)：赵阳想学短视频制作，申请待审核</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `chatmessage` (`addtime`, `uid`, `fid`, `content`, `format`, `isread`) VALUES
+('2026-04-25 09:00:00',11,18,'王浩同学你好，我是赵阳。看到你发布的短视频制作教学，想问一下你主要教什么内容？',1,1),
+('2026-04-25 09:05:00',18,11,'你好赵阳！我主要教剪映和PR的使用，包括手机拍摄技巧、剪辑操作、转场特效、调色这些。',1,1),
+('2026-04-25 09:10:00',11,18,'正是我需要的！我们社团经常要做宣传视频，但是我只会最基本的剪辑。你看我用文言文翻译教学来交换行不行？',1,1),
+('2026-04-25 09:15:00',18,11,'文言文翻译？那太好了，我下学期选了一门古代文学鉴赏，正发愁文言文基础太差。',1,1),
+('2026-04-25 09:20:00',11,18,'没问题，我古文功底还不错，可以从基础语法到篇章翻译系统教你。那我去提交交换申请了！',1,1),
+('2026-04-25 09:35:00',18,11,'好的，我看到申请了，这两天我比较忙，过两天处理一下。',1,1),
+('2026-04-25 09:40:00',11,18,'不着急，你有空的时候处理就行。对了，我们可以先加个微信沟通日常问题吗？',1,1),
+('2026-04-25 09:45:00',18,11,'当然可以，我微信号就是wanghao2026。',1,1),
+('2026-04-27 14:00:00',11,18,'王浩，这两天有个社团活动想拍个短视频，有什么快速上手的拍摄建议吗？',1,1),
+('2026-04-27 14:10:00',18,11,'手机拍摄的话注意三点：稳定（双手持握或靠墙）、光线（尽量面向光源）、构图（三分法放主体）。这几个做到了基本就不会太差。',1,1),
+('2026-04-27 14:15:00',11,18,'受教了！等我们正式开始交换教学的时候好好学，先用这些技巧拍着试试。',1,0);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="enrich-chat-wanghao-wufang" author="system">
+        <comment>吴芳(12)→王浩(18)：吴芳想学英语口语，用摄影教学交换，申请待审核</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `chatmessage` (`addtime`, `uid`, `fid`, `content`, `format`, `isread`) VALUES
+('2026-04-26 07:30:00',12,18,'你好王浩！我叫吴芳，我看到你发布的英语口语陪练技能，正好我最近在准备考研面试的英语口语。',1,1),
+('2026-04-26 07:35:00',18,12,'你好吴芳！考研面试口语我比较了解，主要是自我介绍和专业话题讨论对吧？你考什么方向？',1,1),
+('2026-04-26 07:40:00',12,18,'对，我考的是新闻传播方向。自我介绍写好了但是读起来不太自然，还有专业问答的表达也需要练习。',1,1),
+('2026-04-26 07:45:00',18,12,'没问题，我可以帮你纠正发音、练习口语表达。你用什么来交换呢？',1,1),
+('2026-04-26 07:50:00',12,18,'我擅长摄影！人像、风光、产品摄影都可以教。你平时拍vlog应该需要提升画面质感吧？',1,1),
+('2026-04-26 07:55:00',18,12,'对啊，我拍vlog虽然剪辑学了不少，但是拍摄构图和光线运用还是不太行。摄影教学太合适了！',1,1),
+('2026-04-26 08:00:00',12,18,'那我去提交交换申请了！',1,1),
+('2026-04-26 08:05:00',18,12,'好的，我看到了。不过我最近手头的交换有点多，可能要过几天才能开始，你别着急。',1,1),
+('2026-04-26 08:10:00',12,18,'没关系的，我考研面试是下个月底，时间还够。你空了我们再约时间。',1,1),
+('2026-04-27 18:00:00',12,18,'王浩，我把自我介绍的英文稿写好了，能不能先发给你帮我看看用词和语法有没有问题？',1,1),
+('2026-04-27 18:10:00',18,12,'当然可以，发过来吧。我先帮你改改稿子，等正式交换开始了再系统练口语。',1,0);
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 修复技能封面图片：每条记录使用与标题匹配的专属图片 ==================== -->
+
+    <changeSet id="fix-skill-cover-images" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_短视频制作教学1.jpg,upload/jinengxuqiu_短视频制作教学2.jpg,upload/jinengxuqiu_短视频制作教学3.jpg'
+WHERE xuqiubiaoti = '短视频制作教学';
+
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_英语口语陪练1.jpg,upload/jinengxuqiu_英语口语陪练2.jpg,upload/jinengxuqiu_英语口语陪练3.jpg'
+WHERE xuqiubiaoti = '英语口语陪练';
+
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_Python数据分析教学1.jpg,upload/jinengxuqiu_Python数据分析教学2.jpg,upload/jinengxuqiu_Python数据分析教学3.jpg'
+WHERE xuqiubiaoti = 'Python数据分析教学';
+
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_吉他弹唱入门指导1.jpg,upload/jinengxuqiu_吉他弹唱入门指导2.jpg,upload/jinengxuqiu_吉他弹唱入门指导3.jpg'
+WHERE xuqiubiaoti = '吉他弹唱入门指导';
+
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_PS海报设计1.jpg,upload/jinengxuqiu_PS海报设计2.jpg,upload/jinengxuqiu_PS海报设计3.jpg'
+WHERE xuqiubiaoti = 'PS海报设计';
+
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_考研数学辅导1.jpg,upload/jinengxuqiu_考研数学辅导2.jpg,upload/jinengxuqiu_考研数学辅导3.jpg'
+WHERE xuqiubiaoti = '考研数学辅导';
+
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_英语四六级辅导1.jpg,upload/jinengxuqiu_英语四六级辅导2.jpg,upload/jinengxuqiu_英语四六级辅导3.jpg'
+WHERE xuqiubiaoti = '英语四六级辅导';
+
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_瑜伽入门教学1.jpg,upload/jinengxuqiu_瑜伽入门教学2.jpg,upload/jinengxuqiu_瑜伽入门教学3.jpg'
+WHERE xuqiubiaoti = '瑜伽入门教学';
+
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_视频剪辑教学1.jpg,upload/jinengxuqiu_视频剪辑教学2.jpg,upload/jinengxuqiu_视频剪辑教学3.jpg'
+WHERE xuqiubiaoti = '视频剪辑教学';
+
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_想学PR视频剪辑1.jpg,upload/jinengxuqiu_想学PR视频剪辑2.jpg,upload/jinengxuqiu_想学PR视频剪辑3.jpg'
+WHERE xuqiubiaoti = '想学PR视频剪辑';
+
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_想学配音和有声书录制1.jpg,upload/jinengxuqiu_想学配音和有声书录制2.jpg,upload/jinengxuqiu_想学配音和有声书录制3.jpg'
+WHERE xuqiubiaoti = '想学配音和有声书录制';
+
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_PPT设计美化求教1.jpg,upload/jinengxuqiu_PPT设计美化求教2.jpg,upload/jinengxuqiu_PPT设计美化求教3.jpg'
+WHERE xuqiubiaoti = 'PPT设计美化求教';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 给wanghao补充各分类的需求和技能，让雷达图更丰满 ==================== -->
+    <changeSet id="add-wanghao-multi-category-data" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+INSERT INTO jinengxuqiu (xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, sfsh, shhf, leixing, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum, addtime)
+VALUES
+('XQ20260428N04', '想学Python爬虫', '编程', 'upload/jinengxuqiu_Python数据分析教学1.jpg', '2026-04-15', 80, '希望有人能教我Python爬虫和数据采集技术', '对数据采集非常感兴趣，想系统学习Python爬虫框架Scrapy和数据清洗技术，有一定Python基础', 'wanghao', '王浩', '13290125678', '86', '是', '', '需求', 22, 5, '2026-04-15 10:30:00', 76, 0, 4.0, 8, '2026-04-15 02:30:00');
+
+INSERT INTO jinengxuqiu (xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, sfsh, shhf, leixing, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum, addtime)
+VALUES
+('XQ20260428N05', '求学Java后端开发', '编程', 'upload/jinengxuqiu_Python数据分析教学2.jpg', '2026-04-16', 90, '想深入学习Java后端开发和Spring框架', '正在转型做后端开发，需要有经验的人指导Spring Boot、MyBatis等技术栈', 'wanghao', '王浩', '13290125678', '86', '是', '', '需求', 18, 3, '2026-04-16 14:20:00', 65, 0, 4.5, 6, '2026-04-16 06:20:00');
+
+INSERT INTO jinengxuqiu (xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, sfsh, shhf, leixing, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum, addtime)
+VALUES
+('XQ20260428N06', '想学UI插画设计', '设计', 'upload/jinengxuqiu_PS海报设计1.jpg', '2026-04-17', 75, '希望学习数字插画和UI界面设计', '对Figma和Procreate工具感兴趣，想系统学习UI设计规范和插画绘制技巧', 'wanghao', '王浩', '13290125678', '86', '是', '', '需求', 28, 6, '2026-04-17 09:15:00', 82, 0, 4.0, 12, '2026-04-17 01:15:00');
+
+INSERT INTO jinengxuqiu (xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, sfsh, shhf, leixing, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum, addtime)
+VALUES
+('XQ20260428N07', '求学日语入门会话', '语言', 'upload/jinengxuqiu_英语口语陪练1.jpg', '2026-04-18', 65, '想从零开始学习日语日常会话', '计划去日本旅行，希望能掌握基本日语对话、点餐、问路等实用场景', 'wanghao', '王浩', '13290125678', '86', '是', '', '需求', 20, 4, '2026-04-18 16:40:00', 58, 0, 3.5, 7, '2026-04-18 08:40:00');
+
+INSERT INTO jinengxuqiu (xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, sfsh, shhf, leixing, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum, addtime)
+VALUES
+('XQ20260428N08', '想学英文学术写作', '语言', 'upload/jinengxuqiu_英语四六级辅导1.jpg', '2026-04-19', 85, '需要提升英文学术论文写作能力', '正在准备发表SCI论文，需要有人指导学术英语写作规范和润色技巧', 'wanghao', '王浩', '13290125678', '86', '是', '', '需求', 15, 2, '2026-04-19 11:25:00', 45, 0, 4.0, 5, '2026-04-19 03:25:00');
+
+INSERT INTO jinengxuqiu (xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, sfsh, shhf, leixing, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum, addtime)
+VALUES
+('XQ20260428N09', '想学烘焙甜点制作', '生活', 'upload/jinengxuqiu_瑜伽入门教学1.jpg', '2026-04-20', 55, '希望学习家庭烘焙和甜点制作', '对蛋糕、面包、饼干等烘焙制作感兴趣，想学习从配方到成品的完整流程', 'wanghao', '王浩', '13290125678', '86', '是', '', '需求', 32, 8, '2026-04-20 15:00:00', 95, 0, 4.5, 15, '2026-04-20 07:00:00');
+
+INSERT INTO jinengxuqiu (xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, sfsh, shhf, leixing, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum, addtime)
+VALUES
+('XQ20260428N10', '求学羽毛球技巧', '运动', 'upload/jinengxuqiu_瑜伽入门教学2.jpg', '2026-04-21', 50, '希望提升羽毛球双打配合技巧', '打了一年羽毛球但水平停滞不前，希望有高手指导步法、杀球和双打战术', 'wanghao', '王浩', '13290125678', '86', '是', '', '需求', 25, 5, '2026-04-21 18:30:00', 70, 0, 4.0, 9, '2026-04-21 10:30:00');
+
+INSERT INTO jinengxuqiu (xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, sfsh, shhf, leixing, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum, addtime)
+VALUES
+('XQ20260428S01', '家常菜烹饪教学', '生活', 'upload/jinengxuqiu_瑜伽入门教学3.jpg', '2026-04-14', 45, '擅长川菜和家常菜烹饪，可教授各类实用菜式', '从小跟家人学做菜，擅长红烧肉、水煮鱼、宫保鸡丁等经典菜品，可手把手教学', 'wanghao', '王浩', '13290125678', '86', '是', '', '技能', 30, 7, '2026-04-14 12:00:00', 88, 0, 4.5, 11, '2026-04-14 04:00:00');
+
+INSERT INTO jinengxuqiu (xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, sfsh, shhf, leixing, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum, addtime)
+VALUES
+('XQ20260428S02', 'Photoshop修图教学', '设计', 'upload/jinengxuqiu_PS海报设计2.jpg', '2026-04-13', 70, '精通PS图片处理和人像精修', '5年PS使用经验，擅长商业人像修图、产品图处理和海报合成设计', 'wanghao', '王浩', '13290125678', '86', '是', '', '技能', 38, 9, '2026-04-13 14:30:00', 110, 0, 4.5, 16, '2026-04-13 06:30:00');
+
+INSERT INTO jinengxuqiu (xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, sfsh, shhf, leixing, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum, addtime)
+VALUES
+('XQ20260428S03', 'Python数据分析教学', '编程', 'upload/jinengxuqiu_Python数据分析教学3.jpg', '2026-04-11', 85, '精通Python数据分析和可视化', '熟练使用Pandas、NumPy、Matplotlib进行数据处理与可视化分析，可系统教授数据分析全流程', 'wanghao', '王浩', '13290125678', '86', '是', '', '技能', 42, 10, '2026-04-11 09:00:00', 130, 0, 5.0, 20, '2026-04-11 01:00:00');
+
+INSERT INTO jinengxuqiu (xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, sfsh, shhf, leixing, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum, addtime)
+VALUES
+('XQ20260428S04', '考研数学辅导', '学习', 'upload/jinengxuqiu_考研数学辅导1.jpg', '2026-04-10', 95, '考研数学一高分经验分享与辅导', '考研数学一141分，熟悉高数、线代、概率论各章重难点，可制定针对性复习计划', 'wanghao', '王浩', '13290125678', '86', '是', '', '技能', 48, 12, '2026-04-10 08:00:00', 150, 0, 5.0, 25, '2026-04-10 00:00:00');
+
+INSERT INTO jinengxuqiu (xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, sfsh, shhf, leixing, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum, addtime)
+VALUES
+('XQ20260428S05', '素描水彩绘画教学', '艺术', 'upload/jinengxuqiu_吉他弹唱入门指导1.jpg', '2026-04-09', 60, '擅长素描和水彩画基础教学', '美术专业出身，4年绑画教学经验，可教素描基础、色彩搭配和水彩技法', 'wanghao', '王浩', '13290125678', '86', '是', '', '技能', 35, 8, '2026-04-09 16:00:00', 105, 0, 4.5, 14, '2026-04-09 08:00:00');
+
+INSERT INTO jinengxuqiu (xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, sfsh, shhf, leixing, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum, addtime)
+VALUES
+('XQ20260428S06', '游泳教学与体能训练', '运动', 'upload/jinengxuqiu_瑜伽入门教学1.jpg', '2026-04-08', 55, '持有游泳教练证，可教自由泳蛙泳', '大学游泳队成员，持有救生员证书，擅长自由泳和蛙泳教学，可做体能训练指导', 'wanghao', '王浩', '13290125678', '86', '是', '', '技能', 28, 6, '2026-04-08 10:00:00', 85, 0, 4.0, 10, '2026-04-08 02:00:00');
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 给wanghao补充5条与不同用户的聊天记录 ==================== -->
+    <changeSet id="add-wanghao-chat-records" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(18, 13, '陈曦你好！我看到你发布了考研英语辅导的技能，我最近正在备考，能聊聊你的教学方式吗？', 1, 1, '2026-04-26 09:15:00');
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(13, 18, '你好王浩！我主要针对阅读理解和写作两块，会根据你的基础定制复习计划，一般每周两次线上辅导。', 1, 1, '2026-04-26 09:18:00');
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(18, 13, '听起来很靠谱，我英语基础一般，阅读正确率大概60%左右，你觉得三个月能提升多少？', 1, 0, '2026-04-26 09:22:00');
+
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(14, 18, '王浩同学，我看到你的吉他弹唱技能评分很高，我女儿想学吉他，请问你接不接初中生的学员？', 1, 1, '2026-04-26 14:30:00');
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(18, 14, '李娜姐好！当然可以的，初中生学吉他正是好时候，我之前也教过几个初中生，学得都很快！', 1, 1, '2026-04-26 14:35:00');
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(14, 18, '太好了！那我们可以先约一节试听课吗？周末方便吗？', 1, 0, '2026-04-26 14:40:00');
+
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(18, 16, '周凯，上次你教我的水煮鱼做法我试了一下，味道确实不错！但是我觉得辣度还差点意思', 1, 1, '2026-04-27 11:00:00');
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(16, 18, '哈哈那你可以多加点干辣椒和花椒，下次我教你做正宗的麻辣火锅底料，保证够劲！', 1, 1, '2026-04-27 11:05:00');
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(18, 16, '好啊好啊！那我们这周五晚上继续交换教学？我这次准备教你几个更好听的和弦进行', 1, 0, '2026-04-27 11:10:00');
+
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(17, 18, '王浩你好，看到你发了Python数据分析教学的技能，我在做毕业设计需要用到数据可视化，能请教一下吗？', 1, 1, '2026-04-27 16:20:00');
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(18, 17, '刘敏你好！可以的，你毕设用的什么数据集？Matplotlib和Seaborn我都比较熟，可以帮你看看', 1, 1, '2026-04-27 16:25:00');
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(17, 18, '是一份电商销售数据，大概5万条记录，我想做一些趋势图和热力图，但是代码老是报错...', 1, 0, '2026-04-27 16:30:00');
+
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(18, 15, '强哥！上周你教的PR转场效果我用在vlog里了，好多朋友说剪辑水平进步好大', 1, 1, '2026-04-27 20:00:00');
+INSERT INTO chatmessage (uid, fid, content, format, isread, addtime) VALUES
+(15, 18, '真的吗哈哈！那说明你学得快啊，下次我再教你几个高级调色技巧，你的vlog画面感会更强', 1, 0, '2026-04-27 20:05:00');
+        ]]></sql>
+    </changeSet>
+
+    <!-- 修复jiaohuanshenqing中yonghuzhanghao和gongjirenzhanghao被弄反的记录 -->
+    <changeSet id="fix-jiaohuanshenqing-swapped-users" author="system">
+        <sql><![CDATA[
+            -- id=10: XQ20260401005实际发布者是zhangqiang，wanghao是申请人
+            UPDATE jiaohuanshenqing SET
+                yonghuzhanghao='zhangqiang', yonghuxingming='张强', shoujihao='13987654210',
+                gongjirenzhanghao='wanghao', gongjirenxingming='王浩', lianxifangshi='13290125678', xinyu='86'
+            WHERE id=10;
+
+            -- id=11: XQ20260401003实际发布者是chenxi，wanghao是申请人
+            UPDATE jiaohuanshenqing SET
+                yonghuzhanghao='chenxi', yonghuxingming='陈曦', shoujihao='13890126745',
+                gongjirenzhanghao='wanghao', gongjirenxingming='王浩', lianxifangshi='13290125678', xinyu='86'
+            WHERE id=11;
+
+            -- id=12: XQ20260401007实际发布者是liumin，wanghao是申请人
+            UPDATE jiaohuanshenqing SET
+                yonghuzhanghao='liumin', yonghuxingming='刘敏', shoujihao='15178903456',
+                gongjirenzhanghao='wanghao', gongjirenxingming='王浩', lianxifangshi='13290125678', xinyu='86'
+            WHERE id=12;
+
+            -- id=13: XQ20260401008实际发布者是wanghao，zhoukai是申请人
+            UPDATE jiaohuanshenqing SET
+                yonghuzhanghao='wanghao', yonghuxingming='王浩', shoujihao='13290125678',
+                gongjirenzhanghao='zhoukai', gongjirenxingming='周凯', lianxifangshi='13812348756', xinyu='75'
+            WHERE id=13;
+
+            -- id=14: XQ20260401008实际发布者是wanghao，lina是申请人
+            UPDATE jiaohuanshenqing SET
+                yonghuzhanghao='wanghao', yonghuxingming='王浩', shoujihao='13290125678',
+                gongjirenzhanghao='lina', gongjirenxingming='李娜', lianxifangshi='15187653241', xinyu='78'
+            WHERE id=14;
+
+            -- id=15: XQ20260425001实际发布者是wanghao，zhaoyang是申请人
+            UPDATE jiaohuanshenqing SET
+                yonghuzhanghao='wanghao', yonghuxingming='王浩', shoujihao='13290125678',
+                gongjirenzhanghao='zhaoyang', gongjirenxingming='赵阳', lianxifangshi='13812046578', xinyu='88'
+            WHERE id=15;
+
+            -- id=16: XQ20260425002实际发布者是wanghao，wufang是申请人
+            UPDATE jiaohuanshenqing SET
+                yonghuzhanghao='wanghao', yonghuxingming='王浩', shoujihao='13290125678',
+                gongjirenzhanghao='wufang', gongjirenxingming='吴芳', lianxifangshi='15065437821', xinyu='92'
+            WHERE id=16;
+        ]]></sql>
+    </changeSet>
+
+    <!-- 删除重复的申请记录 -->
+    <changeSet id="fix-jiaohuanshenqing-duplicates" author="system">
+        <sql><![CDATA[
+            -- id=18: 与id=17完全重复(同一技能XQ20260401005，同一申请人wanghao)
+            DELETE FROM jiaohuanshenqing WHERE id=18;
+            -- id=9: 与id=1完全重复(同一技能XQ20260401001，同一申请人zhangqiang)
+            DELETE FROM jiaohuanshenqing WHERE id=9;
+        ]]></sql>
+    </changeSet>
+
+    <!-- 修复friend表type字段：聊天记录模块查询type=2，但所有记录都是type=1 -->
+    <changeSet id="fix-friend-type-for-chat" author="system">
+        <sql><![CDATA[
+            UPDATE friend SET type=2 WHERE type=1;
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 技能交换流程改造：支持双向确认 ==================== -->
+
+    <changeSet id="add-exchange-workflow-columns" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+ALTER TABLE jiaohuanshenqing
+    ADD COLUMN xuanzejinengid BIGINT DEFAULT NULL COMMENT '被选中的技能ID（技能发布者从申请人的技能中选择）',
+    ADD COLUMN xuanzejinengbiaoti VARCHAR(200) DEFAULT NULL COMMENT '被选中的技能标题';
+
+ALTER TABLE jiaohuanjilu
+    ADD COLUMN fabuzhetigong VARCHAR(200) DEFAULT NULL COMMENT '技能发布者提供的技能',
+    ADD COLUMN shenqingrentigong VARCHAR(200) DEFAULT NULL COMMENT '申请人提供的技能';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="migrate-old-sfsh-to-new-status" author="system">
+        <sql>UPDATE jiaohuanshenqing SET sfsh='已完成' WHERE sfsh='是'</sql>
+    </changeSet>
+
+</databaseChangeLog>

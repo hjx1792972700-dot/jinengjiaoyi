@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- ==================== 一、修复2026-04-26新增记录中残留的旧格式账号 ==================== -->
+
+    <changeSet id="fix-26apr-jiaohuanjilu-accounts" author="system">
+        <comment>2026-04-26插入的交换记录仍使用旧数字账号，需更正为修正后的拼音账号</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE jiaohuanjilu SET yonghuzhanghao='zhangqiang', shoujihao='13987654210'
+  WHERE yonghuzhanghao='11' AND yonghuxingming='张强';
+UPDATE jiaohuanjilu SET yonghuzhanghao='chenxi', shoujihao='13890126745'
+  WHERE yonghuzhanghao='14' AND yonghuxingming='陈曦';
+UPDATE jiaohuanjilu SET yonghuzhanghao='lina', shoujihao='15187653241'
+  WHERE yonghuzhanghao='12' AND yonghuxingming='李娜';
+UPDATE jiaohuanjilu SET yonghuzhanghao='zhoukai', shoujihao='13812348756'
+  WHERE yonghuzhanghao='17' AND yonghuxingming='周凯';
+UPDATE jiaohuanjilu SET yonghuzhanghao='liumin', shoujihao='15178903456'
+  WHERE yonghuzhanghao='16' AND yonghuxingming='刘敏';
+UPDATE jiaohuanjilu SET yonghuzhanghao='wufang', shoujihao='15065437821'
+  WHERE yonghuzhanghao='18' AND yonghuxingming='吴芳';
+UPDATE jiaohuanjilu SET yonghuzhanghao='zhaoyang', shoujihao='13812046578'
+  WHERE yonghuzhanghao='15' AND yonghuxingming='赵阳';
+
+UPDATE jiaohuanjilu SET gongjirenzhanghao='wufang', gongjirenxingming='吴芳', lianxifangshi='15065437821'
+  WHERE gongjirenzhanghao='18';
+UPDATE jiaohuanjilu SET gongjirenzhanghao='zhoukai', gongjirenxingming='周凯', lianxifangshi='13812348756'
+  WHERE gongjirenzhanghao='17';
+UPDATE jiaohuanjilu SET gongjirenzhanghao='liumin', gongjirenxingming='刘敏', lianxifangshi='15178903456'
+  WHERE gongjirenzhanghao='16';
+UPDATE jiaohuanjilu SET gongjirenzhanghao='zhaoyang', gongjirenxingming='赵阳', lianxifangshi='13812046578'
+  WHERE gongjirenzhanghao='15';
+UPDATE jiaohuanjilu SET gongjirenzhanghao='chenxi', gongjirenxingming='陈曦', lianxifangshi='13890126745'
+  WHERE gongjirenzhanghao='14';
+UPDATE jiaohuanjilu SET gongjirenzhanghao='lina', gongjirenxingming='李娜', lianxifangshi='15187653241'
+  WHERE gongjirenzhanghao='12';
+UPDATE jiaohuanjilu SET gongjirenzhanghao='zhangqiang', gongjirenxingming='张强', lianxifangshi='13987654210'
+  WHERE gongjirenzhanghao='11';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="fix-26apr-pingjiafankui-accounts" author="system">
+        <comment>2026-04-26插入的评价记录仍使用旧数字账号</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE pingjiafankui SET yonghuzhanghao='zhangqiang', shoujihao='13987654210'
+  WHERE yonghuzhanghao='11' AND yonghuxingming='张强';
+UPDATE pingjiafankui SET yonghuzhanghao='chenxi', shoujihao='13890126745'
+  WHERE yonghuzhanghao='14' AND yonghuxingming='陈曦';
+UPDATE pingjiafankui SET yonghuzhanghao='lina', shoujihao='15187653241'
+  WHERE yonghuzhanghao='12' AND yonghuxingming='李娜';
+UPDATE pingjiafankui SET yonghuzhanghao='zhoukai', shoujihao='13812348756'
+  WHERE yonghuzhanghao='17' AND yonghuxingming='周凯';
+UPDATE pingjiafankui SET yonghuzhanghao='liumin', shoujihao='15178903456'
+  WHERE yonghuzhanghao='16' AND yonghuxingming='刘敏';
+UPDATE pingjiafankui SET yonghuzhanghao='wufang', shoujihao='15065437821'
+  WHERE yonghuzhanghao='18' AND yonghuxingming='吴芳';
+UPDATE pingjiafankui SET yonghuzhanghao='zhaoyang', shoujihao='13812046578'
+  WHERE yonghuzhanghao='15' AND yonghuxingming='赵阳';
+
+UPDATE pingjiafankui SET jiaohuanrenzhanghao='wufang', jiaohuanrenxingming='吴芳', lianxifangshi='15065437821'
+  WHERE jiaohuanrenzhanghao='18';
+UPDATE pingjiafankui SET jiaohuanrenzhanghao='zhoukai', jiaohuanrenxingming='周凯', lianxifangshi='13812348756'
+  WHERE jiaohuanrenzhanghao='17';
+UPDATE pingjiafankui SET jiaohuanrenzhanghao='liumin', jiaohuanrenxingming='刘敏', lianxifangshi='15178903456'
+  WHERE jiaohuanrenzhanghao='16';
+UPDATE pingjiafankui SET jiaohuanrenzhanghao='zhaoyang', jiaohuanrenxingming='赵阳', lianxifangshi='13812046578'
+  WHERE jiaohuanrenzhanghao='15';
+UPDATE pingjiafankui SET jiaohuanrenzhanghao='chenxi', jiaohuanrenxingming='陈曦', lianxifangshi='13890126745'
+  WHERE jiaohuanrenzhanghao='14';
+UPDATE pingjiafankui SET jiaohuanrenzhanghao='lina', jiaohuanrenxingming='李娜', lianxifangshi='15187653241'
+  WHERE jiaohuanrenzhanghao='12';
+UPDATE pingjiafankui SET jiaohuanrenzhanghao='zhangqiang', jiaohuanrenxingming='张强', lianxifangshi='13987654210'
+  WHERE jiaohuanrenzhanghao='11';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 二、修复重复/错配图片 ==================== -->
+
+    <changeSet id="fix-jinengxuqiu-duplicate-images" author="system">
+        <comment>每条技能/需求使用与标题匹配的专属图片，消除图片复用</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_Python爬虫入门1.jpg'
+  WHERE xuqiubianhao = 'XQ20260428N04';
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_Java后端开发1.jpg'
+  WHERE xuqiubianhao = 'XQ20260428N05';
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_UI插画设计1.jpg'
+  WHERE xuqiubianhao = 'XQ20260428N06';
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_日语入门会话1.jpg'
+  WHERE xuqiubianhao = 'XQ20260428N07';
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_英文学术写作1.jpg'
+  WHERE xuqiubianhao = 'XQ20260428N08';
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_烘焙甜点制作1.jpg'
+  WHERE xuqiubianhao = 'XQ20260428N09';
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_羽毛球技巧提升1.jpg'
+  WHERE xuqiubianhao = 'XQ20260428N10';
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_家常菜烹饪1.jpg'
+  WHERE xuqiubianhao = 'XQ20260428S01';
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_Photoshop修图1.jpg'
+  WHERE xuqiubianhao = 'XQ20260428S02';
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_素描水彩绘画1.jpg'
+  WHERE xuqiubianhao = 'XQ20260428S05';
+UPDATE jinengxuqiu SET fengmian = 'upload/jinengxuqiu_游泳体能训练1.jpg'
+  WHERE xuqiubianhao = 'XQ20260428S06';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="fix-jiaohuanjilu-duplicate-images" author="system">
+        <comment>2026-04-26插入的交换记录复用了初始记录的图片，更换为专属图片</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE jiaohuanjilu SET gongjitupian = 'upload/jiaohuanjilu_Python编程入门1.jpg'
+  WHERE biaoti = 'Python编程入门';
+UPDATE jiaohuanjilu SET gongjitupian = 'upload/jiaohuanjilu_PPT设计技巧1.jpg'
+  WHERE biaoti = 'PPT设计技巧';
+UPDATE jiaohuanjilu SET gongjitupian = 'upload/jiaohuanjilu_篮球训练指导1.jpg'
+  WHERE biaoti = '篮球训练指导';
+UPDATE jiaohuanjilu SET gongjitupian = 'upload/jiaohuanjilu_书法入门教学1.jpg'
+  WHERE biaoti = '书法入门教学';
+UPDATE jiaohuanjilu SET gongjitupian = 'upload/jiaohuanjilu_视频剪辑教程1.jpg'
+  WHERE biaoti = '视频剪辑教程';
+UPDATE jiaohuanjilu SET gongjitupian = 'upload/jiaohuanjilu_英语口语练习1.jpg'
+  WHERE biaoti = '英语口语练习';
+UPDATE jiaohuanjilu SET gongjitupian = 'upload/jiaohuanjilu_数学建模辅导1.jpg'
+  WHERE biaoti = '数学建模辅导';
+UPDATE jiaohuanjilu SET gongjitupian = 'upload/jiaohuanjilu_手绘插画教学1.jpg'
+  WHERE biaoti = '手绘插画教学';
+UPDATE jiaohuanjilu SET gongjitupian = 'upload/jiaohuanjilu_数据分析入门1.jpg'
+  WHERE biaoti = '数据分析入门';
+UPDATE jiaohuanjilu SET gongjitupian = 'upload/jiaohuanjilu_健身计划制定1.jpg'
+  WHERE biaoti = '健身计划制定';
+UPDATE jiaohuanjilu SET gongjitupian = 'upload/jiaohuanjilu_钢琴基础教学1.jpg'
+  WHERE biaoti = '钢琴基础教学';
+UPDATE jiaohuanjilu SET gongjitupian = 'upload/jiaohuanjilu_UI设计基础1.jpg'
+  WHERE biaoti = 'UI设计基础';
+UPDATE jiaohuanjilu SET gongjitupian = 'upload/jiaohuanjilu_烹饪技巧分享1.jpg'
+  WHERE biaoti = '烹饪技巧分享';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="fix-pingjiafankui-duplicate-images" author="system">
+        <comment>2026-04-26插入的评价记录复用了初始记录的图片，更换为专属图片</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE pingjiafankui SET huifutupian = 'upload/pingjiafankui_Python编程入门1.jpg'
+  WHERE biaoti = 'Python编程入门';
+UPDATE pingjiafankui SET huifutupian = 'upload/pingjiafankui_PPT设计技巧1.jpg'
+  WHERE biaoti = 'PPT设计技巧';
+UPDATE pingjiafankui SET huifutupian = 'upload/pingjiafankui_篮球训练指导1.jpg'
+  WHERE biaoti = '篮球训练指导';
+UPDATE pingjiafankui SET huifutupian = 'upload/pingjiafankui_书法入门教学1.jpg'
+  WHERE biaoti = '书法入门教学';
+UPDATE pingjiafankui SET huifutupian = 'upload/pingjiafankui_视频剪辑教程1.jpg'
+  WHERE biaoti = '视频剪辑教程';
+UPDATE pingjiafankui SET huifutupian = 'upload/pingjiafankui_英语口语练习1.jpg'
+  WHERE biaoti = '英语口语练习';
+UPDATE pingjiafankui SET huifutupian = 'upload/pingjiafankui_数学建模辅导1.jpg'
+  WHERE biaoti = '数学建模辅导';
+UPDATE pingjiafankui SET huifutupian = 'upload/pingjiafankui_手绘插画教学1.jpg'
+  WHERE biaoti = '手绘插画教学';
+UPDATE pingjiafankui SET huifutupian = 'upload/pingjiafankui_数据分析入门1.jpg'
+  WHERE biaoti = '数据分析入门';
+UPDATE pingjiafankui SET huifutupian = 'upload/pingjiafankui_健身计划制定1.jpg'
+  WHERE biaoti = '健身计划制定';
+UPDATE pingjiafankui SET huifutupian = 'upload/pingjiafankui_钢琴基础教学1.jpg'
+  WHERE biaoti = '钢琴基础教学';
+UPDATE pingjiafankui SET huifutupian = 'upload/pingjiafankui_UI设计基础1.jpg'
+  WHERE biaoti = 'UI设计基础';
+UPDATE pingjiafankui SET huifutupian = 'upload/pingjiafankui_烹饪技巧分享1.jpg'
+  WHERE biaoti = '烹饪技巧分享';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 三、为已完成的交换申请填充"选中技能"字段 ==================== -->
+
+    <changeSet id="fill-jiaohuanshenqing-selected-skill" author="system">
+        <comment>为已完成的交换申请补充发布者从申请人技能中选中的记录</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE jiaohuanshenqing SET xuanzejinengid = 5, xuanzejinengbiaoti = '短视频剪辑'
+  WHERE id = 1 AND sfsh = '已完成';
+UPDATE jiaohuanshenqing SET xuanzejinengid = 5, xuanzejinengbiaoti = '短视频剪辑'
+  WHERE id = 2 AND sfsh = '已完成';
+UPDATE jiaohuanshenqing SET xuanzejinengid = 4, xuanzejinengbiaoti = '手工DIY教学'
+  WHERE id = 3 AND sfsh = '已完成';
+UPDATE jiaohuanshenqing SET xuanzejinengid = 8, xuanzejinengbiaoti = '吉他弹唱教学'
+  WHERE id = 4 AND sfsh = '已完成';
+UPDATE jiaohuanshenqing SET xuanzejinengid = 1, xuanzejinengbiaoti = '文言文翻译'
+  WHERE id = 5 AND sfsh = '已完成';
+UPDATE jiaohuanshenqing SET xuanzejinengid = 8, xuanzejinengbiaoti = '吉他弹唱教学'
+  WHERE id = 6 AND sfsh = '已完成';
+UPDATE jiaohuanshenqing SET xuanzejinengid = 2, xuanzejinengbiaoti = '摄影技巧教学'
+  WHERE id = 7 AND sfsh = '已完成';
+UPDATE jiaohuanshenqing SET xuanzejinengid = 5, xuanzejinengbiaoti = '短视频剪辑'
+  WHERE id = 8 AND sfsh = '已完成';
+
+UPDATE jiaohuanshenqing SET xuanzejinengid = 8, xuanzejinengbiaoti = '吉他弹唱教学'
+  WHERE id = 10 AND sfsh = '已完成';
+UPDATE jiaohuanshenqing SET xuanzejinengbiaoti = '英语口语陪练'
+  WHERE id = 11 AND sfsh = '已完成';
+UPDATE jiaohuanshenqing SET xuanzejinengid = 8, xuanzejinengbiaoti = '吉他弹唱教学'
+  WHERE id = 12 AND sfsh = '已完成';
+UPDATE jiaohuanshenqing SET xuanzejinengid = 6, xuanzejinengbiaoti = '硬笔书法'
+  WHERE id = 13 AND sfsh = '已完成';
+UPDATE jiaohuanshenqing SET xuanzejinengid = 4, xuanzejinengbiaoti = '手工DIY教学'
+  WHERE id = 14 AND sfsh = '已完成';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 四、为交换记录填充双向技能字段 ==================== -->
+
+    <changeSet id="fill-jiaohuanjilu-bidirectional" author="system">
+        <comment>为所有交换记录补充发布者提供的技能和申请人提供的技能</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE jiaohuanjilu SET fabuzhetigong = '文言文翻译', shenqingrentigong = '短视频剪辑' WHERE id = 1;
+UPDATE jiaohuanjilu SET fabuzhetigong = '摄影技巧教学', shenqingrentigong = '短视频剪辑' WHERE id = 2;
+UPDATE jiaohuanjilu SET fabuzhetigong = '配音技巧教学', shenqingrentigong = '手工DIY教学' WHERE id = 3;
+UPDATE jiaohuanjilu SET fabuzhetigong = '手工DIY教学', shenqingrentigong = '吉他弹唱教学' WHERE id = 4;
+UPDATE jiaohuanjilu SET fabuzhetigong = '短视频剪辑', shenqingrentigong = '文言文翻译' WHERE id = 5;
+UPDATE jiaohuanjilu SET fabuzhetigong = '硬笔书法', shenqingrentigong = '吉他弹唱教学' WHERE id = 6;
+UPDATE jiaohuanjilu SET fabuzhetigong = 'PPT美化设计', shenqingrentigong = '摄影技巧教学' WHERE id = 7;
+UPDATE jiaohuanjilu SET fabuzhetigong = '吉他弹唱教学', shenqingrentigong = '短视频剪辑' WHERE id = 8;
+
+UPDATE jiaohuanjilu SET fabuzhetigong = 'Python编程入门', shenqingrentigong = '摄影技巧教学'
+  WHERE biaoti = 'Python编程入门';
+UPDATE jiaohuanjilu SET fabuzhetigong = 'PPT设计技巧', shenqingrentigong = '手工DIY教学'
+  WHERE biaoti = 'PPT设计技巧';
+UPDATE jiaohuanjilu SET fabuzhetigong = '篮球训练指导', shenqingrentigong = '文言文翻译'
+  WHERE biaoti = '篮球训练指导';
+UPDATE jiaohuanjilu SET fabuzhetigong = '书法入门教学', shenqingrentigong = '配音技巧教学'
+  WHERE biaoti = '书法入门教学';
+UPDATE jiaohuanjilu SET fabuzhetigong = '视频剪辑教程', shenqingrentigong = '手工DIY教学'
+  WHERE biaoti = '视频剪辑教程';
+UPDATE jiaohuanjilu SET fabuzhetigong = '英语口语练习', shenqingrentigong = '硬笔书法'
+  WHERE biaoti = '英语口语练习';
+UPDATE jiaohuanjilu SET fabuzhetigong = '数学建模辅导', shenqingrentigong = '摄影技巧教学'
+  WHERE biaoti = '数学建模辅导';
+UPDATE jiaohuanjilu SET fabuzhetigong = '手绘插画教学', shenqingrentigong = '短视频剪辑'
+  WHERE biaoti = '手绘插画教学';
+UPDATE jiaohuanjilu SET fabuzhetigong = '数据分析入门', shenqingrentigong = 'PPT美化设计'
+  WHERE biaoti = '数据分析入门';
+UPDATE jiaohuanjilu SET fabuzhetigong = '健身计划制定', shenqingrentigong = '文言文翻译'
+  WHERE biaoti = '健身计划制定';
+UPDATE jiaohuanjilu SET fabuzhetigong = '钢琴基础教学', shenqingrentigong = '配音技巧教学'
+  WHERE biaoti = '钢琴基础教学';
+UPDATE jiaohuanjilu SET fabuzhetigong = 'UI设计基础', shenqingrentigong = '短视频剪辑'
+  WHERE biaoti = 'UI设计基础';
+UPDATE jiaohuanjilu SET fabuzhetigong = '烹饪技巧分享', shenqingrentigong = '手工DIY教学'
+  WHERE biaoti = '烹饪技巧分享';
+
+UPDATE jiaohuanjilu SET fabuzhetigong = '短视频剪辑', shenqingrentigong = '吉他弹唱教学'
+  WHERE biaoti = '短视频剪辑' AND yonghuzhanghao = 'wanghao';
+UPDATE jiaohuanjilu SET fabuzhetigong = '配音技巧教学', shenqingrentigong = '英语口语陪练'
+  WHERE biaoti = '配音技巧教学' AND yonghuzhanghao = 'wanghao';
+UPDATE jiaohuanjilu SET fabuzhetigong = 'PPT美化设计', shenqingrentigong = '吉他弹唱教学'
+  WHERE biaoti = 'PPT美化设计' AND yonghuzhanghao = 'wanghao';
+UPDATE jiaohuanjilu SET fabuzhetigong = '吉他弹唱教学', shenqingrentigong = '硬笔书法'
+  WHERE biaoti = '吉他弹唱教学' AND yonghuzhanghao = 'zhoukai';
+UPDATE jiaohuanjilu SET fabuzhetigong = '吉他弹唱教学', shenqingrentigong = '手工DIY教学'
+  WHERE biaoti = '吉他弹唱教学' AND yonghuzhanghao = 'lina';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 五、更新旧会员充值记录的新字段 ==================== -->
+
+    <changeSet id="fill-huiyuanchongzhi-new-fields" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE huiyuanchongzhi SET zhuangtai='已支付', taocan='月度会员', zhifufangshi='微信支付' WHERE id = 1;
+UPDATE huiyuanchongzhi SET zhuangtai='已支付', taocan='季度会员', zhifufangshi='支付宝' WHERE id = 2;
+UPDATE huiyuanchongzhi SET zhuangtai='已支付', taocan='月度会员', zhifufangshi='微信支付' WHERE id = 3;
+UPDATE huiyuanchongzhi SET zhuangtai='已支付', taocan='年度会员', zhifufangshi='支付宝' WHERE id = 4;
+UPDATE huiyuanchongzhi SET zhuangtai='已支付', taocan='季度会员', zhifufangshi='微信支付' WHERE id = 5;
+UPDATE huiyuanchongzhi SET zhuangtai='已支付', taocan='年度会员', zhifufangshi='支付宝' WHERE id = 6;
+UPDATE huiyuanchongzhi SET zhuangtai='已支付', taocan='月度会员', zhifufangshi='微信支付' WHERE id = 7;
+UPDATE huiyuanchongzhi SET zhuangtai='已支付', taocan='季度会员', zhifufangshi='支付宝' WHERE id = 8;
+
+UPDATE huiyuanchongzhi SET zhuangtai='已支付', taocan='月度会员', zhifufangshi='微信支付'
+  WHERE chongzhibianhao = 'CZ20260415018';
+UPDATE huiyuanchongzhi SET zhuangtai='已支付', taocan='季度会员', zhifufangshi='支付宝'
+  WHERE chongzhibianhao = 'CZ20260420018';
+UPDATE huiyuanchongzhi SET zhuangtai='已支付', taocan='年度会员', zhifufangshi='微信支付'
+  WHERE chongzhibianhao = 'CZ20260425018';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 六、新增各用户的技能发布 ==================== -->
+
+    <changeSet id="add-new-user-skills" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO jinengxuqiu (addtime, xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, leixing, sfsh, shhf, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum) VALUES
+('2026-04-28 09:00:00', 'JN20260429001', '考研政治辅导', '学习', 'upload/jinengxuqiu_考研政治辅导1.jpg', '2026-04-28', 70, '政治学专业，考研政治85分，系统辅导马原、毛概、史纲和时政',
+ '<p>政治学专业大三学生，考研政治85分：</p><ul><li>马克思主义基本原理重点梳理</li><li>毛泽东思想和中国特色社会主义理论体系</li><li>中国近现代史纲要时间线整理</li><li>时事政治分析与答题模板</li></ul><p>提供系统复习计划和真题讲解，可一对一线上辅导。</p>',
+ 'zhaoyang', '赵阳', '13812046578', 88, '技能', '是', '', 12, 2, '2026-04-28 10:00:00', 68, 1, 4.3, 5),
+
+('2026-04-27 14:00:00', 'JN20260429002', '毛笔书法国画入门', '艺术', 'upload/jinengxuqiu_毛笔书法国画1.jpg', '2026-04-27', 55, '自幼学习毛笔书法和中国画，获省级书法比赛二等奖',
+ '<p>十年书法功底，擅长楷书和行书：</p><ul><li>毛笔基本笔法和执笔姿势</li><li>楷书入门与间架结构</li><li>国画基础：山水、花鸟</li><li>书画欣赏与审美提升</li></ul><p>每次课程90分钟，含理论讲解和实操练习。提供练习用纸笔。</p>',
+ 'zhoukai', '周凯', '13812348756', 75, '技能', '是', '', 18, 3, '2026-04-27 15:00:00', 82, 2, 4.6, 7),
+
+('2026-04-26 11:00:00', 'JN20260429003', 'Figma界面设计', '设计', 'upload/jinengxuqiu_Figma界面设计1.jpg', '2026-04-26', 80, '数字媒体专业，精通Figma和Sketch，完成多个实际项目',
+ '<p>数字媒体设计专业大三，擅长UI/UX设计：</p><ul><li>Figma工具全面教学</li><li>界面设计规范与组件库搭建</li><li>交互原型制作</li><li>设计思维与用户体验</li></ul><p>适合想入门UI设计或者需要做课程项目的同学，线上协作教学。</p>',
+ 'liumin', '刘敏', '15178903456', 95, '技能', '是', '', 22, 4, '2026-04-26 12:00:00', 96, 3, 4.7, 9);
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 七、新增各用户的技能需求 ==================== -->
+
+    <changeSet id="add-new-user-needs" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO jinengxuqiu (addtime, xuqiubianhao, xuqiubiaoti, jinengfenlei, fengmian, fabushijian, xuqiufeiyong, xuqiumiaoshu, xuqiuxiangqing, yonghuzhanghao, yonghuxingming, shoujihao, xinyuzhishu, leixing, sfsh, shhf, thumbsupnum, crazilynum, clicktime, clicknum, discussnum, totalscore, storeupnum) VALUES
+('2026-04-28 14:00:00', 'XQ20260429N01', '想学街舞基础', '运动', 'upload/jinengxuqiu_街舞基础1.jpg', '2026-04-28', 60, '想学Hip-hop和Breaking基础动作',
+ '<p>对街舞很感兴趣，想从零开始学习：</p><ul><li>Hip-hop基础律动</li><li>Breaking入门地板动作</li><li>Popping基础肌肉控制</li><li>简单编舞和节奏感训练</li></ul><p>可以用考研政治辅导或文言文翻译来交换，每周末有空。</p>',
+ 'zhaoyang', '赵阳', '13812046578', 88, '需求', '是', '', 8, 1, '2026-04-28 15:00:00', 45, 0, 0, 3),
+
+('2026-04-27 16:00:00', 'XQ20260429N02', '求学水彩插画', '艺术', 'upload/jinengxuqiu_水彩插画1.jpg', '2026-04-27', 65, '想系统学习水彩画技法，从基础调色到完整作品创作',
+ '<p>对水彩画一直很向往：</p><ul><li>水彩基础工具和材料选择</li><li>调色技巧和色彩搭配</li><li>基础技法（湿画法、干画法）</li><li>花卉和风景主题绘制</li></ul><p>可以提供考研数学辅导或配音教学作为交换。</p>',
+ 'chenxi', '陈曦', '13890126745', 85, '需求', '是', '', 15, 2, '2026-04-27 17:00:00', 62, 0, 0, 6),
+
+('2026-04-26 15:00:00', 'XQ20260429N03', '想学日式料理', '生活', 'upload/jinengxuqiu_日式料理1.jpg', '2026-04-26', 50, '喜欢日本料理，想学寿司、拉面和天妇罗的制作方法',
+ '<p>想学习正宗日式料理：</p><ul><li>手握寿司和卷寿司制作</li><li>日式拉面汤底调制</li><li>天妇罗炸制技巧</li><li>日式便当摆盘艺术</li></ul><p>可以提供Python编程或短视频剪辑教学作为交换。</p>',
+ 'zhangqiang', '张强', '13987654210', 90, '需求', '是', '', 20, 3, '2026-04-26 16:00:00', 78, 0, 0, 8),
+
+('2026-04-28 10:00:00', 'XQ20260429N04', '想学羽毛球双打', '运动', 'upload/jinengxuqiu_羽毛球双打1.jpg', '2026-04-28', 45, '打了半年羽毛球，双打配合和战术急需提升',
+ '<p>希望提升羽毛球水平，尤其是双打技巧：</p><ul><li>双打站位和轮转配合</li><li>发球和接发球战术</li><li>网前球处理和封网</li><li>后场杀球和防守技巧</li></ul><p>可以教Figma界面设计或PPT设计作为交换，周末有空。</p>',
+ 'liumin', '刘敏', '15178903456', 95, '需求', '是', '', 10, 1, '2026-04-28 11:00:00', 52, 0, 0, 4);
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 八、新增交换申请（展示新工作流各状态） ==================== -->
+
+    <changeSet id="add-new-workflow-applications" author="system">
+        <comment>展示新工作流的全部状态：待审核、待确认、已完成、否</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO jiaohuanshenqing (addtime, xuqiubianhao, yonghuzhanghao, yonghuxingming, shoujihao,
+  xuqiubiaoti, jinengfenlei, xuqiufeiyong, fengmian, shenqingshijian, shenqingbeizhu,
+  gongjirenzhanghao, gongjirenxingming, lianxifangshi, xinyu, sfsh, shhf,
+  xuanzejinengid, xuanzejinengbiaoti) VALUES
+('2026-04-28 11:00:00', 'JN20260427001', 'zhangqiang', '张强', '13987654210',
+ 'Python数据分析教学', '编程', 80, 'upload/jinengxuqiu_Python数据分析教学1.jpg',
+ '2026-04-28 11:00:00', '对数据分析很感兴趣，毕设需要用pandas处理数据。可以用文言文翻译或考研政治辅导来交换',
+ 'zhaoyang', '赵阳', '13812046578', 88, '待确认', '',
+ NULL, '考研政治辅导');
+
+INSERT INTO jiaohuanshenqing (addtime, xuqiubianhao, yonghuzhanghao, yonghuxingming, shoujihao,
+  xuqiubiaoti, jinengfenlei, xuqiufeiyong, fengmian, shenqingshijian, shenqingbeizhu,
+  gongjirenzhanghao, gongjirenxingming, lianxifangshi, xinyu, sfsh, shhf) VALUES
+('2026-04-29 09:00:00', 'JN20260427002', 'lina', '李娜', '15187653241',
+ '吉他弹唱入门指导', '生活', 50, 'upload/jinengxuqiu_吉他弹唱入门指导1.jpg',
+ '2026-04-29 09:00:00', '一直想学吉他弹唱，可以提供考研数学辅导或普通话训练作为交换',
+ 'chenxi', '陈曦', '13890126745', 85, '待审核', '');
+
+INSERT INTO jiaohuanshenqing (addtime, xuqiubianhao, yonghuzhanghao, yonghuxingming, shoujihao,
+  xuqiubiaoti, jinengfenlei, xuqiufeiyong, fengmian, shenqingshijian, shenqingbeizhu,
+  gongjirenzhanghao, gongjirenxingming, lianxifangshi, xinyu, sfsh, shhf,
+  xuanzejinengid, xuanzejinengbiaoti) VALUES
+('2026-04-28 15:00:00', 'JN20260429001', 'zhaoyang', '赵阳', '13812046578',
+ '考研政治辅导', '学习', 70, 'upload/jinengxuqiu_考研政治辅导1.jpg',
+ '2026-04-28 15:00:00', '下学期要考研，政治科目急需辅导，可以教毛笔书法作为回报',
+ 'zhoukai', '周凯', '13812348756', 75, '已完成', '',
+ NULL, '毛笔书法国画入门');
+
+INSERT INTO jiaohuanshenqing (addtime, xuqiubianhao, yonghuzhanghao, yonghuxingming, shoujihao,
+  xuqiubiaoti, jinengfenlei, xuqiufeiyong, fengmian, shenqingshijian, shenqingbeizhu,
+  gongjirenzhanghao, gongjirenxingming, lianxifangshi, xinyu, sfsh, shhf,
+  xuanzejinengid, xuanzejinengbiaoti) VALUES
+('2026-04-27 10:00:00', 'JN20260429003', 'liumin', '刘敏', '15178903456',
+ 'Figma界面设计', '设计', 80, 'upload/jinengxuqiu_Figma界面设计1.jpg',
+ '2026-04-27 10:00:00', '毕设需要做APP界面设计，想系统学习Figma。可以提供PS海报设计技能交换',
+ 'wufang', '吴芳', '15065437821', 92, '已完成', '',
+ NULL, 'PS海报设计');
+
+INSERT INTO jiaohuanshenqing (addtime, xuqiubianhao, yonghuzhanghao, yonghuxingming, shoujihao,
+  xuqiubiaoti, jinengfenlei, xuqiufeiyong, fengmian, shenqingshijian, shenqingbeizhu,
+  gongjirenzhanghao, gongjirenxingming, lianxifangshi, xinyu, sfsh, shhf) VALUES
+('2026-04-27 16:00:00', 'JN20260429002', 'zhoukai', '周凯', '13812348756',
+ '毛笔书法国画入门', '艺术', 55, 'upload/jinengxuqiu_毛笔书法国画1.jpg',
+ '2026-04-27 16:00:00', '想学国画基础做社团活动宣传用，可以教Python编程入门',
+ 'zhangqiang', '张强', '13987654210', 90, '否', '时间冲突，暂时无法安排教学');
+
+INSERT INTO jiaohuanshenqing (addtime, xuqiubianhao, yonghuzhanghao, yonghuxingming, shoujihao,
+  xuqiubiaoti, jinengfenlei, xuqiufeiyong, fengmian, shenqingshijian, shenqingbeizhu,
+  gongjirenzhanghao, gongjirenxingming, lianxifangshi, xinyu, sfsh, shhf) VALUES
+('2026-04-29 08:00:00', 'JN20260427003', 'wufang', '吴芳', '15065437821',
+ 'PS海报设计', '设计', 65, 'upload/jinengxuqiu_PS海报设计1.jpg',
+ '2026-04-29 08:00:00', '想学PS海报制作，社团需要做活动宣传物料。可以教Figma界面设计',
+ 'liumin', '刘敏', '15178903456', 95, '待审核', '');
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 九、新增交换记录（展示双向技能字段） ==================== -->
+
+    <changeSet id="add-new-exchange-records" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO jiaohuanjilu (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, gongjitupian, jiaohuanjineng, jiaohuanshijian, gongjineirong,
+  gongjirenzhanghao, gongjirenxingming, lianxifangshi, crossuserid, crossrefid,
+  fabuzhetigong, shenqingrentigong) VALUES
+('2026-04-29 10:00:00', 'zhaoyang', '赵阳', '13812046578',
+ '考研政治辅导', '学习', 'upload/jiaohuanjilu_考研政治辅导1.jpg', '学习', '2026-04-29',
+ '赵阳详细讲解了马原和毛概的核心考点，梳理了历年真题出题规律，提供了针对性的复习计划和答题模板',
+ 'zhoukai', '周凯', '13812348756', 16, 1,
+ '考研政治辅导', '毛笔书法国画入门'),
+
+('2026-04-28 16:00:00', 'liumin', '刘敏', '15178903456',
+ 'Figma界面设计', '设计', 'upload/jiaohuanjilu_Figma界面设计1.jpg', '设计', '2026-04-28',
+ '刘敏从零开始教授了Figma工具使用、组件创建、自动布局和交互原型制作，帮助完成了毕设APP的界面设计',
+ 'wufang', '吴芳', '15065437821', 12, 2,
+ 'Figma界面设计', 'PS海报设计');
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 十、新增评价反馈 ==================== -->
+
+    <changeSet id="add-new-evaluations" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-29 11:00:00', 'zhoukai', '周凯', '13812348756',
+ '考研政治辅导', '学习', 'upload/pingjiafankui_考研政治辅导1.jpg', '学习', '2026-04-29',
+ '线上视频辅导加课后答疑',
+ 'zhaoyang', '赵阳', '13812046578',
+ '赵阳同学的政治辅导非常系统！马原部分的哲学原理梳理得很清晰，每个知识点都配有历年真题例证。特别感谢他整理的答题模板，用起来特别顺手。强烈推荐给备考的同学！',
+ '好评', '', '', '是', ''),
+
+('2026-04-29 11:30:00', 'zhaoyang', '赵阳', '13812046578',
+ '毛笔书法国画入门', '艺术', 'upload/pingjiafankui_毛笔书法国画1.jpg', '艺术', '2026-04-29',
+ '线下书法教室面对面教学',
+ 'zhoukai', '周凯', '13812348756',
+ '周凯同学的书法功底真的很深厚！从执笔姿势到基本笔法都讲解得很细致，还现场示范了楷书永字八法。一节课下来感觉自己写字好看了不少。',
+ '好评', '', '', '是', ''),
+
+('2026-04-29 09:00:00', 'wufang', '吴芳', '15065437821',
+ 'Figma界面设计', '设计', 'upload/pingjiafankui_Figma界面设计1.jpg', '设计', '2026-04-29',
+ '线上Figma协作教学',
+ 'liumin', '刘敏', '15178903456',
+ '刘敏的Figma教学非常专业！从基础操作到高级功能一步步带着做，特别是自动布局和组件变体的讲解让我豁然开朗。帮我的毕设APP做了完整的UI设计方案，导师看了都说很规范。',
+ '好评', '', '', '是', ''),
+
+('2026-04-29 09:30:00', 'liumin', '刘敏', '15178903456',
+ 'PS海报设计', '设计', 'upload/pingjiafankui_PS海报设计交换1.jpg', '设计', '2026-04-29',
+ '线上远程协作',
+ 'wufang', '吴芳', '15065437821',
+ '吴芳的PS海报设计水平很高！配色感觉非常好，排版也很有创意。讲解PS蒙版和图层混合模式时也很有耐心，让我对PS有了更深的理解。',
+ '好评', '', '', '是', '');
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 十一、新增会员充值记录（完整字段） ==================== -->
+
+    <changeSet id="add-new-membership-orders" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO huiyuanchongzhi (addtime, chongzhibianhao, tupian, chongzhijine, chongzhiriqi,
+  yonghuzhanghao, yonghuxingming, zhuangtai, taocan, zhifufangshi) VALUES
+('2026-04-28 09:30:00', 'CZ20260429001', 'upload/huiyuanchongzhi_zhaoyang1.jpg', 29.9, '2026-04-28',
+ 'zhaoyang', '赵阳', '已支付', '月度会员', '微信支付'),
+('2026-04-27 14:00:00', 'CZ20260429002', 'upload/huiyuanchongzhi_zhoukai1.jpg', 79.9, '2026-04-27',
+ 'zhoukai', '周凯', '已支付', '季度会员', '支付宝'),
+('2026-04-29 08:00:00', 'CZ20260429003', 'upload/huiyuanchongzhi_liumin1.jpg', 29.9, '2026-04-29',
+ 'liumin', '刘敏', '待支付', '月度会员', '微信支付'),
+('2026-04-26 10:00:00', 'CZ20260429004', 'upload/huiyuanchongzhi_wanghao_renew1.jpg', 199.9, '2026-04-26',
+ 'wanghao', '王浩', '已支付', '年度会员', '支付宝');
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 十二、更新VIP状态和到期时间 ==================== -->
+
+    <changeSet id="update-vip-status-20260429" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE yonghu SET vip='是', vip_expire='2026-05-28 00:00:00' WHERE yonghuzhanghao='zhaoyang';
+UPDATE yonghu SET vip='是', vip_expire='2026-07-27 00:00:00' WHERE yonghuzhanghao='zhoukai';
+UPDATE yonghu SET vip='是', vip_expire='2027-04-26 00:00:00' WHERE yonghuzhanghao='wanghao';
+
+UPDATE yonghu SET vip_expire='2026-09-15 00:00:00' WHERE yonghuzhanghao='zhangqiang' AND vip='是';
+UPDATE yonghu SET vip_expire='2026-08-20 00:00:00' WHERE yonghuzhanghao='lina' AND vip='是';
+UPDATE yonghu SET vip_expire='2026-07-10 00:00:00' WHERE yonghuzhanghao='wufang' AND vip='是';
+UPDATE yonghu SET vip_expire='2026-10-01 00:00:00' WHERE yonghuzhanghao='chenxi' AND vip='是';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 十三、补充好友关系（新交换双方） ==================== -->
+
+    <changeSet id="add-new-friend-records-20260429" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO friend (addtime, uid, fid, name, picture, role, tablename, alias, type) VALUES
+('2026-04-28 11:00:00', 11, 15, '张强', 'upload/yonghu_touxiang5.jpg', '用户', 'yonghu', NULL, 2),
+('2026-04-28 11:00:00', 15, 11, '赵阳', 'upload/yonghu_touxiang1.jpg', '用户', 'yonghu', NULL, 2),
+('2026-04-28 15:00:00', 11, 16, '周凯', 'upload/yonghu_touxiang6.jpg', '用户', 'yonghu', NULL, 2),
+('2026-04-28 15:00:00', 16, 11, '赵阳', 'upload/yonghu_touxiang1.jpg', '用户', 'yonghu', NULL, 2),
+('2026-04-27 10:00:00', 12, 17, '刘敏', 'upload/yonghu_touxiang7.jpg', '用户', 'yonghu', NULL, 2),
+('2026-04-27 10:00:00', 17, 12, '吴芳', 'upload/yonghu_touxiang2.jpg', '用户', 'yonghu', NULL, 2),
+('2026-04-29 09:00:00', 13, 14, '李娜', 'upload/yonghu_touxiang4.jpg', '用户', 'yonghu', NULL, 2),
+('2026-04-29 09:00:00', 14, 13, '陈曦', 'upload/yonghu_touxiang3.jpg', '用户', 'yonghu', NULL, 2);
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 十四、新增聊天记录（新交换对话） ==================== -->
+
+    <changeSet id="chat-zhaoyang-zhangqiang" author="system">
+        <comment>赵阳(11)↔张强(15)：赵阳申请Python数据分析教学</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO chatmessage (addtime, uid, fid, content, format, isread) VALUES
+('2026-04-28 10:30:00', 11, 15, '张强你好！看到你发布的Python数据分析教学，正好我毕设需要用pandas做数据处理，能请教你吗？', 1, 1),
+('2026-04-28 10:35:00', 15, 11, '你好赵阳！当然可以，你有Python基础吗？数据分析需要先会基础语法。', 1, 1),
+('2026-04-28 10:40:00', 11, 15, '基础语法会一些，之前自学过一点。主要是pandas和matplotlib不太熟。我可以用考研政治辅导来交换。', 1, 1),
+('2026-04-28 10:45:00', 15, 11, '考研政治辅导正好我需要！我下学期要考研，政治还没开始复习呢。那我去平台上操作，选你的考研政治辅导作为交换技能。', 1, 1),
+('2026-04-28 10:50:00', 11, 15, '好的！我看到你选了考研政治辅导，那我确认一下就可以开始了。你什么时候有空上第一节课？', 1, 0);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="chat-zhoukai-zhaoyang" author="system">
+        <comment>周凯(16)↔赵阳(11)：考研政治辅导交换（已完成）</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO chatmessage (addtime, uid, fid, content, format, isread) VALUES
+('2026-04-28 14:30:00', 16, 11, '赵阳同学你好，我是周凯。看到你发布了考研政治辅导技能，我明年考研特别需要政治辅导，可以用毛笔书法来交换吗？', 1, 1),
+('2026-04-28 14:35:00', 11, 16, '你好周凯！当然可以。你目前政治备考到什么程度了？', 1, 1),
+('2026-04-28 14:40:00', 16, 11, '刚开始准备，政治基本是零基础。听说马原比较难理解，想找人辅导一下。', 1, 1),
+('2026-04-28 14:45:00', 11, 16, '马原确实需要理解透彻，我可以帮你梳理核心概念和做题方法。你的毛笔书法我太需要了，一直想练好字！', 1, 1),
+('2026-04-28 15:00:00', 11, 16, '申请通过了，我选了你的毛笔书法。这周末怎么样？上午我教你政治，下午你教我书法。', 1, 1),
+('2026-04-28 15:05:00', 16, 11, '太好了！周六没问题，我带纸笔和墨过来。你先准备马原的资料就行。', 1, 1),
+('2026-04-29 10:30:00', 16, 11, '今天的政治课太有收获了！你把马原的哲学原理讲得好清楚，之前看书完全看不懂的唯物辩证法终于理解了。', 1, 1),
+('2026-04-29 10:35:00', 11, 16, '你的书法课也让我大开眼界！原来毛笔书法和硬笔差别这么大，执笔手法完全不一样。', 1, 1),
+('2026-04-29 10:40:00', 16, 11, '哈哈是的，毛笔讲究的是中锋用笔和提按转折。你今天写的横已经很有感觉了，多练练就更好了。下周继续？', 1, 0);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="chat-wufang-liumin" author="system">
+        <comment>吴芳(12)↔刘敏(17)：Figma界面设计交换（已完成）</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO chatmessage (addtime, uid, fid, content, format, isread) VALUES
+('2026-04-27 09:30:00', 12, 17, '刘敏你好！看到你发布的Figma界面设计技能，我毕设要做一个APP的界面设计，你能教我吗？', 1, 1),
+('2026-04-27 09:35:00', 17, 12, '吴芳你好！当然可以，你做的是什么方向的APP？大概需要多少个页面？', 1, 1),
+('2026-04-27 09:40:00', 12, 17, '是一个校园二手交易的APP，大概需要首页、商品详情、个人中心、发布页、聊天页等十来个页面。', 1, 1),
+('2026-04-27 09:45:00', 17, 12, '工作量不小但很好做！我可以帮你搭建组件库和设计规范，后面做页面会快很多。你用PS海报设计来交换怎么样？', 1, 1),
+('2026-04-27 09:50:00', 12, 17, '好呀！PS用了三年了，海报设计是我强项。那我提交申请了，你帮忙通过一下。', 1, 1),
+('2026-04-27 10:00:00', 17, 12, '通过了！我选了你的PS海报设计。今晚就可以开始第一节Figma入门课，你装好软件了吗？', 1, 1),
+('2026-04-28 16:30:00', 12, 17, '今天的Figma课太棒了！自动布局和组件变体功能真的太强了，比PS做界面效率高太多了。', 1, 1),
+('2026-04-28 16:35:00', 17, 12, '你的PS海报教学也很棒！蒙版和混合模式的操作技巧让我学到了很多，之前一直不太会用。', 1, 1),
+('2026-04-28 16:40:00', 12, 17, '哈哈我们都学到了新东西，这就是技能交换的魅力。下次继续教我响应式设计吧！', 1, 0);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="chat-chenxi-lina" author="system">
+        <comment>陈曦(13)↔李娜(14)：陈曦申请吉他弹唱入门（待审核）</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO chatmessage (addtime, uid, fid, content, format, isread) VALUES
+('2026-04-29 08:30:00', 13, 14, '李娜你好！看到你发布了吉他弹唱入门指导，一直想学吉他但不知道从哪开始，你能教我吗？', 1, 1),
+('2026-04-29 08:35:00', 14, 13, '陈曦你好！当然可以呀。你有吉他吗？如果没有我可以推荐一个入门款。', 1, 1),
+('2026-04-29 08:40:00', 13, 14, '还没有，正打算买。你推荐什么牌子？价格别太贵，先入门试试。', 1, 1),
+('2026-04-29 08:45:00', 14, 13, '建议买个雅马哈F310或者卡马D1C，五百左右就够了。音色和手感都不错，适合新手。', 1, 1),
+('2026-04-29 08:50:00', 13, 14, '好的，我去买一把！我提交了交换申请，可以用考研数学辅导来交换，你看怎么样？', 1, 0);
+        ]]></sql>
+    </changeSet>
+
+</databaseChangeLog>

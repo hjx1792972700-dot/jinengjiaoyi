@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- 新增"技能"类型的技能需求记录 -->
+    <changeSet id="add-jineng-type-records" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `jinengxuqiu` (`addtime`, `xuqiubianhao`, `xuqiubiaoti`, `jinengfenlei`, `fengmian`, `fabushijian`, `xuqiufeiyong`, `xuqiumiaoshu`, `xuqiuxiangqing`, `yonghuzhanghao`, `yonghuxingming`, `shoujihao`, `xinyuzhishu`, `leixing`, `sfsh`, `shhf`, `thumbsupnum`, `crazilynum`, `clicktime`, `clicknum`, `discussnum`, `totalscore`, `storeupnum`) VALUES
+('2026-04-24 10:00:00','JN20260427001','Python数据分析教学','编程','upload/jinengxuqiu_Python编程入门1.jpg,upload/jinengxuqiu_Python编程入门2.jpg,upload/jinengxuqiu_Python编程入门3.jpg','2026-04-27',80,'精通Python数据分析，熟练使用pandas、numpy、matplotlib等数据科学库，有多个实际项目经验','<p>本人计算机专业大三学生，精通Python数据分析方向：</p><ul><li>pandas数据清洗与处理</li><li>numpy科学计算与矩阵运算</li><li>matplotlib/seaborn数据可视化</li><li>机器学习基础（sklearn）</li></ul><p>可以从零基础开始教学，也可以针对课程作业、毕业设计进行辅导。每周可安排2-3次线上教学。</p>','zhangqiang','张强','13987654210',90,'技能','是','',15,0,'2026-04-27 09:00:00',88,2,4.3,6),
+('2026-04-26 14:00:00','JN20260427002','吉他弹唱入门指导','生活','upload/jinengxuqiu_吉他弹唱教学1.jpg,upload/jinengxuqiu_吉他弹唱教学2.jpg,upload/jinengxuqiu_吉他弹唱教学3.jpg','2026-04-26',50,'学习吉他三年，擅长民谣弹唱，曾在校园音乐节演出','<p>自学吉他三年，擅长民谣弹唱，可以教授：</p><ul><li>吉他基础乐理和识谱</li><li>常用和弦及转换技巧</li><li>分解和弦与扫弦节奏</li><li>热门民谣歌曲弹唱</li></ul><p>零基础一个月可以弹唱简单曲目，有基础的同学可以进阶学习指弹。可以线下面对面教学。</p>','lina','李娜','15187653241',78,'技能','是','',10,0,'2026-04-26 15:00:00',62,1,4.5,4),
+('2026-04-25 09:30:00','JN20260427003','PS海报设计','设计','upload/jinengxuqiu_海报设计教学1.jpg,upload/jinengxuqiu_海报设计教学2.jpg,upload/jinengxuqiu_海报设计教学3.jpg','2026-04-25',65,'熟练运用Photoshop和Illustrator，视觉传达专业在读','<p>视觉传达专业大二学生，擅长平面设计：</p><ul><li>PS基础操作与图片处理</li><li>海报版式设计与排版</li><li>配色理论与实践应用</li><li>社团活动宣传物料设计</li></ul><p>可以教你从零开始学PS，也可以帮忙设计社团海报、活动传单等。线上线下教学均可。</p>','wufang','吴芳','15065437821',92,'技能','是','',20,0,'2026-04-25 10:00:00',105,3,4.7,8),
+('2026-04-24 16:00:00','JN20260427004','考研数学辅导','学习','upload/jinengxuqiu_文言文翻译1.jpg,upload/jinengxuqiu_文言文翻译2.jpg,upload/jinengxuqiu_文言文翻译3.jpg','2026-04-24',100,'考研数学一135分，有丰富的辅导经验','<p>研一在读，考研数学一135分，有两年辅导经验：</p><ul><li>高等数学重难点梳理</li><li>线性代数核心知识讲解</li><li>概率统计解题技巧</li><li>真题模拟与考试策略</li></ul><p>针对考研数学一和数学二都可以辅导，提供系统的复习规划和答疑服务。</p>','chenxi','陈曦','13890126745',85,'技能','是','',25,0,'2026-04-24 17:00:00',135,4,4.6,10);
+        ]]></sql>
+    </changeSet>
+
+    <!-- 设置部分用户为VIP -->
+    <changeSet id="set-vip-users" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE `yonghu` SET `vip` = '是' WHERE `yonghuzhanghao` IN ('zhangqiang', 'lina', 'wufang', 'chenxi');
+        ]]></sql>
+    </changeSet>
+
+    <!-- 新增待审核的技能记录，用于审核功能演示 -->
+    <changeSet id="add-pending-skill-records" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `jinengxuqiu` (`addtime`, `xuqiubianhao`, `xuqiubiaoti`, `jinengfenlei`, `fengmian`, `fabushijian`, `xuqiufeiyong`, `xuqiumiaoshu`, `xuqiuxiangqing`, `yonghuzhanghao`, `yonghuxingming`, `shoujihao`, `xinyuzhishu`, `leixing`, `sfsh`, `shhf`, `thumbsupnum`, `crazilynum`, `clicktime`, `clicknum`, `discussnum`, `totalscore`, `storeupnum`) VALUES
+('2026-04-27 10:00:00','JN20260427005','英语四六级辅导','学习','upload/jinengxuqiu_Python编程入门1.jpg','2026-04-27',60,'英语专业大三，四级620分六级580分，有丰富的辅导经验','<p>英语专业大三学生，成绩优异：</p><ul><li>四级620分、六级580分</li><li>精通听力、阅读、写作、翻译各模块</li><li>总结了一套高效的备考方法</li></ul><p>可以提供一对一辅导，帮助制定复习计划。</p>','zhangqiang','张强','13987654210',90,'技能','待审核','',0,0,NULL,0,0,0,0),
+('2026-04-27 11:00:00','JN20260427006','瑜伽入门教学','生活','upload/jinengxuqiu_吉他弹唱教学1.jpg','2026-04-27',45,'练习瑜伽两年，取得了瑜伽教练初级证书','<p>瑜伽爱好者，持有初级教练证书：</p><ul><li>基础体式教学</li><li>呼吸法与冥想指导</li><li>柔韧性训练</li><li>减压放松课程</li></ul><p>适合零基础入门，每次课程约60分钟。</p>','lina','李娜','15187653241',78,'技能','待审核','',0,0,NULL,0,0,0,0),
+('2026-04-27 12:00:00','JN20260427007','视频剪辑教学','设计','upload/jinengxuqiu_海报设计教学1.jpg','2026-04-27',70,'熟练使用PR、AE等视频剪辑软件，有多个作品','<p>数字媒体专业学生，擅长视频制作：</p><ul><li>Premiere Pro基础操作</li><li>视频转场与特效</li><li>调色与音频处理</li><li>短视频创作技巧</li></ul><p>可以从零开始教学，也可以帮忙剪辑视频作品。</p>','wufang','吴芳','15065437821',92,'技能','待审核','',0,0,NULL,0,0,0,0);
+        ]]></sql>
+    </changeSet>
+
+</databaseChangeLog>

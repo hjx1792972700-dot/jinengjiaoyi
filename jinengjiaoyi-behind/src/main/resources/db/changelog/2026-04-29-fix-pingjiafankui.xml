@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- ====================================================================
+         修复评价反馈数据：确保每条评价都有对应的交换记录(jiaohuanjilu)
+         业务规则：技能交换完成后双方可互相评价，无交换记录不可评价
+         ==================================================================== -->
+
+    <changeSet id="clear-invalid-pingjiafankui" author="system">
+        <comment>清除旧的评价数据，旧数据未严格遵守"先交换后评价"的业务逻辑</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+DELETE FROM pingjiafankui;
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="rebuild-pingjiafankui-from-exchanges" author="system">
+        <comment>基于实际交换记录重建评价数据，所有评价均有对应jiaohuanjilu记录，且评价时间在交换时间之后</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+-- ==================== 基于初始交换记录(id 1-8)的互相评价 ====================
+
+-- 交换#1: 赵阳↔张强 文言文翻译 (交换日期2026-04-08)
+-- 赵阳(发布者,提供文言文翻译) 评价 张强(申请人,提供短视频剪辑)
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-09 10:00:00', 'zhaoyang', '赵阳', '13812046578',
+ '文言文翻译', '学习', 'upload/pingjiafankui_文言文翻译1.jpg', '学习', '2026-04-09',
+ '通过线上视频讲解完成了交换',
+ 'zhangqiang', '张强', '13987654210',
+ '张强同学用短视频剪辑来交换，剪辑技巧讲得很实用，我跟着做了一支vlog效果不错。交换过程很愉快，准时且教学认真。',
+ '好评', '', '', '是', '');
+
+-- 张强(申请人,提供短视频剪辑) 评价 赵阳(发布者,提供文言文翻译)
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-09 14:00:00', 'zhangqiang', '张强', '13987654210',
+ '文言文翻译', '学习', 'upload/pingjiafankui_文言文翻译2.jpg', '学习', '2026-04-09',
+ '线上视频讲解',
+ 'zhaoyang', '赵阳', '13812046578',
+ '赵阳同学的文言文功底非常扎实，虚词用法和句式分析讲得很清楚，对我的古代文学课帮助很大。',
+ '好评', '', '', '是', '');
+
+-- 交换#3: 陈曦↔李娜 配音技巧教学 (交换日期2026-04-10)
+-- 陈曦(发布者) 评价 李娜(申请人)
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-11 09:30:00', 'chenxi', '陈曦', '13890126745',
+ '配音技巧教学', '生活', 'upload/pingjiafankui_配音技巧教学1.jpg', '生活', '2026-04-11',
+ '通过录音练习与反馈的方式完成交换',
+ 'lina', '李娜', '15187653241',
+ '李娜同学的手工DIY技能不错，但配音指导方面节奏稍显仓促，部分内容讲解不够深入。',
+ '中评', '', '', '是', '');
+
+-- 交换#4: 李娜↔王浩 手工DIY教学 (交换日期2026-04-13)
+-- 李娜(发布者) 评价 王浩(申请人)
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-14 10:00:00', 'lina', '李娜', '15187653241',
+ '手工DIY教学', '生活', 'upload/pingjiafankui_手工DIY教学1.jpg', '生活', '2026-04-14',
+ '线下手工教室面对面教学',
+ 'wanghao', '王浩', '13290125678',
+ '王浩同学用吉他弹唱来交换，吉他教学循序渐进，零基础也能跟上节奏，一节课学会了C和弦。',
+ '好评', '', '', '是', '');
+
+-- 王浩(申请人) 评价 李娜(发布者)
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-14 14:00:00', 'wanghao', '王浩', '13290125678',
+ '手工DIY教学', '生活', 'upload/pingjiafankui_手工DIY教学2.jpg', '生活', '2026-04-14',
+ '线下手工教室面对面教学',
+ 'lina', '李娜', '15187653241',
+ '李娜同学的手工教学通俗易懂，一个下午就学会了做杯垫，做出了满意的黏土作品。非常有耐心！',
+ '好评', '', '', '是', '');
+
+-- 交换#6: 周凯↔王浩 硬笔书法 (交换日期2026-04-15)
+-- 周凯(发布者) 评价 王浩(申请人)
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-16 11:00:00', 'zhoukai', '周凯', '13812348756',
+ '硬笔书法', '学习', 'upload/pingjiafankui_硬笔书法1.jpg', '学习', '2026-04-16',
+ '线上视频教学加作品点评',
+ 'wanghao', '王浩', '13290125678',
+ '王浩的吉他弹唱教学很有耐心，节奏把控讲得很好。用硬笔书法交换吉他弹唱，双方都有收获。',
+ '好评', '', '', '是', '');
+
+-- 交换#7: 刘敏↔吴芳 PPT美化设计 (交换日期2026-04-18)
+-- 刘敏(发布者) 评价 吴芳(申请人)
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-19 09:00:00', 'liumin', '刘敏', '15178903456',
+ 'PPT美化设计', '学习', 'upload/pingjiafankui_PPT美化设计1.jpg', '学习', '2026-04-19',
+ '远程协作完成PPT优化',
+ 'wufang', '吴芳', '15065437821',
+ '吴芳的摄影技巧很专业，用摄影教学来交换PPT设计，答辩时获得了导师的认可。',
+ '好评', '', '', '是', '');
+
+-- 吴芳(申请人) 评价 刘敏(发布者)
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-19 14:00:00', 'wufang', '吴芳', '15065437821',
+ 'PPT美化设计', '学习', 'upload/pingjiafankui_PPT美化设计2.jpg', '学习', '2026-04-19',
+ '远程协作完成PPT优化',
+ 'liumin', '刘敏', '15178903456',
+ '刘敏的PPT设计水平很高，配色方案和排版建议都非常实用，学到了很多设计理念。',
+ '好评', '', '', '是', '');
+
+-- ==================== 基于王浩交换记录的评价 ====================
+
+-- 交换: 王浩↔张强 短视频剪辑 (交换日期2026-04-18)
+-- 王浩 评价 张强
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-19 10:00:00', 'wanghao', '王浩', '13290125678',
+ '短视频剪辑', '工具', 'upload/pingjiafankui_短视频剪辑1.jpg', '工具', '2026-04-19',
+ '线上屏幕共享远程教学',
+ 'zhangqiang', '张强', '13987654210',
+ 'PR剪辑教学非常系统，从素材导入到成片输出都有详细讲解，调色部分尤其实用。学完之后独立剪了一支vlog，效果很满意！',
+ '好评', '', '', '是', '');
+
+-- 张强 评价 王浩
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-19 15:00:00', 'zhangqiang', '张强', '13987654210',
+ '短视频剪辑', '工具', 'upload/pingjiafankui_短视频剪辑2.jpg', '工具', '2026-04-19',
+ '线上屏幕共享远程教学',
+ 'wanghao', '王浩', '13290125678',
+ '王浩用吉他弹唱来交换，教学非常有趣，C和弦已经能按住了。交换过程守时负责。',
+ '好评', '', '', '是', '');
+
+-- 交换: 王浩↔陈曦 配音技巧教学 (交换日期2026-04-21)
+-- 王浩 评价 陈曦
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-22 09:00:00', 'wanghao', '王浩', '13290125678',
+ '配音技巧教学', '生活', 'upload/pingjiafankui_配音技巧教学2.jpg', '生活', '2026-04-22',
+ '线上语音教学与录音练习',
+ 'chenxi', '陈曦', '13890126745',
+ '配音教学很专业，气息控制的训练方法非常有效。陈曦同学对有声书录制有丰富经验，指导很到位。',
+ '好评', '', '', '是', '');
+
+-- 陈曦 评价 王浩
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-22 14:00:00', 'chenxi', '陈曦', '13890126745',
+ '配音技巧教学', '生活', 'upload/pingjiafankui_配音技巧教学3.jpg', '生活', '2026-04-22',
+ '线上语音教学与录音练习',
+ 'wanghao', '王浩', '13290125678',
+ '王浩的英语口语陪练效果很好，发音纠正方法很实用。我的六级口语成绩提高了一个档次，非常感谢！',
+ '好评', '', '', '是', '');
+
+-- 交换: 周凯↔王浩 吉他弹唱教学 (交换日期2026-04-21)
+-- 周凯 评价 王浩
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-22 16:00:00', 'zhoukai', '周凯', '13812348756',
+ '吉他弹唱教学', '艺术', 'upload/pingjiafankui_吉他弹唱教学1.jpg', '艺术', '2026-04-22',
+ '每周一次线下教学',
+ 'wanghao', '王浩', '13290125678',
+ '王浩的吉他教学非常有耐心，把复杂的和弦转换讲解得很清楚。一个月下来已经能弹唱简单的歌了，强烈推荐！',
+ '好评', '', '', '是', '');
+
+-- 交换: 王浩↔刘敏 PPT美化设计 (交换日期2026-04-23)
+-- 王浩 评价 刘敏
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-24 10:00:00', 'wanghao', '王浩', '13290125678',
+ 'PPT美化设计', '学习', 'upload/pingjiafankui_PPT美化设计3.jpg', '学习', '2026-04-24',
+ '远程协作PPT设计',
+ 'liumin', '刘敏', '15178903456',
+ 'PPT设计指导很用心，配色方案非常协调，排版建议也很实用。课程汇报时获得了老师的表扬！',
+ '好评', '', '', '是', '');
+
+-- 交换: 李娜↔王浩 吉他弹唱教学 (交换日期2026-04-24)
+-- 李娜 评价 王浩
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-25 11:00:00', 'lina', '李娜', '15187653241',
+ '吉他弹唱教学', '艺术', 'upload/pingjiafankui_吉他弹唱教学2.jpg', '艺术', '2026-04-25',
+ '线下面对面教学',
+ 'wanghao', '王浩', '13290125678',
+ '王浩教吉他循序渐进，不会让人觉得太难。两节课学会了《生日快乐》，弹给室友听她超感动！',
+ '好评', '', '', '是', '');
+
+-- ==================== 基于2026-04-26新增交换记录的评价 ====================
+
+-- 交换: 周凯↔赵阳 篮球训练指导 (交换日期2026-04-17)
+-- 周凯 评价 赵阳
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-18 10:00:00', 'zhoukai', '周凯', '13812348756',
+ '篮球训练指导', '生活', 'upload/pingjiafankui_篮球训练指导1.jpg', '生活', '2026-04-18',
+ '操场实地训练',
+ 'zhaoyang', '赵阳', '13812046578',
+ '训练方法科学，投篮姿势纠正到位，一节课就明显感到进步。赵阳同学运动功底扎实。',
+ '好评', '', '', '是', '');
+
+-- 交换: 张强↔周凯 英语口语练习 (交换日期2026-04-21)
+-- 张强 评价 周凯
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-22 10:00:00', 'zhangqiang', '张强', '13987654210',
+ '英语口语练习', '学习', 'upload/pingjiafankui_英语口语练习1.jpg', '学习', '2026-04-22',
+ '线上语音通话',
+ 'zhoukai', '周凯', '13812348756',
+ '口语练习效果不太明显，教学内容缺少系统性规划，话题衔接不够流畅，希望能改进教学方案。',
+ '差评', '', '', '是', '');
+
+-- 交换: 刘敏↔陈曦 钢琴基础教学 (交换日期2026-04-24)
+-- 刘敏 评价 陈曦
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-25 10:00:00', 'liumin', '刘敏', '15178903456',
+ '钢琴基础教学', '生活', 'upload/pingjiafankui_钢琴基础教学1.jpg', '生活', '2026-04-25',
+ '线下钢琴教室',
+ 'chenxi', '陈曦', '13890126745',
+ '五线谱讲解清楚，基础指法练习安排合理。陈曦同学的钢琴基本功扎实，教学很有条理。',
+ '好评', '', '', '是', '');
+
+-- ==================== 基于2026-04-29新交换记录的互相评价 ====================
+
+-- 交换: 赵阳↔周凯 考研政治辅导 (交换日期2026-04-29)
+-- 周凯 评价 赵阳
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-29 11:00:00', 'zhoukai', '周凯', '13812348756',
+ '考研政治辅导', '学习', 'upload/pingjiafankui_考研政治辅导1.jpg', '学习', '2026-04-29',
+ '线上视频辅导加课后答疑',
+ 'zhaoyang', '赵阳', '13812046578',
+ '赵阳同学的政治辅导非常系统！马原部分的哲学原理梳理得很清晰，每个知识点都配有历年真题例证。特别感谢他整理的答题模板，用起来特别顺手。',
+ '好评', '', '', '是', '');
+
+-- 赵阳 评价 周凯
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-29 11:30:00', 'zhaoyang', '赵阳', '13812046578',
+ '考研政治辅导', '学习', 'upload/pingjiafankui_毛笔书法国画1.jpg', '艺术', '2026-04-29',
+ '线下书法教室面对面教学',
+ 'zhoukai', '周凯', '13812348756',
+ '周凯同学的书法功底真的很深厚！从执笔姿势到基本笔法都讲解得很细致，还现场示范了楷书永字八法。一节课下来感觉自己写字好看了不少。',
+ '好评', '', '', '是', '');
+
+-- 交换: 刘敏↔吴芳 Figma界面设计 (交换日期2026-04-28)
+-- 吴芳 评价 刘敏
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-29 09:00:00', 'wufang', '吴芳', '15065437821',
+ 'Figma界面设计', '设计', 'upload/pingjiafankui_Figma界面设计1.jpg', '设计', '2026-04-29',
+ '线上Figma协作教学',
+ 'liumin', '刘敏', '15178903456',
+ '刘敏的Figma教学非常专业！从基础操作到高级功能一步步带着做，特别是自动布局和组件变体的讲解让我豁然开朗。帮我的毕设APP做了完整的UI设计方案，导师看了都说很规范。',
+ '好评', '', '', '是', '');
+
+-- 刘敏 评价 吴芳
+INSERT INTO pingjiafankui (addtime, yonghuzhanghao, yonghuxingming, shoujihao,
+  biaoti, jinengfenlei, huifutupian, jiaohuanjineng, pingjiashijian, jiaohuanbeizhu,
+  jiaohuanrenzhanghao, jiaohuanrenxingming, lianxifangshi, huifuneirong, pingjiajieguo,
+  huifushipin, huifufujian, sfsh, shhf) VALUES
+('2026-04-29 09:30:00', 'liumin', '刘敏', '15178903456',
+ 'Figma界面设计', '设计', 'upload/pingjiafankui_PS海报设计交换1.jpg', '设计', '2026-04-29',
+ '线上远程协作',
+ 'wufang', '吴芳', '15065437821',
+ '吴芳的PS海报设计水平很高！配色感觉非常好，排版也很有创意。讲解PS蒙版和图层混合模式时也很有耐心，让我对PS有了更深的理解。',
+ '好评', '', '', '是', '');
+        ]]></sql>
+    </changeSet>
+
+</databaseChangeLog>

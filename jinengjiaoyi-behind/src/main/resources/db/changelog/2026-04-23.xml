@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- 补充论坛类型数据 -->
+    <changeSet id="supplement-data-forumtype" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+INSERT IGNORE INTO `forumtype` (`id`, `addtime`, `typename`) VALUES (9,'2026-04-23 07:10:23','编程'),(10,'2026-04-23 07:10:23','语言'),(11,'2026-04-23 07:10:23','设计'),(12,'2026-04-23 07:10:23','运动');
+        ]]></sql>
+    </changeSet>
+
+    <!-- 补充技能需求数据 -->
+    <changeSet id="supplement-data-jinengxuqiu" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+INSERT IGNORE INTO `jinengxuqiu` (`id`, `addtime`, `xuqiubianhao`, `xuqiubiaoti`, `jinengfenlei`, `fengmian`, `fabushijian`, `xuqiufeiyong`, `xuqiumiaoshu`, `xuqiuxiangqing`, `yonghuzhanghao`, `yonghuxingming`, `shoujihao`, `xinyuzhishu`, `sfsh`, `shhf`, `thumbsupnum`, `crazilynum`, `clicktime`, `clicknum`, `discussnum`, `totalscore`, `storeupnum`) VALUES (9,'2026-04-23 07:10:23','9999999999','Python编程入门','编程','upload/jinengxuqiu_Python编程入门1.jpg,upload/jinengxuqiu_Python编程入门2.jpg,upload/jinengxuqiu_Python编程入门3.jpg','2026-04-20',100,'零基础想学Python编程，希望有经验的同学手把手教学，从环境搭建到基础语法再到小项目实战','<p>希望找到一位Python编程高手进行一对一教学</p>','11','张强','13987654321','44','是',NULL,6,0,NULL,38,2,4,3),(10,'2026-04-23 07:10:23','1010101010','日语入门教学','语言','upload/jinengxuqiu_日语入门教学1.jpg,upload/jinengxuqiu_日语入门教学2.jpg,upload/jinengxuqiu_日语入门教学3.jpg','2026-04-19',65,'想学日语五十音图和基础会话，计划考N5，希望有日语基础的同学带我入门','<p>本人对日本文化很感兴趣，想系统学习日语</p>','14','周莉','13876543210','52','是',NULL,8,1,NULL,45,3,5,4),(11,'2026-04-23 07:10:23','1111111100','海报设计教学','设计','upload/jinengxuqiu_海报设计教学1.jpg,upload/jinengxuqiu_海报设计教学2.jpg,upload/jinengxuqiu_海报设计教学3.jpg','2026-04-18',55,'社团活动需要设计宣传海报，想学PS和AI基础操作，能独立完成简单海报排版','<p>社团要办迎新晚会，急需学会海报设计</p>','16','陈磊','15812345678','37','是',NULL,5,0,NULL,32,1,4,2),(12,'2026-04-23 07:10:23','1212121212','篮球基础训练','运动','upload/jinengxuqiu_篮球基础训练1.jpg,upload/jinengxuqiu_篮球基础训练2.jpg,upload/jinengxuqiu_篮球基础训练3.jpg','2026-04-17',30,'想提升篮球投篮和运球技术，希望校队的同学能带我训练，目标是加入院队','<p>大一新生想加入院篮球队，需要系统训练</p>','17','刘洋','13765432109','41','是',NULL,12,0,NULL,57,4,5,5);
+        ]]></sql>
+    </changeSet>
+
+    <!-- 补充收藏数据 -->
+    <changeSet id="supplement-data-storeup" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+INSERT IGNORE INTO `storeup` (`id`, `addtime`, `userid`, `refid`, `tablename`, `name`, `picture`, `type`, `inteltype`, `remark`) VALUES (201,'2026-04-23 07:10:23',12,9,'jinengxuqiu','Python编程入门','upload/jinengxuqiu_Python编程入门1.jpg','1','',''),(202,'2026-04-23 07:10:23',15,9,'jinengxuqiu','Python编程入门','upload/jinengxuqiu_Python编程入门1.jpg','1','',''),(203,'2026-04-23 07:10:23',18,9,'jinengxuqiu','Python编程入门','upload/jinengxuqiu_Python编程入门1.jpg','1','',''),(204,'2026-04-23 07:10:23',13,10,'jinengxuqiu','日语入门教学','upload/jinengxuqiu_日语入门教学1.jpg','1','',''),(205,'2026-04-23 07:10:23',16,10,'jinengxuqiu','日语入门教学','upload/jinengxuqiu_日语入门教学1.jpg','1','',''),(206,'2026-04-23 07:10:23',11,11,'jinengxuqiu','海报设计教学','upload/jinengxuqiu_海报设计教学1.jpg','1','',''),(207,'2026-04-23 07:10:23',14,11,'jinengxuqiu','海报设计教学','upload/jinengxuqiu_海报设计教学1.jpg','1','',''),(208,'2026-04-23 07:10:23',11,12,'jinengxuqiu','篮球基础训练','upload/jinengxuqiu_篮球基础训练1.jpg','1','',''),(209,'2026-04-23 07:10:23',13,12,'jinengxuqiu','篮球基础训练','upload/jinengxuqiu_篮球基础训练1.jpg','1','',''),(210,'2026-04-23 07:10:23',15,12,'jinengxuqiu','篮球基础训练','upload/jinengxuqiu_篮球基础训练1.jpg','1','','');
+        ]]></sql>
+    </changeSet>
+
+</databaseChangeLog>

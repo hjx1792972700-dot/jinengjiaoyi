@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+body { background: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 40px; }
+.formula-box { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 12px; padding: 36px 48px; text-align: center; }
+.title { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; font-size: 20px; font-weight: bold; color: #333; margin-bottom: 24px; }
+.formula { font-size: 24px; margin-bottom: 20px; }
+.desc { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; font-size: 15px; color: #666; line-height: 1.8; max-width: 600px; margin: 0 auto; text-align: left; }
+.desc b { color: #333; }
+</style>
+</head>
+<body>
+<div class="formula-box">
+  <div class="title">余弦相似度公式 (Cosine Similarity)</div>
+  <div class="formula">
+    $$\text{similarity}(A, B) = \frac{\displaystyle\sum_{i \in I} A_i \times B_i}{\displaystyle\sqrt{\sum_{i \in I} A_i^{\,2}} \;\times\; \sqrt{\sum_{i \in I} B_i^{\,2}}}$$
+  </div>
+  <div class="desc">
+    <b>其中：</b><br>
+    · <b>A、B</b> — 两个用户的评分向量<br>
+    · <b>I</b> — 两个用户共同评分过的物品集合<br>
+    · <b>分子</b> — 共同物品上评分乘积之和（点积）<br>
+    · <b>分母</b> — 两个向量的模长之积<br>
+    · <b>结果</b> — 范围 [0, 1]，越接近 1 表示越相似
+  </div>
+</div>
+</body>
+</html>

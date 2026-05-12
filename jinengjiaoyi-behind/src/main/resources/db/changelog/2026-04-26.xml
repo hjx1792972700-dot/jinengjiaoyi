@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- ==================== 一、丰富统计数据 ==================== -->
+
+    <changeSet id="update-jiaohuanjilu-dates" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE `jiaohuanjilu` SET `jiaohuanshijian` = '2026-04-08' WHERE `id` = 1;
+UPDATE `jiaohuanjilu` SET `jiaohuanshijian` = '2026-04-10' WHERE `id` = 2;
+UPDATE `jiaohuanjilu` SET `jiaohuanshijian` = '2026-04-10' WHERE `id` = 3;
+UPDATE `jiaohuanjilu` SET `jiaohuanshijian` = '2026-04-13' WHERE `id` = 4;
+UPDATE `jiaohuanjilu` SET `jiaohuanshijian` = '2026-04-15' WHERE `id` = 5;
+UPDATE `jiaohuanjilu` SET `jiaohuanshijian` = '2026-04-15' WHERE `id` = 6;
+UPDATE `jiaohuanjilu` SET `jiaohuanshijian` = '2026-04-18' WHERE `id` = 7;
+UPDATE `jiaohuanjilu` SET `jiaohuanshijian` = '2026-04-20' WHERE `id` = 8;
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="insert-more-jiaohuanjilu" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+INSERT INTO `jiaohuanjilu` (`addtime`, `yonghuzhanghao`, `yonghuxingming`, `shoujihao`, `biaoti`, `jinengfenlei`, `gongjitupian`, `jiaohuanjineng`, `jiaohuanshijian`, `gongjineirong`, `gongjirenzhanghao`, `gongjirenxingming`, `lianxifangshi`, `crossuserid`, `crossrefid`) VALUES
+('2026-04-14 10:20:00','11','张强','13987654321','Python编程入门','学习','upload/jiaohuanjilu_文言文翻译1.jpg','学习','2026-04-14','分享了Python基础语法和常用库讲解','18','吴芳','15065432109',2,2),
+('2026-04-14 15:30:00','14','陈曦','13890123456','吉他弹唱教学','生活','upload/jiaohuanjilu_摄影技巧教学1.jpg','生活','2026-04-14','教授了基础和弦转换和弹唱技巧','17','周凯','13812345678',6,6),
+('2026-04-16 09:00:00','12','李娜','15187654321','PPT设计技巧','学习','upload/jiaohuanjilu_配音技巧教学1.jpg','学习','2026-04-16','分享了PPT配色方案和排版技巧','16','刘敏','15198765432',7,7),
+('2026-04-17 14:00:00','17','周凯','13812345678','篮球训练指导','生活','upload/jiaohuanjilu_文言文翻译2.jpg','生活','2026-04-17','进行了运球和投篮基础训练','15','赵阳','13012345678',1,1),
+('2026-04-19 11:00:00','16','刘敏','15198765432','书法入门教学','生活','upload/jiaohuanjilu_摄影技巧教学2.jpg','生活','2026-04-19','讲解了楷书基本笔画和结构','14','陈曦','13890123456',3,3),
+('2026-04-20 16:00:00','18','吴芳','15065432109','视频剪辑教程','学习','upload/jiaohuanjilu_配音技巧教学2.jpg','学习','2026-04-20','分享了Premiere基础操作和转场效果','12','李娜','15187654321',4,4),
+('2026-04-21 10:30:00','11','张强','13987654321','英语口语练习','学习','upload/jiaohuanjilu_文言文翻译3.jpg','学习','2026-04-21','进行了日常对话和商务英语练习','17','周凯','13812345678',6,6),
+('2026-04-22 09:15:00','15','赵阳','13012345678','数学建模辅导','学习','upload/jiaohuanjilu_摄影技巧教学3.jpg','学习','2026-04-22','讲解了线性规划和优化算法基础','18','吴芳','15065432109',2,2),
+('2026-04-22 14:30:00','14','陈曦','13890123456','手绘插画教学','生活','upload/jiaohuanjilu_配音技巧教学3.jpg','生活','2026-04-22','教授了水彩基础上色和人物速写','11','张强','13987654321',5,5),
+('2026-04-23 08:45:00','12','李娜','15187654321','数据分析入门','学习','upload/jiaohuanjilu_文言文翻译1.jpg','学习','2026-04-23','分享了Excel数据透视表和Python数据处理','16','刘敏','15198765432',7,7),
+('2026-04-24 10:00:00','17','周凯','13812345678','健身计划制定','生活','upload/jiaohuanjilu_摄影技巧教学1.jpg','生活','2026-04-24','制定了增肌减脂综合训练计划','15','赵阳','13012345678',1,1),
+('2026-04-24 16:20:00','16','刘敏','15198765432','钢琴基础教学','生活','upload/jiaohuanjilu_配音技巧教学1.jpg','生活','2026-04-24','教授了五线谱识读和基础指法','14','陈曦','13890123456',3,3),
+('2026-04-25 11:00:00','18','吴芳','15065432109','UI设计基础','学习','upload/jiaohuanjilu_文言文翻译2.jpg','学习','2026-04-25','分享了Figma工具使用和界面设计原则','11','张强','13987654321',5,5),
+('2026-04-25 15:00:00','11','张强','13987654321','烹饪技巧分享','生活','upload/jiaohuanjilu_摄影技巧教学2.jpg','生活','2026-04-25','教授了家常菜烹饪和刀工技巧','12','李娜','15187654321',4,4);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="update-pingjiafankui-results" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE `pingjiafankui` SET `pingjiajieguo` = '好评', `pingjiashijian` = '2026-04-09' WHERE `id` = 1;
+UPDATE `pingjiafankui` SET `pingjiajieguo` = '好评', `pingjiashijian` = '2026-04-10' WHERE `id` = 2;
+UPDATE `pingjiafankui` SET `pingjiajieguo` = '中评', `pingjiashijian` = '2026-04-11' WHERE `id` = 3;
+UPDATE `pingjiafankui` SET `pingjiajieguo` = '好评', `pingjiashijian` = '2026-04-13' WHERE `id` = 4;
+UPDATE `pingjiafankui` SET `pingjiajieguo` = '差评', `pingjiashijian` = '2026-04-14' WHERE `id` = 5;
+UPDATE `pingjiafankui` SET `pingjiajieguo` = '中评', `pingjiashijian` = '2026-04-15' WHERE `id` = 6;
+UPDATE `pingjiafankui` SET `pingjiajieguo` = '好评', `pingjiashijian` = '2026-04-17' WHERE `id` = 7;
+UPDATE `pingjiafankui` SET `pingjiajieguo` = '好评', `pingjiashijian` = '2026-04-19' WHERE `id` = 8;
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="insert-more-pingjiafankui" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+INSERT INTO `pingjiafankui` (`addtime`, `yonghuzhanghao`, `yonghuxingming`, `shoujihao`, `biaoti`, `jinengfenlei`, `huifutupian`, `jiaohuanjineng`, `pingjiashijian`, `jiaohuanbeizhu`, `jiaohuanrenzhanghao`, `jiaohuanrenxingming`, `lianxifangshi`, `huifuneirong`, `pingjiajieguo`, `sfsh`, `shhf`) VALUES
+('2026-04-15 10:00:00','11','张强','13987654321','Python编程入门','学习','upload/pingjiafankui_文言文翻译1.jpg','学习','2026-04-15','线上视频讲解','18','吴芳','15065432109','讲解清晰易懂，代码示例丰富','好评','是',''),
+('2026-04-16 14:00:00','14','陈曦','13890123456','吉他弹唱教学','生活','upload/pingjiafankui_摄影技巧教学1.jpg','生活','2026-04-16','线下面对面教学','17','周凯','13812345678','教学有耐心但进度偏慢','中评','是',''),
+('2026-04-17 09:00:00','12','李娜','15187654321','PPT设计技巧','学习','upload/pingjiafankui_配音技巧教学1.jpg','学习','2026-04-17','线上屏幕共享','16','刘敏','15198765432','设计理念讲得很好，实操指导非常实用','好评','是',''),
+('2026-04-18 11:30:00','17','周凯','13812345678','篮球训练指导','生活','upload/pingjiafankui_文言文翻译2.jpg','生活','2026-04-18','操场实地训练','15','赵阳','13012345678','训练方法科学，动作纠正到位','好评','是',''),
+('2026-04-19 15:00:00','16','刘敏','15198765432','书法入门教学','生活','upload/pingjiafankui_摄影技巧教学2.jpg','生活','2026-04-19','线下书法教室','14','陈曦','13890123456','基本笔画讲解不够细致','中评','是',''),
+('2026-04-20 10:00:00','18','吴芳','15065432109','视频剪辑教程','学习','upload/pingjiafankui_配音技巧教学2.jpg','学习','2026-04-20','线上录屏教学','12','李娜','15187654321','教程制作精良，操作步骤非常详细','好评','是',''),
+('2026-04-21 14:00:00','11','张强','13987654321','英语口语练习','学习','upload/pingjiafankui_文言文翻译3.jpg','学习','2026-04-21','线上语音通话','17','周凯','13812345678','口语练习效果不明显，缺少系统性','差评','是',''),
+('2026-04-22 09:30:00','15','赵阳','13012345678','数学建模辅导','学习','upload/pingjiafankui_摄影技巧教学3.jpg','学习','2026-04-22','线上视频教学','18','吴芳','15065432109','建模思路讲解透彻，受益匪浅','好评','是',''),
+('2026-04-23 11:00:00','14','陈曦','13890123456','手绘插画教学','生活','upload/pingjiafankui_配音技巧教学3.jpg','生活','2026-04-23','线下美术教室','11','张强','13987654321','上色技巧一般，但速写讲得不错','中评','是',''),
+('2026-04-24 10:00:00','12','李娜','15187654321','数据分析入门','学习','upload/pingjiafankui_文言文翻译1.jpg','学习','2026-04-24','线上屏幕共享','16','刘敏','15198765432','Excel讲解很实用，Python部分有些跳跃','中评','是',''),
+('2026-04-24 16:00:00','17','周凯','13812345678','健身计划制定','生活','upload/pingjiafankui_摄影技巧教学1.jpg','生活','2026-04-24','健身房实地指导','15','赵阳','13012345678','训练计划很专业，动作规范','好评','是',''),
+('2026-04-25 10:00:00','16','刘敏','15198765432','钢琴基础教学','生活','upload/pingjiafankui_配音技巧教学1.jpg','生活','2026-04-25','线下钢琴教室','14','陈曦','13890123456','五线谱讲解清楚，指法练习有效','好评','是',''),
+('2026-04-25 14:00:00','18','吴芳','15065432109','UI设计基础','学习','upload/pingjiafankui_文言文翻译2.jpg','学习','2026-04-25','线上Figma协作','11','张强','13987654321','工具使用讲得好，设计原则部分偏理论','中评','是',''),
+('2026-04-25 16:00:00','11','张强','13987654321','烹饪技巧分享','生活','upload/pingjiafankui_摄影技巧教学2.jpg','生活','2026-04-25','厨房实操教学','12','李娜','15187654321','菜品味道很好，刀工讲解详细','好评','是','');
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 二、轮播图链接更新 ==================== -->
+
+    <changeSet id="update-carousel-urls" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE `config` SET `url` = '/main/jinengxuqiu' WHERE `id` = 1 AND `type` = '1';
+UPDATE `config` SET `url` = '/main/xuexiziliao' WHERE `id` = 2 AND `type` = '1';
+UPDATE `config` SET `url` = '/main/forum' WHERE `id` = 3 AND `type` = '1';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 三、王浩测试数据 ==================== -->
+
+    <changeSet id="wanghao-jinengxuqiu" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `jinengxuqiu` (`addtime`, `xuqiubianhao`, `xuqiubiaoti`, `jinengfenlei`, `fengmian`, `fabushijian`, `xuqiufeiyong`, `xuqiumiaoshu`, `xuqiuxiangqing`, `yonghuzhanghao`, `yonghuxingming`, `shoujihao`, `xinyuzhishu`, `sfsh`, `shhf`, `thumbsupnum`, `crazilynum`, `clicktime`, `clicknum`, `discussnum`, `totalscore`, `storeupnum`) VALUES
+('2026-04-18 09:30:00','XQ20260425001','短视频制作教学','工具','upload/jinengxuqiu_短视频剪辑1.jpg,upload/jinengxuqiu_短视频剪辑2.jpg,upload/jinengxuqiu_短视频剪辑3.jpg','2026-04-18',85,'熟练使用剪映和PR进行短视频创作，擅长vlog拍摄与后期剪辑','<p>拥有两年短视频创作经验，熟悉抖音、B站等平台的内容风格。可以教授：</p><ul><li>手机拍摄技巧和运镜方法</li><li>剪映/PR基础操作和进阶技巧</li><li>转场特效、字幕动画制作</li><li>调色和音频处理</li></ul><p>适合零基础想入门短视频的同学，也欢迎有一定基础想提升的朋友。</p>','wanghao','王浩','13290125678','86','是','',3,0,'2026-04-25 14:30:00',22,2,4,2),
+('2026-04-20 14:00:00','XQ20260425002','英语口语陪练','语言','upload/jinengxuqiu_配音技巧教学1.jpg,upload/jinengxuqiu_配音技巧教学2.jpg,upload/jinengxuqiu_配音技巧教学3.jpg','2026-04-20',60,'英语六级580分，擅长日常口语和商务英语会话练习','<p>本人英语六级580分，有丰富的英语交流经验：</p><ul><li>日常英语会话训练</li><li>四六级口语考试备考指导</li><li>英文面试模拟练习</li><li>英语发音纠正和听力提升方法</li></ul><p>每周可安排2-3次线上语音练习，每次30-45分钟。希望用英语技能换取设计或编程方面的技能。</p>','wanghao','王浩','13290125678','86','是','',5,0,'2026-04-26 10:00:00',35,3,5,3);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="wanghao-discussjinengxuqiu" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `discussjinengxuqiu` (`addtime`, `refid`, `userid`, `avatarurl`, `nickname`, `content`, `score`, `reply`, `thumbsupnum`, `crazilynum`) VALUES
+('2026-04-15 10:30:00',1,18,'upload/yonghu_touxiang8.jpg','王浩','文言文翻译讲得很好，赵阳同学对古文词汇的掌握非常扎实，虚词用法解析尤其透彻。推荐给对文言文感兴趣的同学！',5,NULL,3,0),
+('2026-04-16 14:20:00',2,18,'upload/yonghu_touxiang8.jpg','王浩','摄影技巧教学的内容很实用，特别是构图部分的讲解，让我用手机拍照也有了很大提升。期待更多风光摄影的内容。',4,NULL,2,0),
+('2026-04-18 09:15:00',5,18,'upload/yonghu_touxiang8.jpg','王浩','短视频剪辑这个需求和我的技能很匹配，张强同学的PR教程做得很专业。我自己也在做短视频，可以互相交流学习。',5,NULL,4,0),
+('2026-04-22 16:45:00',9,18,'upload/yonghu_touxiang8.jpg','王浩','Python编程入门课程设计得很合理，从环境搭建到小项目实战循序渐进。正好我最近也在自学Python，这个对我帮助很大。',4,NULL,2,0),
+('2026-04-24 11:00:00',3,18,'upload/yonghu_touxiang8.jpg','王浩','配音教学内容很有趣！陈曦同学的声音很有特色，气息控制讲解得也很清楚。有没有关于有声书录制的教程？',4,NULL,1,0),
+('2026-04-25 15:30:00',10,18,'upload/yonghu_touxiang8.jpg','王浩','日语入门教学看起来很不错，五十音图的记忆方法很有创意。我也在考虑学日语，请问有配套的练习材料吗？',4,NULL,2,0);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="wanghao-discussxuexiziliao" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `discussxuexiziliao` (`addtime`, `refid`, `userid`, `avatarurl`, `nickname`, `content`, `reply`, `thumbsupnum`, `crazilynum`) VALUES
+('2026-04-14 16:00:00',2,18,'upload/yonghu_touxiang8.jpg','王浩','Python自动化脚本编写这个资料太实用了！我用里面的方法写了一个自动整理文件的脚本，节省了大量时间。建议增加一些爬虫实战案例。',NULL,5,0),
+('2026-04-17 11:30:00',3,18,'upload/yonghu_touxiang8.jpg','王浩','短视频脚本创作的资料对我帮助很大，之前拍视频总是想到哪拍到哪，学了脚本结构之后视频质量明显提升了。',NULL,3,0),
+('2026-04-20 09:45:00',5,18,'upload/yonghu_touxiang8.jpg','王浩','职场压力管理的方法很有用，时间管理矩阵帮助我重新规划了学习计划，现在效率提高不少。推荐每个大学生都看看。',NULL,4,0),
+('2026-04-23 14:20:00',1,18,'upload/yonghu_touxiang8.jpg','王浩','UI原型设计的资料讲得很系统，Figma的操作讲解很清晰。作为非设计专业的学生，看完之后基本能独立做简单的原型了。',NULL,2,0),
+('2026-04-25 10:15:00',6,18,'upload/yonghu_touxiang8.jpg','王浩','直播控场互动技巧的内容非常接地气，里面的话术模板直接就能用。我在社团直播活动中试了几个方法，效果很好！',NULL,3,0);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="wanghao-forum-posts" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `forum` (`addtime`, `typename`, `title`, `content`, `parentid`, `username`, `avatarurl`, `isdone`, `istop`, `cover`, `isanon`, `delflag`, `sfsh`, `shhf`, `userid`) VALUES
+('2026-04-16 20:30:00','工具','分享｜用剪映做出电影感vlog的技巧','最近研究了一下怎么用剪映做出有电影感的vlog，分享几个技巧：1. 使用2.35:1的宽屏比例裁剪画面，瞬间提升电影感；2. 调色用低饱和度+青橙色调，模拟胶片风格；3. 加入合适的背景音乐，推荐轻音乐或氛围感音乐；4. 转场不要太花哨，简单的淡入淡出最高级；5. 字幕用无衬线字体，字号不要太大。附上我用这些技巧剪的一支校园vlog，欢迎交流讨论！',0,'王浩','upload/yonghu_touxiang8.jpg','开放',0,'upload/forum_video_edit.jpg',0,0,'是','',18),
+('2026-04-19 18:20:00','艺术','吉他入门一个月心得｜零基础如何快速上手','学吉他一个月了，从完全不会到能弹唱《晴天》，分享一下我的学习过程：第1周认识吉他各部位，学会调音，练习C、Am、G三个基础和弦；第2周练习和弦转换，左手按弦要到位，右手节奏要稳；第3周学会扫弦和分解和弦，开始尝试简单曲目；第4周完整弹唱第一首歌。最重要的经验：每天至少练习30分钟，坚持比技巧更重要！手指起茧是正常的，过了这个阶段就好了。有一起学吉他的同学欢迎互相交流！',0,'王浩','upload/yonghu_touxiang8.jpg','开放',0,'upload/forum_guitar.jpg',0,0,'是','',18),
+('2026-04-21 15:45:00','学习','大学生如何高效利用碎片时间学习新技能','作为一个同时在学吉他、英语和视频剪辑的人，分享一下我的碎片时间管理方法：通勤时间听英语播客或背单词App；课间休息看一个短视频教程的片段；午休前练习吉他和弦转换；睡前复习当天学到的知识点。关键是要把大目标拆解成小任务，每天进步一点点。另外推荐几个好用的学习App：Anki（间隔重复记忆）、Forest（专注计时）、Notion（知识整理）。大家有什么好的学习方法也欢迎分享！',0,'王浩','upload/yonghu_touxiang8.jpg','开放',0,'upload/forum_calligraphy.jpg',0,0,'是','',18);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="wanghao-forum-replies" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `forum` (`addtime`, `typename`, `title`, `content`, `parentid`, `username`, `avatarurl`, `isdone`, `istop`, `cover`, `isanon`, `delflag`, `sfsh`, `shhf`, `userid`) VALUES
+('2026-04-15 21:00:00','编程','','推荐《Python Crash Course》，这本书非常适合有其他语言基础的同学入门。学完基础语法后建议往数据分析方向走，pandas和matplotlib组合很实用，做课程作业和毕业设计都用得上。',1,'王浩','upload/yonghu_touxiang8.jpg','开放',0,NULL,0,0,'是','',18),
+('2026-04-17 12:30:00','生活','','手机摄影技巧补充：开启网格线辅助构图，善用人像模式拍人物，逆光拍摄时点击暗部对焦可以拍出剪影效果。另外推荐VSCO这个App做后期，滤镜质感比较高级。',2,'王浩','upload/yonghu_touxiang8.jpg','开放',0,NULL,0,0,'是','',18),
+('2026-04-23 19:15:00','艺术','','作为吉他社的一员，非常欢迎零基础的同学加入！我就是在社里从零开始学的，学长们都很有耐心。建议新同学先从尤克里里入手也行，四根弦比六根弦容易上手。',8,'王浩','upload/yonghu_touxiang8.jpg','开放',0,NULL,0,0,'是','',18);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="wanghao-storeup" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `storeup` (`addtime`, `userid`, `refid`, `tablename`, `name`, `picture`, `type`, `inteltype`, `remark`) VALUES
+('2026-04-14 09:00:00',18,1,'jinengxuqiu','文言文翻译','upload/jinengxuqiu_文言文翻译1.jpg','1','',''),
+('2026-04-15 14:30:00',18,2,'jinengxuqiu','摄影技巧教学','upload/jinengxuqiu_摄影技巧教学1.jpg','1','',''),
+('2026-04-16 10:15:00',18,5,'jinengxuqiu','短视频剪辑','upload/jinengxuqiu_短视频剪辑1.jpg','1','',''),
+('2026-04-19 16:00:00',18,10,'jinengxuqiu','日语入门教学','upload/jinengxuqiu_日语入门教学1.jpg','1','',''),
+('2026-04-20 11:00:00',18,12,'jinengxuqiu','篮球基础训练','upload/jinengxuqiu_篮球基础训练1.jpg','1','',''),
+('2026-04-14 15:45:00',18,2,'xuexiziliao','Python自动化脚本编写','upload/xuexiziliao_Python自动化脚本编写1.jpg','1','',''),
+('2026-04-17 10:30:00',18,3,'xuexiziliao','短视频脚本创作','upload/xuexiziliao_短视频脚本创作1.jpg','1','',''),
+('2026-04-20 09:00:00',18,5,'xuexiziliao','职场压力管理','upload/xuexiziliao_职场压力管理1.jpg','1','',''),
+('2026-04-23 13:00:00',18,1,'xuexiziliao','UI原型快速设计','upload/xuexiziliao_UI原型快速设计1.jpg','1','',''),
+('2026-04-25 10:00:00',18,6,'xuexiziliao','直播控场互动技巧','upload/xuexiziliao_直播控场互动技巧1.jpg','1','','');
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="wanghao-friend" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `friend` (`addtime`, `uid`, `fid`, `name`, `picture`, `role`, `tablename`, `alias`, `type`) VALUES
+('2026-04-14 10:00:00',18,15,'张强','upload/yonghu_touxiang5.jpg','用户','yonghu',NULL,1),
+('2026-04-14 10:00:00',15,18,'王浩','upload/yonghu_touxiang8.jpg','用户','yonghu',NULL,1),
+('2026-04-16 15:00:00',18,13,'陈曦','upload/yonghu_touxiang3.jpg','用户','yonghu',NULL,1),
+('2026-04-16 15:00:00',13,18,'王浩','upload/yonghu_touxiang8.jpg','用户','yonghu',NULL,1),
+('2026-04-19 11:00:00',18,14,'李娜','upload/yonghu_touxiang4.jpg','用户','yonghu',NULL,1),
+('2026-04-19 11:00:00',14,18,'王浩','upload/yonghu_touxiang8.jpg','用户','yonghu',NULL,1),
+('2026-04-22 09:00:00',18,17,'刘敏','upload/yonghu_touxiang7.jpg','用户','yonghu',NULL,1),
+('2026-04-22 09:00:00',17,18,'王浩','upload/yonghu_touxiang8.jpg','用户','yonghu',NULL,1);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="wanghao-chatmessage" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `chatmessage` (`addtime`, `uid`, `fid`, `content`, `format`, `isread`) VALUES
+('2026-04-14 10:05:00',18,15,'张强你好！我看到你发布的短视频剪辑技能，想和你交流一下PR的使用技巧。',1,1),
+('2026-04-14 10:08:00',15,18,'王浩你好！当然可以，我对你的吉他教学也很感兴趣，要不我们互相交换技能？',1,1),
+('2026-04-14 10:12:00',18,15,'太好了！我可以教你吉他基础，你教我PR剪辑进阶技巧。这周六下午有时间吗？',1,1),
+('2026-04-14 10:15:00',15,18,'周六下午没问题，我们在图书馆一楼咖啡厅见吧。我先准备一下PR的教学资料。',1,1),
+('2026-04-20 14:00:00',18,15,'上次学到的PR技巧已经用在我新剪的vlog里了，效果很不错！下次什么时候继续？',1,1),
+('2026-04-20 14:10:00',15,18,'太好了！这周三晚上怎么样？我想学《小星星》的吉他指弹版。',1,1),
+('2026-04-16 15:05:00',18,13,'陈曦同学你好，我对配音很感兴趣，看到你发布的配音技巧教学，想了解一下具体内容。',1,1),
+('2026-04-16 15:10:00',13,18,'你好王浩！我可以教基础发声和情感表达，你有什么具体想学的方向吗？比如动漫配音还是有声书？',1,1),
+('2026-04-16 15:15:00',18,13,'我比较想学有声书录制，平时喜欢读书，想把一些好文章录成音频分享。',1,1),
+('2026-04-16 15:20:00',13,18,'有声书录制很棒！我可以教你气息控制和朗读节奏。你用英语口语陪练来交换怎么样？我正好在准备六级口语。',1,1),
+('2026-04-22 10:00:00',18,13,'上次练习的效果很好，我已经录了一段散文朗读，你有空帮我听听看有什么需要改进的吗？',1,1),
+('2026-04-22 10:05:00',13,18,'好的，发过来我听听！另外我觉得你的声音条件很好，可以试试小说播读。',1,1),
+('2026-04-19 11:05:00',18,14,'李娜你好，我看到你的手工DIY教学，想学毛线钩织。我可以用吉他教学来交换。',1,1),
+('2026-04-19 11:10:00',14,18,'好呀！钩织入门很简单的，我先教你最基础的锁针和短针，一个下午就能学会杯垫。',1,1),
+('2026-04-23 16:00:00',18,14,'上次做的杯垫送给室友了，他们都很喜欢！下次想学钩小包包，难度大不大？',1,1),
+('2026-04-23 16:05:00',14,18,'小包包比杯垫难一点，需要掌握加针减针的技巧。我准备好教程了，这周末约吧！',1,0),
+('2026-04-22 09:05:00',18,17,'刘敏你好，你的PPT设计作品看起来很专业！我最近要做课程汇报PPT，能给我一些建议吗？',1,1),
+('2026-04-22 09:10:00',17,18,'当然可以！你先把PPT大纲发给我看看，我帮你规划一下整体设计方向。',1,1),
+('2026-04-25 20:00:00',18,17,'PPT做好了，多亏了你的配色方案和排版建议，老师给了很高的评价！太感谢了。',1,1),
+('2026-04-25 20:10:00',17,18,'不客气！以后有PPT相关的问题随时找我。对了，你什么时候教我弹吉他呀？',1,0);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="wanghao-jiaohuanshenqing" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `jiaohuanshenqing` (`addtime`, `xuqiubianhao`, `yonghuzhanghao`, `yonghuxingming`, `shoujihao`, `xuqiubiaoti`, `jinengfenlei`, `xuqiufeiyong`, `fengmian`, `shenqingshijian`, `shenqingbeizhu`, `gongjirenzhanghao`, `gongjirenxingming`, `lianxifangshi`, `xinyu`, `sfsh`, `shhf`) VALUES
+('2026-04-17 10:00:00','XQ20260401005','wanghao','王浩','13290125678','短视频剪辑','工具',120,'upload/jinengxuqiu_短视频剪辑1.jpg','2026-04-17 10:00:00','我对PR剪辑很感兴趣，可以用吉他弹唱教学来交换，每周可安排2次线上教学','zhangqiang','张强','13987654210','90','是',''),
+('2026-04-19 14:30:00','XQ20260401003','wanghao','王浩','13290125678','配音技巧教学','生活',60,'upload/jinengxuqiu_配音技巧教学1.jpg','2026-04-19 14:30:00','想学有声书录制技巧，可以提供英语口语陪练作为交换','chenxi','陈曦','13890126745','85','是',''),
+('2026-04-22 09:00:00','XQ20260401007','wanghao','王浩','13290125678','PPT美化设计','学习',90,'upload/jinengxuqiu_PPT美化设计1.jpg','2026-04-22 09:00:00','课程汇报PPT需要美化，可以教吉他基础作为回报','liumin','刘敏','15178903456','95','是',''),
+('2026-04-20 16:00:00','XQ20260401008','zhoukai','周凯','13812348756','吉他弹唱教学','艺术',70,'upload/jinengxuqiu_吉他弹唱教学1.jpg','2026-04-20 16:00:00','一直想学吉他弹唱，可以用硬笔书法教学来交换','wanghao','王浩','13290125678','86','是',''),
+('2026-04-23 11:00:00','XQ20260401008','lina','李娜','15187653241','吉他弹唱教学','艺术',70,'upload/jinengxuqiu_吉他弹唱教学1.jpg','2026-04-23 11:00:00','想学简单的吉他弹唱，可以教手工DIY作为交换','wanghao','王浩','13290125678','86','是',''),
+('2026-04-25 09:30:00','XQ20260425001','zhaoyang','赵阳','13812046578','短视频制作教学','工具',85,'upload/jinengxuqiu_短视频剪辑1.jpg','2026-04-25 09:30:00','想学短视频拍摄和剪辑，可以用文言文翻译教学来交换','wanghao','王浩','13290125678','86','待审核',''),
+('2026-04-26 08:00:00','XQ20260425002','wufang','吴芳','15065437821','英语口语陪练','语言',60,'upload/jinengxuqiu_配音技巧教学1.jpg','2026-04-26 08:00:00','想提升英语口语水平，可以提供摄影教学作为交换','wanghao','王浩','13290125678','86','待审核','');
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="wanghao-jiaohuanjilu" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `jiaohuanjilu` (`addtime`, `yonghuzhanghao`, `yonghuxingming`, `shoujihao`, `biaoti`, `jinengfenlei`, `gongjitupian`, `jiaohuanjineng`, `jiaohuanshijian`, `gongjineirong`, `gongjirenzhanghao`, `gongjirenxingming`, `lianxifangshi`, `crossuserid`, `crossrefid`) VALUES
+('2026-04-18 17:00:00','wanghao','王浩','13290125678','短视频剪辑','工具','upload/jiaohuanjilu_短视频剪辑1.jpg','工具','2026-04-18','通过线上屏幕共享学习了PR的基础剪辑和调色技巧，张强同学讲得很细致','zhangqiang','张强','13987654210',15,5),
+('2026-04-21 16:30:00','wanghao','王浩','13290125678','配音技巧教学','生活','upload/jiaohuanjilu_配音技巧教学1.jpg','生活','2026-04-21','学习了气息控制和有声书朗读技巧，陈曦同学的教学很专业','chenxi','陈曦','13890126745',13,3),
+('2026-04-23 15:00:00','wanghao','王浩','13290125678','PPT美化设计','学习','upload/jiaohuanjilu_PPT美化设计1.jpg','学习','2026-04-23','获得了PPT配色方案和排版建议，课程汇报PPT焕然一新','liumin','刘敏','15178903456',17,7),
+('2026-04-21 10:00:00','zhoukai','周凯','13812348756','吉他弹唱教学','艺术','upload/jiaohuanjilu_吉他弹唱教学1.jpg','艺术','2026-04-21','王浩教授了C和弦、Am和弦及基础扫弦技巧，教学循序渐进','wanghao','王浩','13290125678',18,8),
+('2026-04-24 14:00:00','lina','李娜','15187653241','吉他弹唱教学','艺术','upload/jiaohuanjilu_吉他弹唱教学2.jpg','艺术','2026-04-24','王浩耐心教授了吉他基础指法和简单曲目弹唱','wanghao','王浩','13290125678',18,8);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="wanghao-pingjiafankui" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `pingjiafankui` (`addtime`, `yonghuzhanghao`, `yonghuxingming`, `shoujihao`, `biaoti`, `jinengfenlei`, `huifutupian`, `jiaohuanjineng`, `pingjiashijian`, `jiaohuanbeizhu`, `jiaohuanrenzhanghao`, `jiaohuanrenxingming`, `lianxifangshi`, `huifuneirong`, `pingjiajieguo`, `sfsh`, `shhf`) VALUES
+('2026-04-19 09:00:00','wanghao','王浩','13290125678','短视频剪辑','工具','upload/pingjiafankui_短视频剪辑1.jpg','工具','2026-04-19','线上屏幕共享远程教学','zhangqiang','张强','13987654210','PR剪辑教学非常系统，从素材导入到成片输出都有详细讲解，调色部分尤其实用。学完之后独立剪了一支vlog，效果很满意！','好评','是',''),
+('2026-04-22 11:00:00','wanghao','王浩','13290125678','配音技巧教学','生活','upload/pingjiafankui_配音技巧教学1.jpg','生活','2026-04-22','线上语音教学与录音练习','chenxi','陈曦','13890126745','配音教学很专业，气息控制的训练方法非常有效。陈曦同学对有声书录制有丰富经验，指导很到位。','好评','是',''),
+('2026-04-24 10:30:00','wanghao','王浩','13290125678','PPT美化设计','学习','upload/pingjiafankui_PPT美化设计1.jpg','学习','2026-04-24','远程协作PPT设计','liumin','刘敏','15178903456','PPT设计指导很用心，配色方案非常协调，排版建议也很实用。课程汇报时获得了老师的表扬！','好评','是',''),
+('2026-04-22 15:00:00','zhoukai','周凯','13812348756','吉他弹唱教学','艺术','upload/pingjiafankui_吉他弹唱教学1.jpg','艺术','2026-04-22','每周一次线下教学','wanghao','王浩','13290125678','王浩的吉他教学非常有耐心，把复杂的和弦转换讲解得很清楚。一个月下来已经能弹唱简单的歌了，强烈推荐！','好评','是',''),
+('2026-04-25 11:00:00','lina','李娜','15187653241','吉他弹唱教学','艺术','upload/pingjiafankui_吉他弹唱教学2.jpg','艺术','2026-04-25','线下面对面教学','wanghao','王浩','13290125678','王浩教吉他循序渐进，不会让人觉得太难。每次教学都有明确的目标，练习效果很好。希望能多安排几次练习。','好评','是','');
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="wanghao-huiyuanchongzhi" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `huiyuanchongzhi` (`addtime`, `chongzhibianhao`, `tupian`, `chongzhijine`, `chongzhiriqi`, `yonghuzhanghao`, `yonghuxingming`) VALUES
+('2026-04-15 10:00:00','CZ20260415018','upload/huiyuanchongzhi_tupian1.jpg',50,'2026-04-15','wanghao','王浩'),
+('2026-04-20 14:30:00','CZ20260420018','upload/huiyuanchongzhi_tupian2.jpg',100,'2026-04-20','wanghao','王浩'),
+('2026-04-25 09:00:00','CZ20260425018','upload/huiyuanchongzhi_tupian3.jpg',200,'2026-04-25','wanghao','王浩');
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="wanghao-messages" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `messages` (`addtime`, `userid`, `username`, `avatarurl`, `content`, `cpicture`, `reply`, `rpicture`) VALUES
+('2026-04-13 20:00:00',18,'王浩','upload/yonghu_touxiang8.jpg','你好，我刚注册了账号，想问一下怎么发布技能需求？需要审核多长时间？',NULL,'欢迎加入平台！点击技能需求页面的发布按钮即可，审核一般24小时内完成。如有问题可随时留言。',NULL),
+('2026-04-18 15:30:00',18,'王浩','upload/yonghu_touxiang8.jpg','建议增加一个技能交换日历功能，方便双方约定交换时间，避免时间冲突。另外希望能支持视频消息功能。',NULL,'感谢您的宝贵建议！日历功能已经列入开发计划，预计下个版本会上线。视频消息功能也在规划中。',NULL),
+('2026-04-24 21:00:00',18,'王浩','upload/yonghu_touxiang8.jpg','平台使用体验很好，推荐算法推荐的内容很精准。希望以后能增加视频教学直播功能，实现实时互动教学，这样技能交换会更高效。',NULL,NULL,NULL);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="wanghao-chat" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO `chat` (`addtime`, `userid`, `adminid`, `ask`, `reply`, `isreply`, `isread`, `uname`, `uimage`, `type`) VALUES
+('2026-04-15 09:00:00',18,1,'请问怎么提升自己的信誉指数？','您的信誉指数可以通过以下方式提升：1. 积极完成技能交换，每次完成交换可获得积分；2. 获得交换对象的好评会加分；3. 在社区发布有价值的帖子并获得点赞也有加成；4. 保持良好的交易记录，避免违规行为。目前您的信誉指数为86，继续保持良好的交易习惯即可稳步提升。',1,1,'王浩','upload/yonghu_touxiang8.jpg',1),
+('2026-04-19 14:00:00',18,1,'我想学Python编程，平台上有推荐的学习路线吗？','推荐您从以下步骤开始学习Python：1. 先查看学习资料中的"Python自动化脚本编写"教程，内容由浅入深；2. 在技能需求板块搜索Python相关需求，目前有"Python编程入门"正在招收学员；3. 社区论坛中有Python学习讨论帖，可以参与交流获取经验。建议同时关注"软件研发"分类的学习资料，内容非常丰富实用。',1,1,'王浩','upload/yonghu_touxiang8.jpg',1),
+('2026-04-23 10:30:00',18,1,'如何查看我发布的技能需求的浏览数据？','您可以在个人中心查看已发布的技能需求列表，每个需求卡片上会显示浏览量、收藏数、评论数等数据。点击进入详情页还可以查看更详细的互动信息。如果想了解哪些用户收藏了您的需求，可以在后台管理中查看。',1,1,'王浩','upload/yonghu_touxiang8.jpg',1);
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 四、技能需求统计数值更新 ==================== -->
+
+    <changeSet id="jinengxuqiu-stats-update-20260426" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE `jinengxuqiu` SET thumbsupnum=18, storeupnum=12, clicknum=156, totalscore=4.5 WHERE id=1;
+UPDATE `jinengxuqiu` SET thumbsupnum=32, storeupnum=8,  clicknum=89,  totalscore=3.8 WHERE id=2;
+UPDATE `jinengxuqiu` SET thumbsupnum=9,  storeupnum=22, clicknum=178, totalscore=4.8 WHERE id=3;
+UPDATE `jinengxuqiu` SET thumbsupnum=25, storeupnum=15, clicknum=67,  totalscore=4.2 WHERE id=4;
+UPDATE `jinengxuqiu` SET thumbsupnum=42, storeupnum=6,  clicknum=210, totalscore=3.5 WHERE id=5;
+UPDATE `jinengxuqiu` SET thumbsupnum=14, storeupnum=28, clicknum=48,  totalscore=4.9 WHERE id=6;
+UPDATE `jinengxuqiu` SET thumbsupnum=7,  storeupnum=19, clicknum=135, totalscore=3.2 WHERE id=7;
+UPDATE `jinengxuqiu` SET thumbsupnum=35, storeupnum=10, clicknum=98,  totalscore=4.0 WHERE id=8;
+UPDATE `jinengxuqiu` SET thumbsupnum=22, storeupnum=35, clicknum=245, totalscore=4.6 WHERE id=9;
+UPDATE `jinengxuqiu` SET thumbsupnum=16, storeupnum=18, clicknum=112, totalscore=4.3 WHERE id=10;
+UPDATE `jinengxuqiu` SET thumbsupnum=28, storeupnum=5,  clicknum=72,  totalscore=3.6 WHERE id=11;
+UPDATE `jinengxuqiu` SET thumbsupnum=38, storeupnum=14, clicknum=58,  totalscore=4.7 WHERE id=12;
+UPDATE `jinengxuqiu` SET thumbsupnum=12, storeupnum=30, clicknum=185, totalscore=3.9 WHERE id=13;
+UPDATE `jinengxuqiu` SET thumbsupnum=20, storeupnum=9,  clicknum=42,  totalscore=4.4 WHERE id=14;
+UPDATE `jinengxuqiu` SET thumbsupnum=45, storeupnum=25, clicknum=320, totalscore=4.1 WHERE id=15;
+UPDATE `jinengxuqiu` SET thumbsupnum=8,  storeupnum=16, clicknum=95,  totalscore=4.8 WHERE id=16;
+UPDATE `jinengxuqiu` SET thumbsupnum=15, storeupnum=20, clicknum=128, totalscore=3.4 WHERE id=17;
+UPDATE `jinengxuqiu` SET thumbsupnum=30, storeupnum=11, clicknum=168, totalscore=4.5 WHERE id=18;
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 五、VIP字段与订单字段 ==================== -->
+
+    <changeSet id="add-vip-to-yonghu" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="yonghu" columnName="vip"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="yonghu">
+            <column name="vip" type="varchar(200)" defaultValue="否">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add-order-fields-to-huiyuanchongzhi" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="huiyuanchongzhi" columnName="zhuangtai"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="huiyuanchongzhi">
+            <column name="zhuangtai" type="varchar(200)" defaultValue="待支付">
+                <constraints nullable="true"/>
+            </column>
+            <column name="taocan" type="varchar(200)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="zhifufangshi" type="varchar(200)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add-vip-expire-to-yonghu" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="yonghu" columnName="vip_expire"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="yonghu">
+            <column name="vip_expire" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- ==================== 六、技能需求类型字段 ==================== -->
+
+    <changeSet id="2026-04-26-add-leixing" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="jinengxuqiu" columnName="leixing"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="jinengxuqiu">
+            <column name="leixing" type="varchar(50)" defaultValue="需求">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <comment>添加类型字段区分需求和技能</comment>
+    </changeSet>
+
+    <changeSet id="2026-04-26-init-leixing-data" author="system">
+        <sql>UPDATE jinengxuqiu SET leixing = '需求' WHERE leixing IS NULL</sql>
+    </changeSet>
+
+    <!-- ==================== 七、论坛互动字段 ==================== -->
+
+    <changeSet id="2026-04-26-forum-thumbsupnum" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="forum" columnName="thumbsupnum"/></not>
+        </preConditions>
+        <addColumn tableName="forum">
+            <column name="thumbsupnum" type="INT" defaultValueNumeric="0">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="2026-04-26-forum-crazilynum" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="forum" columnName="crazilynum"/></not>
+        </preConditions>
+        <addColumn tableName="forum">
+            <column name="crazilynum" type="INT" defaultValueNumeric="0">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="2026-04-26-forum-storeupnum" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="forum" columnName="storeupnum"/></not>
+        </preConditions>
+        <addColumn tableName="forum">
+            <column name="storeupnum" type="INT" defaultValueNumeric="0">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- ==================== 八、论坛封面修正 ==================== -->
+
+    <changeSet id="2026-04-26-fix-forum-duplicate-covers" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE `forum` SET `cover` = 'upload/forum_cover1.jpg' WHERE `title` = '吉他入门一个月心得｜零基础如何快速上手' AND `cover` = 'upload/forum_guitar.jpg' AND `userid` = 18;
+UPDATE `forum` SET `cover` = 'upload/forum_cover2.jpg' WHERE `title` = '大学生如何高效利用碎片时间学习新技能' AND `cover` = 'upload/forum_calligraphy.jpg' AND `userid` = 18;
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="2026-04-26-fix-forum-covers-v2" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE `forum` SET `cover` = 'upload/forum_guitar_learn.jpg' WHERE `title` = '吉他入门一个月心得｜零基础如何快速上手' AND `userid` = 18;
+UPDATE `forum` SET `cover` = 'upload/forum_study_time.jpg' WHERE `title` = '大学生如何高效利用碎片时间学习新技能' AND `userid` = 18;
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 九、新增技能分类 ==================== -->
+
+    <changeSet id="2026-04-26-add-yuyan-category" author="system">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM jinengfenlei WHERE jinengfenlei = '语言'</sqlCheck>
+        </preConditions>
+        <sql>INSERT INTO jinengfenlei (jinengfenlei, addtime) VALUES ('语言', NOW())</sql>
+    </changeSet>
+
+    <changeSet id="2026-04-26-add-yundong-category" author="system">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM jinengfenlei WHERE jinengfenlei = '运动'</sqlCheck>
+        </preConditions>
+        <sql>INSERT INTO jinengfenlei (jinengfenlei, addtime) VALUES ('运动', NOW())</sql>
+    </changeSet>
+
+</databaseChangeLog>

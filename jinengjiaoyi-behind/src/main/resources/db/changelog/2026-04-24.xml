@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- ==================== 留言反馈数据更新 ==================== -->
+    <changeSet id="update-messages-real-data" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+DELETE FROM `messages` WHERE `id` BETWEEN 1 AND 8;
+INSERT INTO `messages` (`id`, `addtime`, `userid`, `username`, `avatarurl`, `content`, `cpicture`, `reply`, `rpicture`) VALUES
+(1, '2026-04-13 02:30:00', 15, '张强', 'upload/yonghu_touxiang5.jpg', '<p>这个技能交易平台太赞了！我通过平台用Python编程技能交换到了PR剪辑教程，双方都学到了新东西。推荐算法也很精准，首页推荐的内容都是我感兴趣的方向。希望平台越来越好！</p>', NULL, '<p>感谢您的支持与肯定！我们会持续优化推荐算法，为大家提供更精准的技能匹配服务。欢迎多多使用交换功能，让技能流动起来！</p>', NULL),
+(2, '2026-04-14 08:15:00', 12, '吴芳', 'upload/yonghu_touxiang2.jpg', '<p>建议增加「外语口语」和「乐器演奏」这两个技能分类，现在分类里没有找到特别匹配的。另外，能不能在技能需求页增加按费用范围筛选的功能？这样找技能交换更方便。</p>', NULL, '<p>非常感谢您的宝贵建议！我们已经记录了您提到的分类需求，会在下个版本中新增更细化的技能分类。费用筛选功能也在规划中，敬请期待！</p>', NULL),
+(3, '2026-04-15 05:45:00', 13, '陈曦', 'upload/yonghu_touxiang3.jpg', '<p>上周通过平台找到了一位配音高手进行技能交换，对方非常专业和耐心。整个交换过程体验很好，从申请到完成评价流程都很清晰。唯一的小建议是希望能加一个交换过程中的即时沟通功能，现在只能留手机号联系，不太方便。</p>', NULL, '<p>很高兴听到您有愉快的交换体验！即时通讯功能已在开发中，预计下月上线，届时可以直接在平台内沟通。感谢您的耐心等待！</p>', NULL),
+(4, '2026-04-16 10:20:00', 14, '李娜', 'upload/yonghu_touxiang4.jpg', '<p>作为一名手工DIY爱好者，在这里找到了好几个志同道合的朋友。通过技能社区的讨论帖学到了很多新的手工技巧，社区氛围很好！不过有时候帖子加载比较慢，希望能优化一下。</p>', NULL, NULL, NULL),
+(5, '2026-04-17 03:00:00', 11, '赵阳', 'upload/yonghu_touxiang1.jpg', '<p>我在平台上发布了文言文翻译的技能需求，没想到这么快就有人申请交换了！对方用视频剪辑技能来换我的古文翻译指导，双方都很满意。信誉体系也很靠谱，看到对方信誉分高就放心多了。</p>', NULL, '<p>感谢您的分享！信誉体系正是为了让大家安心交易而设计的。您的好评也会为对方积累信誉，形成良性循环。祝您在平台上获得更多美好的交换体验！</p>', NULL),
+(6, '2026-04-18 07:30:00', 16, '周凯', 'upload/yonghu_touxiang6.jpg', '<p>希望学习资料模块能支持视频在线播放功能，现在只能下载附件看，不太方便。另外建议加一个学习进度追踪的功能，可以记录自己学了多少内容。整体来说平台做得不错，功能很实用！</p>', NULL, NULL, NULL),
+(7, '2026-04-20 01:00:00', 17, '刘敏', 'upload/yonghu_touxiang7.jpg', '<p>用PPT设计技能在平台上帮了好几位同学美化毕业答辩PPT，获得了很多好评。平台的评价反馈机制很好，每次交换后都能看到对方的真实评价，让人很有成就感。强烈推荐给身边的同学们！</p>', NULL, '<p>太棒了！您的热心帮助让技能交换更有温度。我们鼓励更多像您这样的优质用户分享技能，一起构建互帮互助的校园技能交易社区！</p>', NULL),
+(8, '2026-04-22 06:10:00', 18, '王浩', 'upload/yonghu_touxiang8.jpg', '<p>作为新用户，注册和发布技能需求的流程都很顺畅。界面简洁明了，没有多余的操作步骤。不过个人中心的界面可以再美化一下，信息展示可以更直观。总体好评，会继续使用！</p>', NULL, '<p>欢迎您加入技能交易平台！感谢您对产品体验的肯定和建议。个人中心的界面优化已列入开发计划，我们会不断打磨每一个细节，让您的使用体验更好！</p>', NULL);
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 用户数据修正 ==================== -->
+    <changeSet id="fix-yonghu-realistic-data" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE `yonghu` SET yonghuzhanghao='zhaoyang', xingbie='男', idcard='610104200403150037', age=22, xinyuzhishu=88, shoujihao='13812046578' WHERE id=11;
+UPDATE `yonghu` SET yonghuzhanghao='wufang', xingbie='女', idcard='210103200207074528', age=24, xinyuzhishu=92, shoujihao='15065437821' WHERE id=12;
+UPDATE `yonghu` SET yonghuzhanghao='chenxi', xingbie='女', idcard='330106200508086024', age=21, xinyuzhishu=85, shoujihao='13890126745' WHERE id=13;
+UPDATE `yonghu` SET yonghuzhanghao='lina', xingbie='女', idcard='140105200302140026', age=23, xinyuzhishu=78, shoujihao='15187653241' WHERE id=14;
+UPDATE `yonghu` SET yonghuzhanghao='zhangqiang', xingbie='男', idcard='230102200404160019', age=22, xinyuzhishu=90, shoujihao='13987654210' WHERE id=15;
+UPDATE `yonghu` SET yonghuzhanghao='zhoukai', xingbie='男', idcard='420111200609090035', age=20, xinyuzhishu=75, shoujihao='13812348756' WHERE id=16;
+UPDATE `yonghu` SET yonghuzhanghao='liumin', xingbie='女', idcard='430104200110100062', age=25, xinyuzhishu=95, shoujihao='15178903456' WHERE id=17;
+UPDATE `yonghu` SET yonghuzhanghao='wanghao', xingbie='男', idcard='120106200305050078', age=23, xinyuzhishu=86, shoujihao='13290125678' WHERE id=18;
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 技能需求关联修正 ==================== -->
+    <changeSet id="fix-jinengxuqiu-refs" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE `jinengxuqiu` SET yonghuzhanghao='zhaoyang', shoujihao='13812046578', xinyuzhishu=88 WHERE yonghuzhanghao='15' AND yonghuxingming='赵阳';
+UPDATE `jinengxuqiu` SET yonghuzhanghao='wufang', shoujihao='15065437821', xinyuzhishu=92 WHERE yonghuzhanghao='18' AND yonghuxingming='吴芳';
+UPDATE `jinengxuqiu` SET yonghuzhanghao='chenxi', shoujihao='13890126745', xinyuzhishu=85 WHERE yonghuzhanghao='14' AND yonghuxingming='陈曦';
+UPDATE `jinengxuqiu` SET yonghuzhanghao='lina', shoujihao='15187653241', xinyuzhishu=78 WHERE yonghuzhanghao='12' AND yonghuxingming='李娜';
+UPDATE `jinengxuqiu` SET yonghuzhanghao='zhangqiang', shoujihao='13987654210', xinyuzhishu=90 WHERE yonghuzhanghao='11' AND yonghuxingming='张强';
+UPDATE `jinengxuqiu` SET yonghuzhanghao='zhoukai', shoujihao='13812348756', xinyuzhishu=75 WHERE yonghuzhanghao='17' AND yonghuxingming='周凯';
+UPDATE `jinengxuqiu` SET yonghuzhanghao='liumin', shoujihao='15178903456', xinyuzhishu=95 WHERE yonghuzhanghao='16' AND yonghuxingming='刘敏';
+UPDATE `jinengxuqiu` SET yonghuzhanghao='wanghao', shoujihao='13290125678', xinyuzhishu=86 WHERE yonghuzhanghao='13' AND yonghuxingming='王浩';
+
+UPDATE `jinengxuqiu` SET yonghuzhanghao='chenxi', yonghuxingming='陈曦', shoujihao='13890126745', xinyuzhishu=85 WHERE id=10 AND yonghuzhanghao='14';
+UPDATE `jinengxuqiu` SET yonghuzhanghao='liumin', yonghuxingming='刘敏', shoujihao='15178903456', xinyuzhishu=95 WHERE id=11 AND yonghuzhanghao='16';
+UPDATE `jinengxuqiu` SET yonghuzhanghao='zhoukai', yonghuxingming='周凯', shoujihao='13812348756', xinyuzhishu=75 WHERE id=12 AND yonghuzhanghao='17';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 交换记录关联修正 ==================== -->
+    <changeSet id="fix-jiaohuanjilu-refs" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE `jiaohuanjilu` SET yonghuzhanghao='zhaoyang', shoujihao='13812046578' WHERE yonghuzhanghao='15' AND yonghuxingming='赵阳';
+UPDATE `jiaohuanjilu` SET yonghuzhanghao='wufang', shoujihao='15065437821' WHERE yonghuzhanghao='18' AND yonghuxingming='吴芳';
+UPDATE `jiaohuanjilu` SET yonghuzhanghao='chenxi', shoujihao='13890126745' WHERE yonghuzhanghao='14' AND yonghuxingming='陈曦';
+UPDATE `jiaohuanjilu` SET yonghuzhanghao='lina', shoujihao='15187653241' WHERE yonghuzhanghao='12' AND yonghuxingming='李娜';
+UPDATE `jiaohuanjilu` SET yonghuzhanghao='zhangqiang', shoujihao='13987654210' WHERE yonghuzhanghao='11' AND yonghuxingming='张强';
+UPDATE `jiaohuanjilu` SET yonghuzhanghao='zhoukai', shoujihao='13812348756' WHERE yonghuzhanghao='17' AND yonghuxingming='周凯';
+UPDATE `jiaohuanjilu` SET yonghuzhanghao='liumin', shoujihao='15178903456' WHERE yonghuzhanghao='16' AND yonghuxingming='刘敏';
+UPDATE `jiaohuanjilu` SET yonghuzhanghao='wanghao', shoujihao='13290125678' WHERE yonghuzhanghao='13' AND yonghuxingming='王浩';
+
+UPDATE `jiaohuanjilu` SET gongjirenzhanghao='zhangqiang', gongjirenxingming='张强', lianxifangshi='13987654210' WHERE gongjirenzhanghao='11';
+UPDATE `jiaohuanjilu` SET gongjirenzhanghao='lina', gongjirenxingming='李娜', lianxifangshi='15187653241' WHERE gongjirenzhanghao='12';
+UPDATE `jiaohuanjilu` SET gongjirenzhanghao='wanghao', gongjirenxingming='王浩', lianxifangshi='13290125678' WHERE gongjirenzhanghao='13';
+UPDATE `jiaohuanjilu` SET gongjirenzhanghao='zhaoyang', gongjirenxingming='赵阳', lianxifangshi='13812046578' WHERE gongjirenzhanghao='15';
+UPDATE `jiaohuanjilu` SET gongjirenzhanghao='wufang', gongjirenxingming='吴芳', lianxifangshi='15065437821' WHERE gongjirenzhanghao='18';
+
+UPDATE `jiaohuanjilu` SET gongjineirong='提供了文言文基础语法讲解材料和常见古文词汇整理表' WHERE id=1;
+UPDATE `jiaohuanjilu` SET gongjineirong='分享了人像摄影构图要点和校园取景地推荐' WHERE id=2;
+UPDATE `jiaohuanjilu` SET gongjineirong='提供了配音气息控制训练方法和情感表达技巧视频' WHERE id=3;
+UPDATE `jiaohuanjilu` SET gongjineirong='分享了折纸教程和黏土造型入门视频合集' WHERE id=4;
+UPDATE `jiaohuanjilu` SET gongjineirong='提供了PR从入门到进阶的操作手册和实战案例' WHERE id=5;
+UPDATE `jiaohuanjilu` SET gongjineirong='分享了硬笔楷书笔画练习字帖和间架结构教程' WHERE id=6;
+UPDATE `jiaohuanjilu` SET gongjineirong='完成了毕业答辩PPT的整体美化与动画优化' WHERE id=7;
+UPDATE `jiaohuanjilu` SET gongjineirong='提供了吉他零基础入门课程和三首民谣弹唱教学' WHERE id=8;
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 交换申请关联修正 ==================== -->
+    <changeSet id="fix-jiaohuanshenqing-refs" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE `jiaohuanshenqing` SET yonghuzhanghao='zhaoyang', shoujihao='13812046578' WHERE yonghuzhanghao='15' AND yonghuxingming='赵阳';
+UPDATE `jiaohuanshenqing` SET yonghuzhanghao='wufang', shoujihao='15065437821' WHERE yonghuzhanghao='18' AND yonghuxingming='吴芳';
+UPDATE `jiaohuanshenqing` SET yonghuzhanghao='chenxi', shoujihao='13890126745' WHERE yonghuzhanghao='14' AND yonghuxingming='陈曦';
+UPDATE `jiaohuanshenqing` SET yonghuzhanghao='lina', shoujihao='15187653241' WHERE yonghuzhanghao='12' AND yonghuxingming='李娜';
+UPDATE `jiaohuanshenqing` SET yonghuzhanghao='zhangqiang', shoujihao='13987654210' WHERE yonghuzhanghao='11' AND yonghuxingming='张强';
+UPDATE `jiaohuanshenqing` SET yonghuzhanghao='zhoukai', shoujihao='13812348756' WHERE yonghuzhanghao='17' AND yonghuxingming='周凯';
+UPDATE `jiaohuanshenqing` SET yonghuzhanghao='liumin', shoujihao='15178903456' WHERE yonghuzhanghao='16' AND yonghuxingming='刘敏';
+UPDATE `jiaohuanshenqing` SET yonghuzhanghao='wanghao', shoujihao='13290125678' WHERE yonghuzhanghao='13' AND yonghuxingming='王浩';
+
+UPDATE `jiaohuanshenqing` SET gongjirenzhanghao='zhangqiang', gongjirenxingming='张强', lianxifangshi='13987654210', xinyu=90 WHERE gongjirenzhanghao='11';
+UPDATE `jiaohuanshenqing` SET gongjirenzhanghao='lina', gongjirenxingming='李娜', lianxifangshi='15187653241', xinyu=78 WHERE gongjirenzhanghao='12';
+UPDATE `jiaohuanshenqing` SET gongjirenzhanghao='wanghao', gongjirenxingming='王浩', lianxifangshi='13290125678', xinyu=86 WHERE gongjirenzhanghao='13';
+UPDATE `jiaohuanshenqing` SET gongjirenzhanghao='zhaoyang', gongjirenxingming='赵阳', lianxifangshi='13812046578', xinyu=88 WHERE gongjirenzhanghao='15';
+UPDATE `jiaohuanshenqing` SET gongjirenzhanghao='wufang', gongjirenxingming='吴芳', lianxifangshi='15065437821', xinyu=92 WHERE gongjirenzhanghao='18';
+
+UPDATE `jiaohuanshenqing` SET shenqingbeizhu='我有较好的古文基础，希望互相探讨文言文翻译方法' WHERE id=1;
+UPDATE `jiaohuanshenqing` SET shenqingbeizhu='想学习人像摄影技巧，可以用视频剪辑技能交换' WHERE id=2;
+UPDATE `jiaohuanshenqing` SET shenqingbeizhu='对配音感兴趣，愿意用英语口语教学来交换' WHERE id=3;
+UPDATE `jiaohuanshenqing` SET shenqingbeizhu='喜欢手工制作，想学习黏土和编织，可以教绘画基础' WHERE id=4;
+UPDATE `jiaohuanshenqing` SET shenqingbeizhu='需要学习PR剪辑，可以提供Python编程入门教学' WHERE id=5;
+UPDATE `jiaohuanshenqing` SET shenqingbeizhu='希望提升硬笔书法水平，愿意用吉他教学来交换' WHERE id=6;
+UPDATE `jiaohuanshenqing` SET shenqingbeizhu='毕业答辩PPT需要美化，可以提供摄影服务作为交换' WHERE id=7;
+UPDATE `jiaohuanshenqing` SET shenqingbeizhu='零基础想学吉他弹唱，可以教短视频剪辑作为回报' WHERE id=8;
+UPDATE `jiaohuanshenqing` SET shenqingbeizhu='' WHERE id=9;
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 评价反馈关联修正 ==================== -->
+    <changeSet id="fix-pingjiafankui-refs" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE `pingjiafankui` SET yonghuzhanghao='zhaoyang', shoujihao='13812046578' WHERE yonghuzhanghao='15' AND yonghuxingming='赵阳';
+UPDATE `pingjiafankui` SET yonghuzhanghao='wufang', shoujihao='15065437821' WHERE yonghuzhanghao='18' AND yonghuxingming='吴芳';
+UPDATE `pingjiafankui` SET yonghuzhanghao='chenxi', shoujihao='13890126745' WHERE yonghuzhanghao='14' AND yonghuxingming='陈曦';
+UPDATE `pingjiafankui` SET yonghuzhanghao='lina', shoujihao='15187653241' WHERE yonghuzhanghao='12' AND yonghuxingming='李娜';
+UPDATE `pingjiafankui` SET yonghuzhanghao='zhangqiang', shoujihao='13987654210' WHERE yonghuzhanghao='11' AND yonghuxingming='张强';
+UPDATE `pingjiafankui` SET yonghuzhanghao='zhoukai', shoujihao='13812348756' WHERE yonghuzhanghao='17' AND yonghuxingming='周凯';
+UPDATE `pingjiafankui` SET yonghuzhanghao='liumin', shoujihao='15178903456' WHERE yonghuzhanghao='16' AND yonghuxingming='刘敏';
+UPDATE `pingjiafankui` SET yonghuzhanghao='wanghao', shoujihao='13290125678' WHERE yonghuzhanghao='13' AND yonghuxingming='王浩';
+
+UPDATE `pingjiafankui` SET jiaohuanrenzhanghao='zhangqiang', jiaohuanrenxingming='张强', lianxifangshi='13987654210' WHERE jiaohuanrenzhanghao='11';
+UPDATE `pingjiafankui` SET jiaohuanrenzhanghao='lina', jiaohuanrenxingming='李娜', lianxifangshi='15187653241' WHERE jiaohuanrenzhanghao='12';
+UPDATE `pingjiafankui` SET jiaohuanrenzhanghao='wanghao', jiaohuanrenxingming='王浩', lianxifangshi='13290125678' WHERE jiaohuanrenzhanghao='13';
+UPDATE `pingjiafankui` SET jiaohuanrenzhanghao='zhaoyang', jiaohuanrenxingming='赵阳', lianxifangshi='13812046578' WHERE jiaohuanrenzhanghao='15';
+UPDATE `pingjiafankui` SET jiaohuanrenzhanghao='wufang', jiaohuanrenxingming='吴芳', lianxifangshi='15065437821' WHERE jiaohuanrenzhanghao='18';
+
+UPDATE `pingjiafankui` SET jiaohuanbeizhu='通过线上视频讲解完成了交换', huifuneirong='翻译讲解得非常细致，对文言文虚词的用法理解加深了很多' WHERE id=1;
+UPDATE `pingjiafankui` SET jiaohuanbeizhu='线下约拍实践教学', huifuneirong='摄影技巧讲解很专业，取景构图方面收获很大' WHERE id=2;
+UPDATE `pingjiafankui` SET jiaohuanbeizhu='通过录音练习与反馈的方式完成交换', huifuneirong='配音指导认真耐心，声音表达技巧提升明显' WHERE id=3;
+UPDATE `pingjiafankui` SET jiaohuanbeizhu='线下手工教室面对面教学', huifuneirong='手工教学通俗易懂，做出了满意的黏土作品' WHERE id=4;
+UPDATE `pingjiafankui` SET jiaohuanbeizhu='通过屏幕共享远程教学', huifuneirong='剪辑教程实用性强，学会了PR基本剪辑和调色' WHERE id=5;
+UPDATE `pingjiafankui` SET jiaohuanbeizhu='线上视频教学加作品点评', huifuneirong='书法教学很有耐心，笔画规范性有了很大提升' WHERE id=6;
+UPDATE `pingjiafankui` SET jiaohuanbeizhu='远程协作完成PPT优化', huifuneirong='PPT美化效果很好，答辩时获得了导师的认可' WHERE id=7;
+UPDATE `pingjiafankui` SET jiaohuanbeizhu='每周线下教学一次', huifuneirong='吉他教学循序渐进，已经能弹唱简单的民谣了' WHERE id=8;
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 会员充值关联修正 ==================== -->
+    <changeSet id="fix-huiyuanchongzhi-refs" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE `huiyuanchongzhi` SET yonghuzhanghao='zhaoyang' WHERE yonghuzhanghao='15' AND yonghuxingming='赵阳';
+UPDATE `huiyuanchongzhi` SET yonghuzhanghao='wufang' WHERE yonghuzhanghao='18' AND yonghuxingming='吴芳';
+UPDATE `huiyuanchongzhi` SET yonghuzhanghao='chenxi' WHERE yonghuzhanghao='14' AND yonghuxingming='陈曦';
+UPDATE `huiyuanchongzhi` SET yonghuzhanghao='lina' WHERE yonghuzhanghao='12' AND yonghuxingming='李娜';
+UPDATE `huiyuanchongzhi` SET yonghuzhanghao='zhangqiang' WHERE yonghuzhanghao='11' AND yonghuxingming='张强';
+UPDATE `huiyuanchongzhi` SET yonghuzhanghao='zhoukai' WHERE yonghuzhanghao='17' AND yonghuxingming='周凯';
+UPDATE `huiyuanchongzhi` SET yonghuzhanghao='liumin' WHERE yonghuzhanghao='16' AND yonghuxingming='刘敏';
+UPDATE `huiyuanchongzhi` SET yonghuzhanghao='wanghao' WHERE yonghuzhanghao='13' AND yonghuxingming='王浩';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="fix-huiyuanchongzhi-amounts" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE `huiyuanchongzhi` SET chongzhibianhao='CZ20260401001', chongzhijine=50 WHERE id=1;
+UPDATE `huiyuanchongzhi` SET chongzhibianhao='CZ20260402001', chongzhijine=100 WHERE id=2;
+UPDATE `huiyuanchongzhi` SET chongzhibianhao='CZ20260403001', chongzhijine=30 WHERE id=3;
+UPDATE `huiyuanchongzhi` SET chongzhibianhao='CZ20260404001', chongzhijine=200 WHERE id=4;
+UPDATE `huiyuanchongzhi` SET chongzhibianhao='CZ20260405001', chongzhijine=80 WHERE id=5;
+UPDATE `huiyuanchongzhi` SET chongzhibianhao='CZ20260406001', chongzhijine=150 WHERE id=6;
+UPDATE `huiyuanchongzhi` SET chongzhibianhao='CZ20260407001', chongzhijine=60 WHERE id=7;
+UPDATE `huiyuanchongzhi` SET chongzhibianhao='CZ20260408001', chongzhijine=120 WHERE id=8;
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 技能需求编号修正 ==================== -->
+    <changeSet id="fix-jinengxuqiu-bianhao" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE `jinengxuqiu` SET xuqiubianhao='XQ20260401001' WHERE id=1;
+UPDATE `jinengxuqiu` SET xuqiubianhao='XQ20260401002' WHERE id=2;
+UPDATE `jinengxuqiu` SET xuqiubianhao='XQ20260401003' WHERE id=3;
+UPDATE `jinengxuqiu` SET xuqiubianhao='XQ20260401004' WHERE id=4;
+UPDATE `jinengxuqiu` SET xuqiubianhao='XQ20260401005' WHERE id=5;
+UPDATE `jinengxuqiu` SET xuqiubianhao='XQ20260401006' WHERE id=6;
+UPDATE `jinengxuqiu` SET xuqiubianhao='XQ20260401007' WHERE id=7;
+UPDATE `jinengxuqiu` SET xuqiubianhao='XQ20260401008' WHERE id=8;
+UPDATE `jinengxuqiu` SET xuqiubianhao='XQ20260420001' WHERE id=9;
+UPDATE `jinengxuqiu` SET xuqiubianhao='XQ20260419001' WHERE id=10;
+UPDATE `jinengxuqiu` SET xuqiubianhao='XQ20260418001' WHERE id=11;
+UPDATE `jinengxuqiu` SET xuqiubianhao='XQ20260417001' WHERE id=12;
+
+UPDATE `jiaohuanshenqing` SET xuqiubianhao='XQ20260401001' WHERE id=1;
+UPDATE `jiaohuanshenqing` SET xuqiubianhao='XQ20260401002' WHERE id=2;
+UPDATE `jiaohuanshenqing` SET xuqiubianhao='XQ20260401003' WHERE id=3;
+UPDATE `jiaohuanshenqing` SET xuqiubianhao='XQ20260401004' WHERE id=4;
+UPDATE `jiaohuanshenqing` SET xuqiubianhao='XQ20260401005' WHERE id=5;
+UPDATE `jiaohuanshenqing` SET xuqiubianhao='XQ20260401006' WHERE id=6;
+UPDATE `jiaohuanshenqing` SET xuqiubianhao='XQ20260401007' WHERE id=7;
+UPDATE `jiaohuanshenqing` SET xuqiubianhao='XQ20260401008' WHERE id=8;
+UPDATE `jiaohuanshenqing` SET xuqiubianhao='XQ20260401001' WHERE id=9;
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 论坛用户关联修正 ==================== -->
+    <changeSet id="fix-forum-user-refs" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE `forum` SET username='张强', avatarurl='upload/yonghu_touxiang5.jpg', userid=15 WHERE id=1;
+UPDATE `forum` SET username='吴芳', avatarurl='upload/yonghu_touxiang2.jpg', userid=12 WHERE id=2;
+UPDATE `forum` SET username='陈曦', avatarurl='upload/yonghu_touxiang3.jpg', userid=13 WHERE id=3;
+UPDATE `forum` SET username='李娜', avatarurl='upload/yonghu_touxiang4.jpg', userid=14 WHERE id=4;
+UPDATE `forum` SET username='王浩', avatarurl='upload/yonghu_touxiang8.jpg', userid=18 WHERE id=5;
+UPDATE `forum` SET username='周凯', avatarurl='upload/yonghu_touxiang6.jpg', userid=16 WHERE id=6;
+UPDATE `forum` SET username='刘敏', avatarurl='upload/yonghu_touxiang7.jpg', userid=17 WHERE id=7;
+UPDATE `forum` SET username='赵阳', avatarurl='upload/yonghu_touxiang1.jpg', userid=11 WHERE id=8;
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== 资讯头像修正 ==================== -->
+    <changeSet id="fix-news-avatars" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE `news` SET headportrait='upload/yonghu_touxiang5.jpg' WHERE headportrait='upload/avatar_zhangqiang.jpg';
+UPDATE `news` SET headportrait='upload/yonghu_touxiang2.jpg' WHERE headportrait='upload/avatar_zhouli.jpg';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== AI问答数据修正 ==================== -->
+    <changeSet id="fix-chat-realistic-data" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+DELETE FROM `chat` WHERE `id` BETWEEN 1 AND 8;
+INSERT INTO `chat` (`id`, `addtime`, `userid`, `adminid`, `ask`, `reply`, `isreply`, `isread`, `uname`, `uimage`, `type`) VALUES
+(1,'2026-04-13 09:30:00',11,1,'你好，我想问一下如何修改个人资料中的头像？','您好！点击个人中心页面的头像区域即可上传新头像，支持jpg和png格式，建议使用正方形图片效果更佳。',1,1,'赵阳','upload/yonghu_touxiang1.jpg',1),
+(2,'2026-04-14 10:15:00',12,1,'请问发布技能需求后多久能被别人看到？','发布成功后经管理员审核通过即可展示，一般审核时间在24小时以内。审核通过后会出现在首页推荐和分类列表中。',1,1,'吴芳','upload/yonghu_touxiang2.jpg',1),
+(3,'2026-04-15 14:20:00',13,1,'我发布的配音教学需求能修改费用吗？','可以的，进入个人中心找到您发布的需求，点击编辑按钮即可修改费用和其他信息。',1,1,'陈曦','upload/yonghu_touxiang3.jpg',1),
+(4,'2026-04-16 08:45:00',14,1,'技能交换申请提交后对方多久会回复？','这个取决于对方的在线时间，一般1-3天内会有回复。如果超过72小时未处理，系统会发送提醒通知。',1,1,'李娜','upload/yonghu_touxiang4.jpg',1),
+(5,'2026-04-17 16:00:00',15,1,'请问信誉指数是怎么计算的？','信誉指数由交换完成率、评价得分和社区贡献综合计算。完成交换并获得好评可以提升信誉分。',1,1,'张强','upload/yonghu_touxiang5.jpg',1),
+(6,'2026-04-18 11:30:00',16,1,'学习资料板块的资料可以下载吗？','目前学习资料支持在线浏览，部分带附件的资料可以下载。后续我们会增加更多可下载的资源。',1,1,'周凯','upload/yonghu_touxiang6.jpg',1),
+(7,'2026-04-20 09:10:00',17,1,'社区发帖有字数限制吗？','帖子标题限50字以内，正文内容不超过5000字。建议标题简洁明了，正文内容充实有价值。',1,1,'刘敏','upload/yonghu_touxiang7.jpg',1),
+(8,'2026-04-22 13:25:00',18,1,'如何收藏感兴趣的技能需求？','在技能需求详情页点击右上角的收藏按钮即可。收藏的内容可以在个人中心的收藏列表中查看和管理。',1,1,'王浩','upload/yonghu_touxiang8.jpg',1);
+        ]]></sql>
+    </changeSet>
+
+    <!-- ==================== AI助手预设问答修正 ==================== -->
+    <changeSet id="fix-chathelper-realistic-data" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+DELETE FROM `chathelper` WHERE `id` BETWEEN 1 AND 8;
+INSERT INTO `chathelper` (`id`, `addtime`, `ask`, `reply`) VALUES
+(1,'2026-04-12 05:55:29','如何注册账号？','点击首页右上角的"注册"按钮，填写用户名、密码和手机号等基本信息即可完成注册。'),
+(2,'2026-04-12 05:55:29','怎么发布技能需求？','登录后进入"技能需求"页面，点击"发布"按钮，填写需求标题、分类、费用和详细描述即可。'),
+(3,'2026-04-12 05:55:29','技能交换的流程是什么？','流程为：发布需求→他人申请交换→审核通过→双方线上/线下交换→完成后互相评价。'),
+(4,'2026-04-12 05:55:29','信誉指数有什么用？','信誉指数反映您在平台上的可信度，高信誉用户的需求会获得更多推荐展示，更容易匹配到合适的交换对象。'),
+(5,'2026-04-12 05:55:29','如何联系管理员？','您可以通过页面底部的"留言反馈"功能或在线客服系统联系管理员，我们会在24小时内回复。'),
+(6,'2026-04-12 05:55:29','可以同时发布多个技能需求吗？','可以的，您可以发布多个不同类别的技能需求，每个需求独立管理和匹配。'),
+(7,'2026-04-12 05:55:29','怎么修改个人信息？','登录后点击右上角头像进入个人中心，在个人资料页面可以修改姓名、手机号、头像等信息。'),
+(8,'2026-04-12 05:55:29','平台收费吗？','平台本身不收取服务费用，技能交换中的费用由双方自行协商确定。');
+        ]]></sql>
+    </changeSet>
+
+</databaseChangeLog>

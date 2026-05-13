@@ -42,7 +42,8 @@
 				dialogImageUrl: "",
 				fileList: [],
 				fileUrlList: [],
-				myHeaders: {}
+				myHeaders: {},
+				justUploaded: false
 			};
 		},
 		props: {
@@ -63,6 +64,10 @@
 		},
 		watch: {
 			fileUrls(val, oldVal) {
+				if (this.justUploaded) {
+					this.justUploaded = false;
+					return;
+				}
 				this.init();
 			}
 		},
@@ -130,22 +135,38 @@
 					};
 				});
 			},
-			handleUploadSuccess(res, file, fileList) {
-				if (res && res.code === 0) {
-					fileList[fileList.length - 1]["url"] = "upload/" + file.response.file;
-					this.setFileList(fileList);
-					this.$emit("change", this.fileUrlList.join(","));
-				} else {
-					this.$message.error(res.msg);
-				}
-			},
-			handleUploadErr(err, file, fileList) {
-				this.$message.error("文件上传失败");
-			},
-			handleRemove(file, fileList) {
-				this.setFileList(fileList);
+		handleUploadSuccess(res, file, fileList) {
+			if (res && res.code === 0) {
+				this.justUploaded = true;
+				this.fileUrlList = this.buildUrlList(fileList);
 				this.$emit("change", this.fileUrlList.join(","));
-			},
+			} else {
+				this.$message.error(res.msg);
+			}
+		},
+		handleUploadErr(err, file, fileList) {
+			this.$message.error("文件上传失败");
+		},
+		handleRemove(file, fileList) {
+			this.fileUrlList = this.buildUrlList(fileList);
+			this.$emit("change", this.fileUrlList.join(","));
+		},
+		buildUrlList(fileList) {
+			let _this = this;
+			return fileList.map(function(item) {
+				if (item.response && item.response.file) {
+					return _this.baseUrl + "upload/" + item.response.file;
+				}
+				let url = (item.url || '').split("?")[0];
+				if (url.startsWith("blob:")) {
+					return '';
+				}
+				if (url && !url.startsWith("http")) {
+					url = _this.baseUrl + url;
+				}
+				return url;
+			}).filter(function(u) { return u; });
+		},
 			handleUploadPreview(file) {
 				if (this.type > 2) {
 					window.open(file.url)

@@ -60,8 +60,8 @@
 								:colors='["#F7BA2A", "#F7BA2A", "#F7BA2A"]'
 								void-color='#C6D1DE'
 								disabled-void-color='#EFF2F7'
-								:icons="commentRateIcons"
-								:void-icon="commentRateVoidIcon"
+							:icon-classes="commentRateIcons"
+							:void-icon-class="commentRateVoidIcon"
 								:show-score='false'
 								disabled
 								>
@@ -142,8 +142,8 @@
 		//数据集合
 		data() {
 			return {
-				commentRateIcons: [StarFilled, StarFilled, StarFilled],
-				commentRateVoidIcon: Star,
+				commentRateIcons: ['el-icon-star-on', 'el-icon-star-on', 'el-icon-star-on'],
+				commentRateVoidIcon: 'el-icon-star-off',
 				layouts: '',
 				swiperIndex: -1,
 				baseUrl: '',

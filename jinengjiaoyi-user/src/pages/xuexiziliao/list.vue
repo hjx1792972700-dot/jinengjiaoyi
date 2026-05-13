@@ -60,9 +60,9 @@
 			<div class="sort-bar-right">
 				<div class="inline-search">
 					<input class="inline-search-input" v-model="formSearch.ziliaobiaoti" placeholder="搜索资料..." @keydown.enter="getList(1, curFenlei)" />
-					<el-select class="inline-search-select" v-model="formSearch.ziliaoleixing" placeholder="技能分类" :clearable="true" size="small">
-						<el-option v-for="(item, index) in ziliaoleixingOptions" :key="index" :label="item" :value="item"></el-option>
-					</el-select>
+				<el-select class="inline-search-select" v-model="formSearch.ziliaoleixing" placeholder="资料分类" :clearable="true" size="small" @change="getList(1, curFenlei)">
+					<el-option v-for="(item, index) in ziliaoleixingOptions" :key="index" :label="item" :value="item"></el-option>
+				</el-select>
 					<button class="inline-search-btn" @click="getList(1, curFenlei)"><i class="el-icon-search"></i></button>
 				</div>
 			</div>
@@ -188,11 +188,11 @@
 				this.centerType = true
 			}
 			this.baseUrl = this.$config.baseUrl;
-			await this.$http.get('option/jinengfenlei/jinengfenlei').then(res => {
-				if (res.data.code == 0) {
-					this.ziliaoleixingOptions = res.data.data;
-				}
-			});
+		await this.$http.get('option/ziliaoleixing/ziliaoleixing').then(res => {
+			if (res.data.code == 0) {
+				this.ziliaoleixingOptions = res.data.data;
+			}
+		});
 			if(this.centerType) {
 			}
 			await this.getFenlei();

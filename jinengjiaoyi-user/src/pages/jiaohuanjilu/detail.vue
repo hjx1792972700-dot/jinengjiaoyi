@@ -96,7 +96,7 @@
 				</div>
 				<div class="action-bar">
 					<el-button class="act-btn act-review" size="small" @click="goReview">
-						<template #icon><StarFilled /></template>
+						<template #icon><i class="el-icon-star-on"></i></template>
 						查看评价详情
 					</el-button>
 				</div>

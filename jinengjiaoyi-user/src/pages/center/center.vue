@@ -1536,6 +1536,13 @@ $sidebar-w: 220px;
 				border-radius: 10px;
 				width: 64px;
 				height: 64px;
+				overflow: hidden;
+				background-color: transparent;
+			}
+			::v-deep .el-upload-list__item-thumbnail {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
 			}
 			::v-deep .el-upload__tip {
 				color: $text-dim;

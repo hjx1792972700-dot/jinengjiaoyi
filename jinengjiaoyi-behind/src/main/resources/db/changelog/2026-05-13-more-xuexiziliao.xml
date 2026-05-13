@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="add-more-xuexiziliao-data" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+INSERT INTO `xuexiziliao` (`addtime`, `ziliaobiaoti`, `ziliaoleixing`, `ziliaofengmian`, `ziliaoshipin`, `ziliaofujian`, `ziliaoxiangqing`, `fabushijian`, `clicktime`, `clicknum`, `discussnum`, `storeupnum`, `jiage`) VALUES
+('2026-04-15 09:12:00','需求文档撰写规范','产品经理','upload/xuexiziliao_UI原型快速设计1.jpg','','','从用户故事到PRD文档，系统讲解需求文档的结构、要素与评审流程，帮助产品经理输出高质量需求文档','2026-04-15','2026-04-15 09:12:00',12,2,5,15),
+('2026-04-18 14:30:00','用户增长策略分析','产品经理','upload/xuexiziliao_UI原型快速设计2.jpg','','','深入剖析AARRR模型与用户生命周期管理，结合案例讲解拉新、促活、留存的实战方法论','2026-04-18','2026-04-18 14:30:00',18,3,8,0),
+
+('2026-04-14 10:20:00','Java微服务架构实战','软件研发','upload/xuexiziliao_Python自动化脚本编写1.jpg','','','基于Spring Cloud构建微服务体系，涵盖服务注册、配置中心、网关路由、熔断限流等核心组件的实战应用','2026-04-14','2026-04-14 10:20:00',22,4,10,25),
+('2026-04-20 16:45:00','前端性能优化指南','软件研发','upload/xuexiziliao_Python自动化脚本编写2.jpg','','','从首屏加载到运行时性能，讲解懒加载、代码分割、缓存策略、虚拟列表等前端性能优化核心技巧','2026-04-20','2026-04-20 16:45:00',15,1,6,10),
+
+('2026-04-13 08:00:00','小红书爆款笔记技巧','新媒体运营','upload/xuexiziliao_短视频脚本创作1.jpg','','','拆解小红书热门笔记的标题公式、封面设计、正文结构与标签策略，快速提升笔记曝光量与互动率','2026-04-13','2026-04-13 08:00:00',30,5,12,0),
+('2026-04-22 11:15:00','社群运营从0到1','新媒体运营','upload/xuexiziliao_短视频脚本创作2.jpg','','','系统讲解社群定位、用户分层、内容规划与活动策划，打造高活跃度的私域流量社群','2026-04-22','2026-04-22 11:15:00',8,0,3,20),
+
+('2026-04-16 13:00:00','品牌营销全案策划','市场营销','upload/xuexiziliao_市场竞品分析1.jpg','','','从品牌定位到传播策略，全流程讲解品牌营销方案的策划方法，包括视觉体系、渠道选择与效果评估','2026-04-16','2026-04-16 13:00:00',20,2,9,30),
+('2026-04-25 09:30:00','数据驱动营销决策','市场营销','upload/xuexiziliao_市场竞品分析2.jpg','','','利用Google Analytics、神策等工具进行营销数据分析，构建转化漏斗模型，实现精准投放与ROI优化','2026-04-25','2026-04-25 09:30:00',14,1,4,18),
+
+('2026-04-17 15:20:00','高效沟通与汇报技巧','全行业','upload/xuexiziliao_职场压力管理1.jpg','','','掌握金字塔原理、STAR法则等结构化表达方法，提升工作汇报、跨部门协作与向上管理的沟通效率','2026-04-17','2026-04-17 15:20:00',25,3,11,0),
+('2026-04-23 10:00:00','Excel数据分析进阶','全行业','upload/xuexiziliao_职场压力管理2.jpg','','','深入讲解数据透视表、VLOOKUP、条件格式、图表可视化等高频功能，快速提升办公数据处理能力','2026-04-23','2026-04-23 10:00:00',35,6,15,12),
+
+('2026-04-19 12:00:00','电商选品与供应链管理','直播电商','upload/xuexiziliao_直播控场互动技巧1.jpg','','','从市场调研到供应商谈判，讲解电商选品方法论与供应链搭建流程，降低库存风险，提升利润率','2026-04-19','2026-04-19 12:00:00',16,2,7,22),
+('2026-04-26 17:30:00','直播间流量投放技巧','直播电商','upload/xuexiziliao_直播控场互动技巧2.jpg','','','详解千川投放、直播广场推荐机制与自然流量撬动方法，帮助直播间实现高效获客与转化','2026-04-26','2026-04-26 17:30:00',10,0,2,0),
+
+('2026-04-21 08:45:00','基金定投策略入门','金融投资','upload/xuexiziliao_财务报表解读1.jpg','','','讲解指数基金、主动基金的选择方法与定投策略，帮助投资者建立长期稳健的资产配置方案','2026-04-21','2026-04-21 08:45:00',28,4,13,15),
+('2026-04-27 14:00:00','股票技术分析基础','金融投资','upload/xuexiziliao_财务报表解读2.jpg','','','系统讲解K线形态、均线系统、MACD与成交量分析方法，建立基础的技术分析框架辅助投资判断','2026-04-27','2026-04-27 14:00:00',19,2,6,20),
+
+('2026-04-24 11:30:00','精益生产管理方法','制造业','upload/xuexiziliao_供应链库存优化1.jpg','','','基于丰田生产方式讲解精益管理核心工具：5S、看板管理、价值流图，消除浪费提升生产效率','2026-04-24','2026-04-24 11:30:00',13,1,5,8),
+('2026-04-28 16:00:00','工业物联网应用实践','制造业','upload/xuexiziliao_供应链库存优化2.jpg','','','介绍工业传感器、边缘计算与云平台在制造业中的应用场景，实现设备状态监控与预测性维护','2026-04-28','2026-04-28 16:00:00',7,0,1,35);
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="fix-xuexiziliao-unique-covers" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_需求文档撰写规范1.jpg' WHERE ziliaobiaoti='需求文档撰写规范';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_用户增长策略分析1.jpg' WHERE ziliaobiaoti='用户增长策略分析';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_Java微服务架构实战1.jpg' WHERE ziliaobiaoti='Java微服务架构实战';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_前端性能优化指南1.jpg' WHERE ziliaobiaoti='前端性能优化指南';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_小红书爆款笔记技巧1.jpg' WHERE ziliaobiaoti='小红书爆款笔记技巧';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_社群运营从0到11.jpg' WHERE ziliaobiaoti='社群运营从0到1';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_品牌营销全案策划1.jpg' WHERE ziliaobiaoti='品牌营销全案策划';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_数据驱动营销决策1.jpg' WHERE ziliaobiaoti='数据驱动营销决策';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_高效沟通与汇报技巧1.jpg' WHERE ziliaobiaoti='高效沟通与汇报技巧';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_Excel数据分析进阶1.jpg' WHERE ziliaobiaoti='Excel数据分析进阶';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_电商选品与供应链管理1.jpg' WHERE ziliaobiaoti='电商选品与供应链管理';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_直播间流量投放技巧1.jpg' WHERE ziliaobiaoti='直播间流量投放技巧';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_基金定投策略入门1.jpg' WHERE ziliaobiaoti='基金定投策略入门';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_股票技术分析基础1.jpg' WHERE ziliaobiaoti='股票技术分析基础';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_精益生产管理方法1.jpg' WHERE ziliaobiaoti='精益生产管理方法';
+UPDATE xuexiziliao SET ziliaofengmian='upload/xuexiziliao_工业物联网应用实践1.jpg' WHERE ziliaobiaoti='工业物联网应用实践';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="assign-xuexiziliao-attachments" author="system">
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_1.pdf' WHERE id=1;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_2.pdf' WHERE id=2;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_3.pdf' WHERE id=3;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_4.pdf' WHERE id=4;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_5.pdf' WHERE id=5;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_6.pdf' WHERE id=6;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_7.pdf' WHERE id=7;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_8.pdf' WHERE id=8;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_1.pdf' WHERE id=9;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_2.pdf' WHERE id=10;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_3.pdf' WHERE id=11;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_4.pdf' WHERE id=12;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_5.pdf' WHERE id=13;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_6.pdf' WHERE id=14;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_7.pdf' WHERE id=15;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_8.pdf' WHERE id=16;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_1.pdf' WHERE id=17;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_2.pdf' WHERE id=18;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_3.pdf' WHERE id=19;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_4.pdf' WHERE id=20;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_5.pdf' WHERE id=21;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_6.pdf' WHERE id=22;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_7.pdf' WHERE id=23;
+UPDATE xuexiziliao SET ziliaofujian='upload/xuexiziliao_fujian_8.pdf' WHERE id=24;
+        ]]></sql>
+    </changeSet>
+
+</databaseChangeLog>

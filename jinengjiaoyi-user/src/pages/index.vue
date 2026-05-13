@@ -100,18 +100,17 @@
 		</div>
 		</div>
 		
-		<el-dialog :visible.sync="chatFormVisible" width="680px" :before-close="chatClose" class="ai-chat-dialog" :show-close="false" append-to-body>
+		<el-dialog :visible.sync="chatFormVisible" width="780px" :before-close="chatClose" class="ai-chat-dialog" :show-close="false" append-to-body>
 			<div class="ai-chat-wrapper">
 				<div class="ai-chat-header">
 					<div class="ai-header-left">
 						<div class="ai-logo-pulse"></div>
 						<div class="ai-header-info">
 							<span class="ai-header-title">AI 智能问答</span>
-							<span class="ai-header-status"><i class="ai-status-dot"></i>在线</span>
+							<span class="ai-header-status"><i class="ai-status-dot"></i>{{askType==1?'智能助手在线':'人工客服在线'}}</span>
 						</div>
 					</div>
 					<div class="ai-header-actions">
-						<el-button size="mini" class="ai-switch-btn" @click="askChange">{{askType==1?'人工服务':'智能回复'}}</el-button>
 						<i class="el-icon-close ai-close-btn" @click="chatClose"></i>
 					</div>
 				</div>
@@ -119,26 +118,31 @@
 				<div class="ai-chat-body" id="chat-content">
 				<div class="ai-welcome" v-if="chatList.length===0">
 					<div class="ai-welcome-icon">
-						<svg viewBox="0 0 60 60" width="48" height="48"><circle cx="30" cy="30" r="28" fill="none" stroke="rgba(0,212,255,0.3)" stroke-width="1.5"/><circle cx="30" cy="30" r="20" fill="none" stroke="rgba(0,212,255,0.5)" stroke-width="1"/><circle cx="22" cy="26" r="3" fill="#00d4ff"/><circle cx="38" cy="26" r="3" fill="#7c3aed"/><path d="M22 36 Q30 42 38 36" fill="none" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/></svg>
+						<svg viewBox="0 0 80 80" width="64" height="64"><defs><linearGradient id="ai-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs><circle cx="40" cy="40" r="36" fill="none" stroke="url(#ai-grad)" stroke-width="2" opacity="0.4"/><circle cx="40" cy="40" r="26" fill="none" stroke="url(#ai-grad)" stroke-width="1.5" opacity="0.6"/><circle cx="30" cy="34" r="4" fill="#00d4ff"/><circle cx="50" cy="34" r="4" fill="#7c3aed"/><path d="M28 48 Q40 56 52 48" fill="none" stroke="url(#ai-grad)" stroke-width="2.5" stroke-linecap="round"/></svg>
 					</div>
-					<p class="ai-welcome-text">你好！我是 AI 助手，有什么可以帮你的？</p>
-					<p class="ai-suggest-title">你可以试着问我：</p>
+					<p class="ai-welcome-text">你好！我是 AI 智能助手</p>
+					<p class="ai-welcome-sub">可以回答您关于技能交易平台的各种问题</p>
+					<p class="ai-suggest-title">热门问题，点击直接提问：</p>
 					<div class="ai-suggest-list">
-						<span class="ai-suggest-tag" v-for="(q, qi) in suggestQuestions" :key="qi" @click="quickAsk(q)">{{q}}</span>
+						<span class="ai-suggest-tag" v-for="(q, qi) in suggestQuestions" :key="qi" @click="quickAsk(q)">
+							<i class="el-icon-chat-dot-round"></i> {{q}}
+						</span>
 					</div>
 				</div>
 				<div class="ai-suggest-bar" v-if="chatList.length > 0 && !aiLoading">
-					<span class="ai-suggest-bar-label">猜你想问：</span>
+					<span class="ai-suggest-bar-label">💡 猜你想问：</span>
 					<span class="ai-suggest-mini" v-for="(q, qi) in suggestQuestionsShort" :key="qi" @click="quickAsk(q)">{{q}}</span>
 				</div>
 					<div v-bind:key="item.id" v-for="item in chatList" class="ai-msg-group">
-						<div v-if="item.addtime" class="ai-msg-time">{{timeFormat(item.addtime)}}</div>
+						<div v-if="item.addtime" class="ai-msg-time">
+							<span class="ai-time-badge">{{timeFormat(item.addtime)}}</span>
+						</div>
 						<div v-if="item.ask" class="ai-msg ai-msg-user">
 							<div class="ai-bubble ai-bubble-user">
 								<span v-if="item.type==1">{{item.ask}}</span>
-								<el-image v-else-if="item.type==2" :src="baseUrl + item.ask" style="width: 150px;height: 150px;border-radius:8px;" fit="cover" :preview-src-list="[baseUrl + item.ask]"></el-image>
-								<video v-else-if="item.type==3" :src="baseUrl + item.ask" style="width: 240px;border-radius:8px;" controls></video>
-								<el-button v-else-if="item.type==4" size="mini" @click="download(item.ask)">文件预览</el-button>
+								<el-image v-else-if="item.type==2" :src="baseUrl + item.ask" style="width: 180px;height: 180px;border-radius:10px;" fit="cover" :preview-src-list="[baseUrl + item.ask]"></el-image>
+								<video v-else-if="item.type==3" :src="baseUrl + item.ask" style="width: 260px;border-radius:10px;" controls></video>
+								<el-button v-else-if="item.type==4" size="mini" @click="download(item.ask)"><i class="el-icon-document"></i> 文件预览</el-button>
 							</div>
 							<img class="ai-avatar" :src="item.uimage?(baseUrl + item.uimage.split(',')[0]):serviceImg" />
 						</div>
@@ -146,15 +150,16 @@
 							<img class="ai-avatar ai-avatar-bot" :src="item.uimage?(baseUrl + item.uimage.split(',')[0]):aiImg" />
 							<div class="ai-bubble ai-bubble-bot">
 								<span v-if="item.type==1">{{item.reply}}</span>
-								<el-image v-else-if="item.type==2" :src="baseUrl + item.reply" style="width: 150px;height: 150px;border-radius:8px;" fit="cover" :preview-src-list="[baseUrl + item.reply]"></el-image>
-								<video v-else-if="item.type==3" :src="baseUrl + item.reply" style="width: 240px;border-radius:8px;" controls></video>
-								<el-button v-else-if="item.type==4" size="mini" @click="download(item.reply)">文件预览</el-button>
+								<el-image v-else-if="item.type==2" :src="baseUrl + item.reply" style="width: 180px;height: 180px;border-radius:10px;" fit="cover" :preview-src-list="[baseUrl + item.reply]"></el-image>
+								<video v-else-if="item.type==3" :src="baseUrl + item.reply" style="width: 260px;border-radius:10px;" controls></video>
+								<el-button v-else-if="item.type==4" size="mini" @click="download(item.reply)"><i class="el-icon-document"></i> 文件预览</el-button>
 							</div>
 						</div>
 					</div>
 					<div v-if="aiLoading" class="ai-msg ai-msg-bot">
 						<img class="ai-avatar ai-avatar-bot" :src="aiImg" />
 						<div class="ai-bubble ai-bubble-bot ai-typing">
+							<span class="ai-typing-text">AI 正在思考</span>
 							<span class="ai-dot"></span><span class="ai-dot"></span><span class="ai-dot"></span>
 						</div>
 					</div>
@@ -173,13 +178,15 @@
 						</el-upload>
 					</div>
 					<div class="ai-input-row">
-						<el-icon class="ai-plus-icon" @click="askShow = !askShow"><CirclePlus /></el-icon>
-						<input class="ai-input" v-model="form.ask" placeholder="输入你的问题..." @keydown.enter="addChat(null)" />
-						<button class="ai-send-btn" @click="addChat(null)"><i class="el-icon-promotion"></i></button>
+						<i class="el-icon-circle-plus-outline ai-plus-icon" @click="askShow = !askShow"></i>
+						<input class="ai-input" v-model="form.ask" placeholder="请输入您的问题，按 Enter 发送..." @keydown.enter="addChat(null)" />
+						<button class="ai-send-btn" :class="{'ai-send-active': form.ask.trim()}" @click="addChat(null)" :title="form.ask.trim()?'发送消息':'请先输入内容'">
+							<i class="el-icon-s-promotion"></i>
+						</button>
 						<div style="position: relative;" v-if="askType==2">
-						<span @click="showEmoji=!showEmoji" class="icon iconfont icon-gerenzhongxin-zhihui" style="font-size: 24px;color: rgba(255,255,255,0.5);cursor: pointer;"></span>
-						<div v-if="showEmoji" class="simple-emoji-picker" style="position: absolute;bottom: 40px;left: -100px;background:#fff;border-radius:8px;padding:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);display:flex;flex-wrap:wrap;width:280px;max-height:200px;overflow-y:auto;z-index:9999;">
-							<span v-for="(em, ei) in emojiList" :key="ei" @click="addEmoji({native:em})" style="cursor:pointer;font-size:22px;padding:4px;display:inline-block;">{{em}}</span>
+						<span @click="showEmoji=!showEmoji" class="ai-emoji-trigger">😊</span>
+						<div v-if="showEmoji" class="ai-emoji-picker">
+							<span v-for="(em, ei) in emojiList" :key="ei" @click="addEmoji({native:em})" class="ai-emoji-item">{{em}}</span>
 						</div>
 						</div>
 					</div>
@@ -655,15 +662,39 @@
 			ask: `${ask}`,
 		}).then(res => {
 			this.aiLoading = false
-			if (res.data.code == 0) {
+			if (res.data.code == 0 && res.data.data && res.data.data.trim()) {
 				this.saveChathelper(res.data.data);
 			} else {
-				this.saveChathelper('抱歉，AI服务暂时不可用，请稍后再试。您也可以点击上方推荐问题获取帮助，或切换到"人工服务"联系管理员。');
+				this.saveChathelper(this.getLocalAnswer(ask));
 			}
 		}).catch(() => {
 			this.aiLoading = false
-			this.saveChathelper('抱歉，网络连接异常，请稍后再试。');
+			this.saveChathelper(this.getLocalAnswer(ask));
 		});
+	},
+	getLocalAnswer(ask) {
+		const qa = [
+			{ keys: ['注册', '账号', '开户'], answer: '注册账号非常简单：\n1. 点击页面右上角的"注册"按钮\n2. 填写用户名、密码和基本信息\n3. 完成注册后即可登录使用\n\n如有问题可切换到"人工服务"联系管理员。' },
+			{ keys: ['发布', '技能', '需求'], answer: '发布技能需求的步骤：\n1. 登录账号后，进入"技能市场"页面\n2. 点击"发布技能"按钮\n3. 填写技能名称、详细描述、分类等信息\n4. 上传相关图片（可选）\n5. 提交后等待审核通过即可展示\n\n成为VIP会员后，您发布的技能将获得优先推荐展示。' },
+			{ keys: ['交换', '流程', '交易', '怎么换'], answer: '技能交换流程：\n1. 在技能市场浏览或搜索你感兴趣的技能\n2. 点击进入技能详情页，了解对方技能信息\n3. 点击"发起交换"按钮，选择你要用来交换的技能\n4. 双方确认后即可开始线上或线下交流学习\n5. 交换完成后双方互相评价\n\n平台采用协同过滤算法，会智能推荐最适合您的技能。' },
+			{ keys: ['信誉', '指数', '评分', '信用'], answer: '关于信誉指数：\n• 信誉指数反映您在平台上的交易信誉度\n• 完成技能交换后获得的好评会提高信誉指数\n• 信誉指数越高，您的技能在推荐列表中排名越靠前\n• 违规操作或获得差评会降低信誉指数\n\n建议：认真完成每次技能交换，积极获取好评来提升信誉。' },
+			{ keys: ['联系', '管理员', '客服', '投诉'], answer: '联系管理员的方式：\n1. 点击当前对话框上方的"人工服务"按钮\n2. 在留言反馈页面发布留言，管理员会回复\n3. 通过公告资讯页面查看管理员联系方式\n\n工作时间内管理员会尽快回复您的消息。' },
+			{ keys: ['多个', '同时', '几个'], answer: '可以同时发布多个技能！\n• 每位用户可以发布多个不同类别的技能\n• 建议每个技能描述尽量详细，方便其他用户了解\n• VIP会员发布的技能数量不受限制\n• 普通用户也可以发布多个技能' },
+			{ keys: ['修改', '个人', '信息', '资料', '头像'], answer: '修改个人信息的步骤：\n1. 点击页面右上角的头像或用户名\n2. 选择"个人中心"\n3. 在个人信息页面点击"编辑"按钮\n4. 修改需要更新的信息（头像、昵称、简介等）\n5. 点击"保存"完成修改' },
+			{ keys: ['收费', '免费', '费用', '价格', '多少钱'], answer: '平台收费说明：\n• 基础功能（浏览、搜索技能）免费使用\n• 发起技能交换的基本功能免费\n• VIP会员享有优先推荐、VIP标识等特权\n• VIP会员可在"会员充值"页面了解详细价格\n\n平台致力于提供公平、透明的技能交易环境。' },
+			{ keys: ['VIP', '会员', '充值', '特权'], answer: 'VIP会员特权包括：\n🚀 发布技能 - 发布个人技能到市场\n⭐ 优先推荐 - 技能在首页优先展示\n👑 VIP标识 - 专属VIP身份标识\n🤖 智能匹配 - AI智能匹配合适技能\n\n前往"会员充值"页面了解更多详情。' },
+			{ keys: ['推荐', '协同过滤', '算法', '匹配'], answer: '平台采用协同过滤推荐算法：\n• 根据您的技能标签和历史交换记录\n• 分析与您相似的用户的偏好\n• 智能推荐最匹配您需求的技能\n• 推荐结果会随着使用逐步优化\n\n使用越多，推荐越精准！' },
+			{ keys: ['学习', '资料', '教程', '资源'], answer: '关于学习资料：\n• 平台提供"学习资料"板块\n• 用户可以分享和浏览学习资源\n• 涵盖编程、设计、语言等多个类别\n• 支持在线预览和下载\n\n建议多关注您感兴趣领域的学习资料。' },
+			{ keys: ['社区', '论坛', '讨论', '帖子'], answer: '技能社区功能：\n• 在"技能社区"板块可以发帖讨论\n• 分享技能学习心得和经验\n• 与其他用户互动交流\n• 获取行业最新动态\n\n积极参与社区讨论有助于提升您的影响力。' },
+			{ keys: ['安全', '隐私', '保护'], answer: '平台安全保障：\n• 用户个人信息严格加密存储\n• 交易过程有完善的评价和举报机制\n• 管理员定期审核内容，杜绝违规信息\n• 如遇到问题可随时联系管理员处理\n\n您的隐私和安全是我们的首要考虑。' },
+		];
+		const lowerAsk = ask.toLowerCase();
+		for (const item of qa) {
+			if (item.keys.some(k => lowerAsk.includes(k))) {
+				return item.answer;
+			}
+		}
+		return '感谢您的提问！关于"' + ask + '"，以下是一些建议：\n\n1. 您可以在技能市场中搜索相关内容\n2. 浏览学习资料板块获取更多信息\n3. 在技能社区中发帖询问其他用户\n4. 切换到"人工服务"联系管理员获取帮助\n\n如需了解更多，请点击上方的推荐问题。';
 	},
 		getRandomNumber(arr) {
 			var randomIndex = Math.floor(Math.random() * arr.length);
@@ -1094,189 +1125,6 @@ $text-sub: #94a3b8;
 	}
 }
 
-::v-deep .ai-chat-dialog {
-	border-radius: 16px !important;
-	overflow: hidden;
-	background: #0b1120 !important;
-	border: 1px solid rgba(0,212,255,0.12);
-	box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,212,255,0.08);
-	.el-dialog__header { display: none; }
-	.el-dialog__body { padding: 0 !important; }
-	.el-dialog__footer { display: none; }
-}
-
-.ai-chat-wrapper {
-	display: flex;
-	flex-direction: column;
-	height: 600px;
-}
-
-.ai-chat-header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 14px 20px;
-	background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(124,58,237,0.06));
-	border-bottom: 1px solid rgba(0,212,255,0.1);
-
-	.ai-header-left {
-		display: flex; align-items: center; gap: 12px;
-	}
-	.ai-logo-pulse {
-		width: 36px; height: 36px; border-radius: 50%;
-		background: linear-gradient(135deg, #00d4ff, #7c3aed);
-		animation: ai-pulse 2s ease-in-out infinite;
-		position: relative;
-		&::after {
-			content: 'AI'; position: absolute; inset: 0;
-			display: flex; align-items: center; justify-content: center;
-			color: #fff; font-size: 13px; font-weight: 700;
-		}
-	}
-	@keyframes ai-pulse {
-		0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,255,0.3); }
-		50% { box-shadow: 0 0 0 8px rgba(0,212,255,0); }
-	}
-	.ai-header-info { display: flex; flex-direction: column; }
-	.ai-header-title { font-size: 15px; font-weight: 600; color: #e2e8f0; letter-spacing: 1px; }
-	.ai-header-status { font-size: 11px; color: rgba(255,255,255,0.4); display: flex; align-items: center; gap: 4px; }
-	.ai-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; display: inline-block; }
-	.ai-header-actions { display: flex; align-items: center; gap: 10px; }
-	.ai-switch-btn {
-		background: rgba(0,212,255,0.1) !important; border: 1px solid rgba(0,212,255,0.2) !important;
-		color: #00d4ff !important; border-radius: 12px !important; font-size: 11px !important;
-		&:hover { background: rgba(0,212,255,0.2) !important; }
-	}
-	.ai-close-btn { font-size: 18px; color: rgba(255,255,255,0.3); cursor: pointer; &:hover { color: #fff; } }
-	.ai-close-btn.el-icon { vertical-align: middle; }
-}
-
-.ai-chat-body {
-	flex: 1; overflow-y: auto; padding: 16px 20px;
-	background-image: linear-gradient(rgba(0,212,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.02) 1px, transparent 1px);
-	background-size: 40px 40px;
-
-	&::-webkit-scrollbar { width: 4px; }
-	&::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.15); border-radius: 4px; }
-}
-
-.ai-welcome {
-	display: flex; flex-direction: column; align-items: center; justify-content: center;
-	padding: 30px 20px 10px; opacity: 0.9;
-	.ai-welcome-icon { margin-bottom: 12px; }
-	.ai-welcome-text { color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 6px; }
-}
-.ai-suggest-title {
-	color: rgba(255,255,255,0.35); font-size: 12px; margin-bottom: 10px;
-}
-.ai-suggest-list {
-	display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 480px;
-}
-.ai-suggest-tag {
-	display: inline-block; padding: 6px 14px; border-radius: 16px; font-size: 13px;
-	background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2);
-	color: #7dd3fc; cursor: pointer; transition: all 0.2s;
-	&:hover { background: rgba(0,212,255,0.18); border-color: rgba(0,212,255,0.5); color: #fff; transform: translateY(-1px); }
-}
-.ai-suggest-bar {
-	display: flex; align-items: center; gap: 6px; padding: 6px 16px; flex-wrap: wrap;
-	border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.ai-suggest-bar-label {
-	font-size: 11px; color: rgba(255,255,255,0.25); white-space: nowrap;
-}
-.ai-suggest-mini {
-	padding: 3px 10px; border-radius: 12px; font-size: 11px;
-	background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2);
-	color: #c4b5fd; cursor: pointer; transition: all 0.2s;
-	&:hover { background: rgba(124,58,237,0.25); color: #fff; }
-}
-
-.ai-msg-group { margin-bottom: 4px; }
-
-.ai-msg-time {
-	text-align: center; font-size: 10px; color: rgba(255,255,255,0.2);
-	padding: 6px 0; letter-spacing: 0.5px;
-}
-
-.ai-msg { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px; }
-.ai-msg-user { flex-direction: row-reverse; }
-
-.ai-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; object-fit: cover; }
-.ai-avatar-bot { box-shadow: 0 0 10px rgba(0,212,255,0.2); border: 1px solid rgba(0,212,255,0.2); }
-
-.ai-bubble {
-	max-width: 75%; padding: 10px 14px; border-radius: 14px;
-	font-size: 13px; line-height: 1.6; word-break: break-word; white-space: pre-line;
-}
-.ai-bubble-user {
-	background: linear-gradient(135deg, rgba(124,58,237,0.6), rgba(124,58,237,0.4));
-	color: #e2e8f0; border-bottom-right-radius: 4px;
-}
-.ai-bubble-bot {
-	background: rgba(255,255,255,0.06); color: #c8d6e5;
-	border: 1px solid rgba(0,212,255,0.08); border-bottom-left-radius: 4px;
-}
-
-.ai-typing {
-	display: flex; align-items: center; gap: 4px; padding: 12px 18px;
-	.ai-dot {
-		width: 6px; height: 6px; border-radius: 50%; background: #00d4ff;
-		animation: ai-bounce 1.2s infinite;
-		&:nth-child(2) { animation-delay: 0.2s; }
-		&:nth-child(3) { animation-delay: 0.4s; }
-	}
-	@keyframes ai-bounce {
-		0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
-		40% { opacity: 1; transform: scale(1.2); }
-	}
-}
-
-.ai-chat-footer {
-	border-top: 1px solid rgba(0,212,255,0.08);
-	background: rgba(0,0,0,0.3);
-	padding: 10px 16px 14px;
-
-	.ai-upload-bar {
-		display: flex; gap: 6px; margin-bottom: 8px;
-		.ai-upload-btn {
-			background: rgba(0,212,255,0.08) !important; border: 1px solid rgba(0,212,255,0.15) !important;
-			color: rgba(0,212,255,0.7) !important; border-radius: 8px !important; font-size: 11px !important;
-			.el-icon { margin-right: 3px; vertical-align: middle; }
-			&:hover { background: rgba(0,212,255,0.15) !important; }
-		}
-	}
-
-	.ai-input-row {
-		display: flex; align-items: center; gap: 8px;
-
-		.ai-plus-icon {
-			font-size: 24px; color: rgba(255,255,255,0.25); cursor: pointer;
-			transition: color 0.2s; flex-shrink: 0;
-			&:hover { color: #00d4ff; }
-			&.el-icon { font-size: 24px; }
-		}
-
-		.ai-input {
-			flex: 1; height: 38px; border: 1px solid rgba(0,212,255,0.12);
-			border-radius: 20px; padding: 0 16px;
-			background: rgba(255,255,255,0.04); color: #e2e8f0;
-			font-size: 13px; outline: none; transition: all 0.3s;
-			&:focus { border-color: rgba(0,212,255,0.35); background: rgba(0,212,255,0.04); box-shadow: 0 0 12px rgba(0,212,255,0.06); }
-			&::placeholder { color: rgba(255,255,255,0.2); }
-		}
-
-		.ai-send-btn {
-			width: 38px; height: 38px; border-radius: 50%; border: none;
-			background: linear-gradient(135deg, #00d4ff, #7c3aed); color: #fff;
-			font-size: 16px; cursor: pointer; display: flex; align-items: center;
-			justify-content: center; flex-shrink: 0; transition: all 0.25s;
-			&:hover { transform: scale(1.08); box-shadow: 0 4px 16px rgba(0,212,255,0.3); }
-			.el-icon { font-size: 16px; }
-		}
-	}
-}
-
 .audioAnimation-box {
 	transform: rotate(0deg) scale(1) skew(0deg, 0deg) translate3d(0px, 68px, 0px);
 	-webkit-perspective: 1000px;
@@ -1286,5 +1134,258 @@ $text-sub: #94a3b8;
 
 .audioAnimation-box1 {
 	transform: rotate(0deg) scale(1) skew(0deg, 0deg) translate3d(0px, 0, 0px) !important;
+}
+</style>
+
+<style lang="scss">
+.ai-chat-dialog {
+	.el-dialog {
+		border-radius: 20px !important;
+		overflow: hidden;
+		background: #111827 !important;
+		border: 1.5px solid rgba(99,102,241,0.3) !important;
+		box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(99,102,241,0.08) !important;
+	}
+	.el-dialog__header { display: none !important; }
+	.el-dialog__body { padding: 0 !important; background: #111827 !important; }
+	.el-dialog__footer { display: none !important; }
+}
+
+.ai-chat-wrapper {
+	display: flex;
+	flex-direction: column;
+	height: 680px;
+	background: #111827;
+}
+
+.ai-chat-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px 24px;
+	background: linear-gradient(135deg, #1e1b4b, #312e81) !important;
+	border-bottom: 2px solid rgba(99,102,241,0.3);
+
+	.ai-header-left {
+		display: flex; align-items: center; gap: 14px;
+	}
+	.ai-logo-pulse {
+		width: 44px; height: 44px; border-radius: 50%;
+		background: linear-gradient(135deg, #6366f1, #8b5cf6);
+		animation: ai-pulse 2s ease-in-out infinite;
+		position: relative;
+		box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+		&::after {
+			content: 'AI'; position: absolute; inset: 0;
+			display: flex; align-items: center; justify-content: center;
+			color: #fff; font-size: 16px; font-weight: 800; letter-spacing: 1px;
+		}
+	}
+	@keyframes ai-pulse {
+		0%, 100% { box-shadow: 0 4px 20px rgba(99,102,241,0.4); }
+		50% { box-shadow: 0 4px 20px rgba(99,102,241,0.4), 0 0 0 12px rgba(99,102,241,0); }
+	}
+	.ai-header-info { display: flex; flex-direction: column; gap: 3px; }
+	.ai-header-title { font-size: 18px; font-weight: 700; color: #ffffff; letter-spacing: 1px; }
+	.ai-header-status { font-size: 13px; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 6px; }
+	.ai-status-dot {
+		width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block;
+		box-shadow: 0 0 8px #22c55e; animation: ai-dot-glow 2s ease-in-out infinite;
+	}
+	@keyframes ai-dot-glow {
+		0%, 100% { box-shadow: 0 0 4px #22c55e; }
+		50% { box-shadow: 0 0 12px #22c55e, 0 0 24px rgba(34,197,94,0.4); }
+	}
+	.ai-header-actions { display: flex; align-items: center; gap: 12px; }
+	.ai-switch-btn {
+		background: rgba(255,255,255,0.15) !important; border: 1.5px solid rgba(255,255,255,0.25) !important;
+		color: #fff !important; border-radius: 18px !important; font-size: 13px !important; padding: 7px 16px !important;
+		font-weight: 500 !important;
+		i { margin-right: 4px; }
+		&:hover { background: rgba(255,255,255,0.25) !important; transform: translateY(-1px); }
+	}
+	.ai-close-btn {
+		font-size: 22px; color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.2s;
+		&:hover { color: #fff; transform: rotate(90deg); }
+	}
+}
+
+.ai-chat-body {
+	flex: 1; overflow-y: auto; padding: 20px 24px;
+	background: #111827 !important;
+
+	&::-webkit-scrollbar { width: 6px; }
+	&::-webkit-scrollbar-track { background: transparent; }
+	&::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 10px; }
+	&::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.5); }
+}
+
+.ai-welcome {
+	display: flex; flex-direction: column; align-items: center; justify-content: center;
+	padding: 40px 20px 20px; animation: ai-fade-in 0.5s ease;
+	.ai-welcome-icon { margin-bottom: 16px; filter: drop-shadow(0 4px 20px rgba(99,102,241,0.4)); }
+	.ai-welcome-text { color: #ffffff !important; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+	.ai-welcome-sub { color: #a5b4fc !important; font-size: 15px; margin-bottom: 28px; }
+}
+@keyframes ai-fade-in {
+	from { opacity: 0; transform: translateY(10px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+.ai-suggest-title {
+	color: #c7d2fe !important; font-size: 14px; margin-bottom: 16px; font-weight: 500;
+}
+.ai-suggest-list {
+	display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 600px;
+}
+.ai-suggest-tag {
+	display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 22px; font-size: 14px;
+	background: rgba(99,102,241,0.15) !important; border: 1.5px solid rgba(99,102,241,0.35) !important;
+	color: #c7d2fe !important; cursor: pointer; transition: all 0.25s; font-weight: 500;
+	i { font-size: 14px; opacity: 0.8; }
+	&:hover { background: rgba(99,102,241,0.3) !important; border-color: rgba(99,102,241,0.6) !important; color: #fff !important; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99,102,241,0.25); }
+}
+.ai-suggest-bar {
+	display: flex; align-items: center; gap: 8px; padding: 10px 0; flex-wrap: wrap;
+	margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.ai-suggest-bar-label {
+	font-size: 13px; color: #a5b4fc !important; white-space: nowrap; font-weight: 500;
+}
+.ai-suggest-mini {
+	padding: 5px 14px; border-radius: 14px; font-size: 13px;
+	background: rgba(139,92,246,0.15) !important; border: 1px solid rgba(139,92,246,0.3) !important;
+	color: #c4b5fd !important; cursor: pointer; transition: all 0.2s; font-weight: 500;
+	&:hover { background: rgba(139,92,246,0.35) !important; color: #fff !important; transform: translateY(-1px); }
+}
+
+.ai-msg-group { margin-bottom: 6px; animation: ai-msg-in 0.35s ease; }
+@keyframes ai-msg-in {
+	from { opacity: 0; transform: translateY(10px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+.ai-msg-time {
+	text-align: center; padding: 10px 0;
+	.ai-time-badge {
+		display: inline-block; font-size: 12px; color: #94a3b8 !important;
+		background: rgba(255,255,255,0.06); padding: 3px 14px; border-radius: 12px;
+		letter-spacing: 0.5px;
+	}
+}
+
+.ai-msg { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 16px; }
+.ai-msg-user { flex-direction: row-reverse; }
+
+.ai-avatar {
+	width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; object-fit: cover;
+	border: 2.5px solid rgba(255,255,255,0.15);
+}
+.ai-avatar-bot {
+	box-shadow: 0 0 20px rgba(99,102,241,0.3);
+	border: 2.5px solid rgba(99,102,241,0.4) !important;
+}
+
+.ai-bubble {
+	max-width: 72%; padding: 14px 20px; border-radius: 20px;
+	font-size: 15px !important; line-height: 1.75; word-break: break-word; white-space: pre-line;
+}
+.ai-bubble-user {
+	background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;
+	color: #ffffff !important; border-bottom-right-radius: 6px;
+	box-shadow: 0 4px 20px rgba(124,58,237,0.35);
+	font-weight: 500;
+}
+.ai-bubble-bot {
+	background: #1e293b !important; color: #e2e8f0 !important;
+	border: 1.5px solid rgba(99,102,241,0.2) !important; border-bottom-left-radius: 6px;
+	box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+	font-weight: 400;
+}
+
+.ai-typing {
+	display: flex; align-items: center; gap: 6px; padding: 14px 20px;
+	.ai-typing-text {
+		font-size: 14px; color: #a5b4fc !important; margin-right: 8px; font-weight: 500;
+	}
+	.ai-dot {
+		width: 8px; height: 8px; border-radius: 50%; background: #6366f1 !important;
+		animation: ai-bounce 1.4s infinite;
+		&:nth-child(3) { animation-delay: 0.2s; }
+		&:nth-child(4) { animation-delay: 0.4s; }
+	}
+	@keyframes ai-bounce {
+		0%, 80%, 100% { opacity: 0.2; transform: scale(0.6); }
+		40% { opacity: 1; transform: scale(1.4); }
+	}
+}
+
+.ai-chat-footer {
+	border-top: 2px solid rgba(99,102,241,0.2);
+	background: #0f172a !important;
+	padding: 14px 20px 18px;
+
+	.ai-upload-bar {
+		display: flex; gap: 8px; margin-bottom: 12px; padding: 8px 0;
+		border-bottom: 1px solid rgba(255,255,255,0.06);
+		.ai-upload-btn {
+			background: rgba(99,102,241,0.15) !important; border: 1.5px solid rgba(99,102,241,0.3) !important;
+			color: #a5b4fc !important; border-radius: 12px !important; font-size: 13px !important;
+			padding: 7px 16px !important; font-weight: 500 !important;
+			.el-icon { margin-right: 4px; }
+			&:hover { background: rgba(99,102,241,0.3) !important; color: #fff !important; }
+		}
+	}
+
+	.ai-input-row {
+		display: flex; align-items: center; gap: 10px;
+
+		.ai-plus-icon {
+			font-size: 28px; color: rgba(255,255,255,0.4); cursor: pointer;
+			transition: all 0.25s; flex-shrink: 0;
+			&:hover { color: #818cf8; transform: rotate(90deg); }
+		}
+
+		.ai-input {
+			flex: 1; height: 46px; border: 2px solid rgba(99,102,241,0.2);
+			border-radius: 23px; padding: 0 20px;
+			background: rgba(255,255,255,0.07) !important; color: #ffffff !important;
+			font-size: 15px !important; outline: none; transition: all 0.3s;
+			&:focus { border-color: rgba(99,102,241,0.5); background: rgba(99,102,241,0.08) !important; box-shadow: 0 0 24px rgba(99,102,241,0.12); }
+			&::placeholder { color: rgba(255,255,255,0.35) !important; font-size: 14px; }
+		}
+
+		.ai-send-btn {
+			width: 46px; height: 46px; border-radius: 50%; border: none;
+			background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.35);
+			font-size: 20px; cursor: pointer; display: flex; align-items: center;
+			justify-content: center; flex-shrink: 0; transition: all 0.3s;
+			&.ai-send-active {
+				background: linear-gradient(135deg, #6366f1, #8b5cf6) !important; color: #fff !important;
+				box-shadow: 0 4px 24px rgba(99,102,241,0.4);
+				&:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(99,102,241,0.5); }
+			}
+		}
+
+		.ai-emoji-trigger {
+			font-size: 28px; cursor: pointer; transition: transform 0.2s; user-select: none;
+			&:hover { transform: scale(1.2); }
+		}
+
+		.ai-emoji-picker {
+			position: absolute; bottom: 48px; left: -120px;
+			background: #1e293b !important; border: 2px solid rgba(99,102,241,0.3) !important;
+			border-radius: 16px; padding: 12px;
+			box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+			display: flex; flex-wrap: wrap; width: 310px; max-height: 230px; overflow-y: auto; z-index: 9999;
+			&::-webkit-scrollbar { width: 5px; }
+			&::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 5px; }
+		}
+
+		.ai-emoji-item {
+			cursor: pointer; font-size: 26px; padding: 5px 6px; display: inline-block;
+			border-radius: 8px; transition: all 0.15s;
+			&:hover { background: rgba(99,102,241,0.2); transform: scale(1.2); }
+		}
+	}
 }
 </style>

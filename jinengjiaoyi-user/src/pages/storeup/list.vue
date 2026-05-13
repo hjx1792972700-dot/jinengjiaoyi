@@ -9,20 +9,34 @@
 		<div v-if="storeupType==1" class="section-title">我的收藏</div>
 		<div v-if="storeupType==21" class="section-title">我的点赞</div>
 		<div v-if="storeupType==81" class="section-title">我的评论</div>
-		<div v-if="storeupType!=81" class="category-tabs">
-			<div class="tab-item" :class="{active: activeCategory===''}" @click="switchCategory('')">
-				<i class="el-icon-menu"></i> 全部
-			</div>
-			<div class="tab-item" :class="{active: activeCategory==='jinengxuqiu'}" @click="switchCategory('jinengxuqiu')">
-				<i class="el-icon-goods"></i> 技能市场
-			</div>
-			<div class="tab-item" :class="{active: activeCategory==='forum'}" @click="switchCategory('forum')">
-				<i class="el-icon-chat-dot-round"></i> 技能社区
-			</div>
-			<div class="tab-item" :class="{active: activeCategory==='xuexiziliao'}" @click="switchCategory('xuexiziliao')">
-				<i class="el-icon-reading"></i> 学习资料
-			</div>
+	<div v-if="storeupType==81" class="category-tabs">
+		<div class="tab-item" :class="{active: commentCategory===''}" @click="commentCategory=''">
+			<i class="el-icon-menu"></i> 全部
 		</div>
+		<div class="tab-item" :class="{active: commentCategory==='jinengxuqiu'}" @click="commentCategory='jinengxuqiu'">
+			<i class="el-icon-goods"></i> 技能市场
+		</div>
+		<div class="tab-item" :class="{active: commentCategory==='xuexiziliao'}" @click="commentCategory='xuexiziliao'">
+			<i class="el-icon-reading"></i> 学习资料
+		</div>
+		<div class="tab-item" :class="{active: commentCategory==='forum'}" @click="commentCategory='forum'">
+			<i class="el-icon-chat-dot-round"></i> 技能社区
+		</div>
+	</div>
+	<div v-if="storeupType!=81" class="category-tabs">
+		<div class="tab-item" :class="{active: activeCategory===''}" @click="switchCategory('')">
+			<i class="el-icon-menu"></i> 全部
+		</div>
+		<div class="tab-item" :class="{active: activeCategory==='jinengxuqiu'}" @click="switchCategory('jinengxuqiu')">
+			<i class="el-icon-goods"></i> 技能市场
+		</div>
+		<div class="tab-item" :class="{active: activeCategory==='forum'}" @click="switchCategory('forum')">
+			<i class="el-icon-chat-dot-round"></i> 技能社区
+		</div>
+		<div v-if="storeupType!=21" class="tab-item" :class="{active: activeCategory==='xuexiziliao'}" @click="switchCategory('xuexiziliao')">
+			<i class="el-icon-reading"></i> 学习资料
+		</div>
+	</div>
 		<el-form v-if="storeupType!=81" :inline="true" :model="formSearch" class="list-form-pv">
 			<el-form-item class="search-item">
 				<el-input v-model="formSearch.name" placeholder="搜索名称..." clearable @keydown.enter="getStoreupList(1)"></el-input>
@@ -55,7 +69,12 @@
 		<div v-else class="storeup-table-wrap">
 			<el-table class="tables" :stripe='false'
 				:border='true'
-				:data="storeupList">
+				:data="filteredCommentList">
+				<el-table-column width="110" label="来源" :resizable='false'>
+					<template #default="scope">
+						<span class="comment-source-badge" :class="'source-' + scope.row.tablename">{{sourceLabel(scope.row.tablename)}}</span>
+					</template>
+				</el-table-column>
 				<el-table-column :resizable='true' :sortable='false' prop="content" label="评论内容" show-overflow-tooltip>
 					<template #default="scope">
 						<span class="ql-snow ql-editor comment-cell-ellipsis" v-html="scope.row.content"></span>
@@ -66,7 +85,7 @@
 						<span class="ql-snow ql-editor comment-cell-ellipsis" v-html="scope.row.reply"></span>
 					</template>
 				</el-table-column>
-				<el-table-column :resizable='true' :sortable='false' prop="score" label="评分">
+				<el-table-column :resizable='true' :sortable='false' prop="score" label="评分" width="180">
 					<template #default="scope">
 						<el-rate
 							v-if="scope.row.score&&scope.row.score!=undefined"
@@ -82,15 +101,15 @@
 							:colors='["#F7BA2A", "#F7BA2A", "#F7BA2A"]'
 							void-color='#C6D1DE'
 							disabled-void-color='#EFF2F7'
-							:icons="commentRateIcons"
-							:void-icon="commentRateVoidIcon"
+						:icon-classes="commentRateIcons"
+						:void-icon-class="commentRateVoidIcon"
 							:show-score='false'
 							disabled
 							>
 						</el-rate>
 					</template>
 				</el-table-column>
-				<el-table-column width="300" label="操作">
+				<el-table-column width="200" label="操作">
 					<template #default="scope">
 						<el-button class="view" type="success" size="mini"
 							@click="toDetail(scope.row)">
@@ -132,15 +151,16 @@
 		props: { embedded: { type: Boolean, default: false } },
 		data() {
 			return {
-				commentRateIcons: [StarFilled, StarFilled, StarFilled],
-				commentRateVoidIcon: Star,
+				commentRateIcons: ['el-icon-star-on', 'el-icon-star-on', 'el-icon-star-on'],
+				commentRateVoidIcon: 'el-icon-star-off',
 				layouts: '',
 				baseUrl: config.baseUrl,
 				formSearch: {
 					name: ''
 				},
-				activeCategory: '',
-				storeupType: 1,
+			activeCategory: '',
+			commentCategory: '',
+			storeupType: 1,
 				storeupList: [],
 				total: 1,
 				pageSize: 8,
@@ -151,6 +171,12 @@
 		created() {
 			this.storeupType = localStorage.getItem('storeupType');
 			this.getStoreupList(1);
+		},
+		computed: {
+			filteredCommentList() {
+				if (!this.commentCategory) return this.storeupList;
+				return this.storeupList.filter(item => item.tablename === this.commentCategory);
+			}
 		},
 		methods: {
 			backClick() {
@@ -210,15 +236,16 @@
 				}
 				this.$router.push({path: `/main/${item.tablename}Detail`, query: params});
 			},
-			async delClick(row){
-				await this.$confirm(`是否删除此记录？`) .then(async _ => {
-					if(this.storeupType==81) {
-						await this.$http.post(`discuss${row.tablename}/delete`, [row.id]).then(async res => {
-							if (res.data.code == 0) {
-								await this.$http.get(`${row.tablename}/info/${row.refid}`).then(async rs=>{
-									rs.data.data.discussnum--
-									await this.$http.post(`${row.tablename}/update`,rs.data.data).then(rs2=>{})
-								})
+		async delClick(row){
+			await this.$confirm(`是否删除此记录？`) .then(async _ => {
+				if(this.storeupType==81) {
+					const deleteUrl = row.tablename === 'forum' ? 'forum/delete' : `discuss${row.tablename}/delete`;
+					await this.$http.post(deleteUrl, [row.id]).then(async res => {
+						if (res.data.code == 0) {
+							await this.$http.get(`${row.tablename}/info/${row.refid}`).then(async rs=>{
+								if (row.tablename !== 'forum') rs.data.data.discussnum--;
+								await this.$http.post(`${row.tablename}/update`,rs.data.data).then(rs2=>{})
+							})
 								this.$message({
 									type: 'success',
 									message: '删除成功!',
@@ -490,6 +517,18 @@ $shadow: 0 4px 20px rgba(0,0,0,0.3);
 .storeup-card-item {
 	min-width: 0;
 	cursor: pointer;
+
+	.storeup-card {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+
+		::v-deep .el-card__body {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+		}
+	}
 }
 
 .storeup-card {
@@ -518,6 +557,13 @@ $shadow: 0 4px 20px rgba(0,0,0,0.3);
 .storeup-card-body {
 	padding: 14px;
 	color: $text-dark;
+	flex: 1;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	min-height: 52px;
 }
 
 .storeup-card-actions {
@@ -542,6 +588,27 @@ $shadow: 0 4px 20px rgba(0,0,0,0.3);
 	overflow: hidden;
 	border: 1px solid $border;
 	box-shadow: $shadow;
+}
+
+.comment-source-badge {
+	display: inline-block;
+	font-size: 11px;
+	font-weight: 600;
+	padding: 3px 10px;
+	border-radius: 12px;
+	color: #fff;
+	letter-spacing: 0.5px;
+	white-space: nowrap;
+
+	&.source-jinengxuqiu {
+		background: linear-gradient(135deg, #0ea5e9, #0284c7);
+	}
+	&.source-xuexiziliao {
+		background: linear-gradient(135deg, #f59e0b, #d97706);
+	}
+	&.source-forum {
+		background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+	}
 }
 
 .comment-cell-ellipsis {

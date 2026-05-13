@@ -306,6 +306,19 @@ public class CommonController{
 				result.addAll( list);
 			}
 		}
+
+		EntityWrapper forumWrapper = new EntityWrapper();
+		forumWrapper.setSqlSelect("id, content, userid, username AS nickname, avatarurl, parentid AS refid, addtime, 'forum' AS tablename");
+		forumWrapper.gt("parentid", 0);
+		forumWrapper.eq("delflag", 0);
+		if (!request.getSession().getAttribute("role").toString().equals("管理员")) {
+			forumWrapper.eq("userid", request.getSession().getAttribute("userId"));
+		}
+		List forumList = (List) SpringContextUtils.getBeanMethod("forumService", "selectMaps", new Class[]{Wrapper.class}, new Object[]{forumWrapper});
+		if (forumList != null && !forumList.isEmpty()) {
+			result.addAll(forumList);
+		}
+
 		return R.ok().put("data", result);
 	}
 	

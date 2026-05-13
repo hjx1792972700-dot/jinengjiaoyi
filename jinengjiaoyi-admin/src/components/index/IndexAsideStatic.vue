@@ -5,8 +5,14 @@
 			<span class="logo-text">技能交易系统</span>
 		</div>
 		<div class="sidebar-user" v-if="user">
-			<el-image class="user-avatar" :src="avatar ? ($base.url + avatar) : require('@/assets/img/avator.png')" fit="cover"></el-image>
-			<span class="user-name">{{$storage.get('adminName')}}</span>
+			<div class="user-avatar-wrap">
+				<el-image class="user-avatar" :src="avatar ? ($base.url + avatar) : require('@/assets/img/avator.png')" fit="cover"></el-image>
+				<span class="user-online-dot"></span>
+			</div>
+			<div class="user-info">
+				<span class="user-name">{{$storage.get('adminName')}}</span>
+				<span class="user-role">系统管理员</span>
+			</div>
 		</div>
 		<nav class="sidebar-nav">
 			<div v-for="item in navItems" :key="item.path"
@@ -70,7 +76,7 @@ export default {
 		navigate(path) {
 			const target = '/' + path
 			if (this.$route.path !== target) this.$router.push(target)
-		}
+		},
 	}
 }
 </script>
@@ -117,25 +123,55 @@ $border: rgba(255,255,255,0.06);
 }
 
 .sidebar-user {
-	padding: 18px 20px;
+	padding: 16px;
+	margin: 12px 10px;
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	border-bottom: 1px solid $border;
+	gap: 12px;
+	border-radius: 12px;
+	background: linear-gradient(135deg, rgba(0,180,216,0.08), rgba(139,92,246,0.06));
+	border: 1px solid rgba(0,180,216,0.12);
 	flex-shrink: 0;
-	.user-avatar {
-		width: 34px;
-		height: 34px;
-		border-radius: 50%;
-		border: 2px solid rgba(0,180,216,0.3);
+	cursor: default;
+	transition: all 0.3s;
+	&:hover {
+		border-color: rgba(0,180,216,0.25);
+		box-shadow: 0 4px 20px rgba(0,180,216,0.08);
+	}
+	.user-avatar-wrap {
+		position: relative;
 		flex-shrink: 0;
 	}
+	.user-avatar {
+		width: 42px;
+		height: 42px;
+		border-radius: 50%;
+		border: 2.5px solid rgba(0,180,216,0.4);
+		box-shadow: 0 0 16px rgba(0,180,216,0.15);
+	}
+	.user-online-dot {
+		position: absolute; right: 0; bottom: 1px;
+		width: 10px; height: 10px; border-radius: 50%;
+		background: #22c55e; border: 2px solid $bg;
+		box-shadow: 0 0 6px #22c55e;
+	}
+	.user-info {
+		display: flex; flex-direction: column; gap: 2px;
+		overflow: hidden;
+	}
 	.user-name {
-		font-size: 13px;
-		color: $text2;
+		font-size: 14px;
+		font-weight: 600;
+		color: $text;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+	.user-role {
+		font-size: 11px;
+		color: $accent;
+		font-weight: 500;
+		letter-spacing: 0.5px;
 	}
 }
 
@@ -186,4 +222,5 @@ $border: rgba(255,255,255,0.06);
 		}
 	}
 }
+
 </style>

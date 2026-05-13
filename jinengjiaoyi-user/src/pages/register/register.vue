@@ -312,9 +312,10 @@ $border-glow: rgba(0,212,255,0.15);
   align-items: center;
   gap: 10px;
 
-  .el-icon {
+  .el-icon,
+  i[class^="el-icon"] {
     font-size: 20px;
-    color: $cyan;
+    color: #ffffff;
   }
 }
 
@@ -351,9 +352,10 @@ $border-glow: rgba(0,212,255,0.15);
     box-shadow: 0 0 20px rgba(0,212,255,0.08);
   }
 
-  > .el-icon:first-child {
+  > .el-icon:first-child,
+  > i[class^="el-icon"]:first-child {
     font-size: 17px;
-    color: rgba(0,212,255,0.5);
+    color: rgba(255,255,255,0.85);
     margin-right: 12px;
     flex-shrink: 0;
   }
@@ -372,12 +374,12 @@ $border-glow: rgba(0,212,255,0.15);
 
   .pwd-toggle {
     font-size: 17px;
-    color: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.7);
     cursor: pointer;
     transition: color 0.2s;
     flex-shrink: 0;
 
-    &:hover { color: $cyan; }
+    &:hover { color: #fff; }
   }
 }
 

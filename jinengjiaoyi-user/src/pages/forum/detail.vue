@@ -94,10 +94,10 @@
 			</div>
 		</div>
 
-		<el-dialog title="发表评论" :visible.sync="dialogFormVisible" class="fd-dialog" width="500px">
+		<el-dialog title="发表评论" :visible.sync="dialogFormVisible" custom-class="fd-dialog" width="520px" :modal-append-to-body="false" :append-to-body="false">
 			<el-form :model="form" :rules="rules" ref="form">
 				<el-form-item prop="content">
-					<el-input type="textarea" v-model="form.content" :rows="4" placeholder="说说你的想法..." maxlength="500" show-word-limit resize="none"></el-input>
+					<el-input type="textarea" v-model="form.content" :rows="5" placeholder="说说你的想法..." maxlength="500" show-word-limit resize="none"></el-input>
 				</el-form-item>
 			</el-form>
 			<template #footer>
@@ -608,44 +608,85 @@ $text-dim: rgba(255,255,255,0.28);
 }
 
 ::v-deep .fd-dialog {
-	border-radius: 14px !important;
+	border-radius: 16px !important;
 	background: #0f172a !important;
-	border: 1px solid $border-glow;
+	border: 1px solid rgba(14,165,233,0.15);
+	box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(14,165,233,0.08) !important;
+	overflow: hidden;
+
 	.el-dialog__header {
+		background: linear-gradient(135deg, rgba(14,165,233,0.08), rgba(124,58,237,0.06));
 		border-bottom: 1px solid rgba(255,255,255,0.06);
-		.el-dialog__title { color: $text-bright; font-size: 15px; }
-		.el-dialog__headerbtn .el-dialog__close { color: $text-sub; }
+		padding: 16px 22px;
+		.el-dialog__title {
+			color: $text-bright;
+			font-size: 16px;
+			font-weight: 600;
+		}
+		.el-dialog__headerbtn {
+			top: 16px;
+			right: 18px;
+			.el-dialog__close {
+				color: $text-sub;
+				font-size: 18px;
+				&:hover { color: #fff; }
+			}
+		}
 	}
-	.el-dialog__body { padding: 16px 20px; }
+	.el-dialog__body {
+		padding: 20px 22px;
+		background: #0f172a;
+	}
 	.el-dialog__footer {
 		border-top: 1px solid rgba(255,255,255,0.06);
-		padding: 12px 20px;
+		padding: 14px 22px;
+		background: rgba(15,23,42,0.95);
 	}
-}
-
-::v-deep .fd-dialog {
 	.el-textarea__inner {
 		background: rgba(255,255,255,0.04) !important;
-		border: 1px solid rgba(255,255,255,0.1) !important;
-		border-radius: 10px !important;
+		border: 1.5px solid rgba(255,255,255,0.1) !important;
+		border-radius: 12px !important;
 		color: $text-bright !important;
 		font-size: 14px;
-		padding: 12px 14px;
-		&:focus { border-color: rgba(14,165,233,0.35) !important; box-shadow: 0 0 10px rgba(14,165,233,0.08); }
-		&::placeholder { color: $text-dim !important; }
+		line-height: 1.7;
+		padding: 14px 16px;
+		transition: border-color 0.25s, box-shadow 0.25s;
+		&:focus {
+			border-color: rgba(14,165,233,0.4) !important;
+			box-shadow: 0 0 0 3px rgba(14,165,233,0.08);
+		}
+		&::placeholder { color: rgba(255,255,255,0.25) !important; }
 	}
-	.el-input__count { background: transparent !important; color: $text-dim !important; }
+	.el-input__count {
+		background: transparent !important;
+		color: rgba(255,255,255,0.3) !important;
+		font-size: 11px;
+	}
+	.el-form-item { margin-bottom: 0; }
 	.el-dialog__footer .el-button--primary {
 		background: linear-gradient(135deg, $primary, $primary-light) !important;
 		border: none !important;
-		border-radius: 16px;
+		border-radius: 20px;
+		padding: 8px 24px;
+		font-weight: 600;
+		font-size: 13px;
+		transition: all 0.3s;
+		&:hover { box-shadow: 0 4px 14px rgba(14,165,233,0.3); transform: translateY(-1px); }
 	}
 	.el-dialog__footer .el-button--default {
 		background: transparent !important;
-		border: 1px solid rgba(255,255,255,0.1) !important;
+		border: 1.5px solid rgba(255,255,255,0.1) !important;
 		color: $text-sub !important;
-		border-radius: 16px;
+		border-radius: 20px;
+		padding: 8px 20px;
+		font-size: 13px;
+		&:hover { color: $text-bright !important; border-color: rgba(255,255,255,0.2) !important; }
 	}
+}
+
+::v-deep .v-modal {
+	background: rgba(0,0,0,0.6) !important;
+	backdrop-filter: blur(4px);
 }
 
 video {

@@ -30,6 +30,10 @@
 			</el-dropdown-menu>
 			</template>
 		</el-dropdown>
+		<div class="header-logout-btn" @click="onLogout" title="退出登录">
+			<i class="el-icon-switch-button"></i>
+			<span>退出登录</span>
+		</div>
 		<el-dialog :visible.sync="recordVisible" :title="'聊天记录'" :append-to-body="true">
 			<div class="z-box" :style='{"width":"70%","padding":"20px","margin":"0 auto"}'>
 				<div class="section-content" v-for="item in recordList" :key="item.id" @click.stop="chatClick(item)">
@@ -617,11 +621,17 @@
 				window.open((location.href.split(this.$base.name).length>1 ? location.href.split(this.$base.name)[0] + this.$base.name + '/' + file :this.$base.url + file))
 			},
 			async onLogout() {
-				await this.$http.post(`${this.$storage.get('sessionTable')}/logout`).then(rs=>{
+				try {
+					await this.$confirm('确定要退出登录吗？', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					})
+					await this.$http.post(`${this.$storage.get('sessionTable')}/logout`)
 					this.$storage.clear()
 					this.$store.dispatch('tagsView/delAllViews')
 					window.location.href = this.$base.indexUrl
-				})
+				} catch(e) {}
 			},
 			onIndexTap(){
 				localStorage.setItem("frontToken", localStorage.getItem("Token"));
@@ -721,6 +731,25 @@
 				.label { color: $text2; font-size: 12px; }
 				.nickname { color: $text; font-size: 13px; font-weight: 600; margin: 0 0 0 3px; }
 				.iconfont { margin: 0 0 0 5px; color: $accent; font-size: 10px; }
+			}
+		}
+		.header-logout-btn {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			margin-left: 16px;
+			padding: 12px 16px;
+			border-radius: 10px;
+			cursor: pointer;
+			color: $text2;
+			transition: all 0.25s;
+			flex-shrink: 0;
+			i { font-size: 18px; }
+			span { font-size: 14px; font-weight: 500; white-space: nowrap; }
+			&:hover {
+				background: rgba(239,68,68,0.1);
+				color: #f87171;
+				i { color: #f87171; }
 			}
 		}
 	}

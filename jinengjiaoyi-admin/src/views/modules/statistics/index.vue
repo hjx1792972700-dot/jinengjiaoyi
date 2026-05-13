@@ -5,25 +5,55 @@
 		</div>
 
 		<div class="summary-cards">
-			<div class="summary-card" v-if="isAuth('yonghu','首页总数')">
-				<div class="card-icon" style="background:linear-gradient(135deg,#3b82f6,#60a5fa)"><i class="el-icon-user-solid"></i></div>
-				<div class="card-info"><div class="card-num">{{counts.yonghu}}</div><div class="card-label">用户总数</div></div>
+			<div class="summary-card card-blue" v-if="isAuth('yonghu','首页总数')">
+				<div class="card-glow"></div>
+				<div class="card-icon"><i class="el-icon-user-solid"></i></div>
+				<div class="card-info">
+					<div class="card-num">{{counts.yonghu}}</div>
+					<div class="card-label">用户总数</div>
+					<div class="card-sub">注册用户数量</div>
+				</div>
+				<div class="card-deco"><i class="el-icon-user-solid"></i></div>
 			</div>
-			<div class="summary-card" v-if="isAuth('jinengfenlei','首页总数')">
-				<div class="card-icon" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)"><i class="el-icon-grid"></i></div>
-				<div class="card-info"><div class="card-num">{{counts.fenlei}}</div><div class="card-label">技能分类</div></div>
+			<div class="summary-card card-purple" v-if="isAuth('jinengfenlei','首页总数')">
+				<div class="card-glow"></div>
+				<div class="card-icon"><i class="el-icon-menu"></i></div>
+				<div class="card-info">
+					<div class="card-num">{{counts.fenlei}}</div>
+					<div class="card-label">技能分类</div>
+					<div class="card-sub">技能类目总数</div>
+				</div>
+				<div class="card-deco"><i class="el-icon-menu"></i></div>
 			</div>
-			<div class="summary-card" v-if="isAuth('jinengxuqiu','首页总数')">
-				<div class="card-icon" style="background:linear-gradient(135deg,#06b6d4,#22d3ee)"><i class="el-icon-s-grid"></i></div>
-				<div class="card-info"><div class="card-num">{{counts.xuqiu}}</div><div class="card-label">技能市场</div></div>
+			<div class="summary-card card-cyan" v-if="isAuth('jinengxuqiu','首页总数')">
+				<div class="card-glow"></div>
+				<div class="card-icon"><i class="el-icon-s-goods"></i></div>
+				<div class="card-info">
+					<div class="card-num">{{counts.xuqiu}}</div>
+					<div class="card-label">技能市场</div>
+					<div class="card-sub">已发布的技能</div>
+				</div>
+				<div class="card-deco"><i class="el-icon-s-goods"></i></div>
 			</div>
-			<div class="summary-card" v-if="isAuth('jiaohuanjilu','首页总数')">
-				<div class="card-icon" style="background:linear-gradient(135deg,#10b981,#34d399)"><i class="el-icon-promotion"></i></div>
-				<div class="card-info"><div class="card-num">{{counts.jiaohuan}}</div><div class="card-label">交换记录</div></div>
+			<div class="summary-card card-green" v-if="isAuth('jiaohuanjilu','首页总数')">
+				<div class="card-glow"></div>
+				<div class="card-icon"><i class="el-icon-s-promotion"></i></div>
+				<div class="card-info">
+					<div class="card-num">{{counts.jiaohuan}}</div>
+					<div class="card-label">交换记录</div>
+					<div class="card-sub">累计交换次数</div>
+				</div>
+				<div class="card-deco"><i class="el-icon-s-promotion"></i></div>
 			</div>
-			<div class="summary-card" v-if="isAuth('xuexiziliao','首页总数')">
-				<div class="card-icon" style="background:linear-gradient(135deg,#ec4899,#f472b6)"><i class="el-icon-reading"></i></div>
-				<div class="card-info"><div class="card-num">{{counts.ziliao}}</div><div class="card-label">学习资料</div></div>
+			<div class="summary-card card-pink" v-if="isAuth('xuexiziliao','首页总数')">
+				<div class="card-glow"></div>
+				<div class="card-icon"><i class="el-icon-notebook-2"></i></div>
+				<div class="card-info">
+					<div class="card-num">{{counts.ziliao}}</div>
+					<div class="card-label">学习资料</div>
+					<div class="card-sub">共享学习资源</div>
+				</div>
+				<div class="card-deco"><i class="el-icon-notebook-2"></i></div>
 			</div>
 		</div>
 
@@ -228,28 +258,96 @@ $radius: 12px;
 
 .summary-cards {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-	gap: 12px;
-	margin-bottom: 16px;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 16px;
+	margin-bottom: 20px;
+
 	.summary-card {
-		background: $surface;
-		border: 1px solid $border;
-		border-radius: $radius;
-		padding: 16px 14px;
+		position: relative;
+		overflow: hidden;
+		border-radius: 16px;
+		padding: 24px 20px;
 		display: flex;
 		align-items: center;
-		gap: 12px;
-		transition: all 0.25s;
-		&:hover { box-shadow: 0 0 16px rgba(0,180,216,0.08); border-color: rgba(0,180,216,0.15); }
+		gap: 16px;
+		transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+		cursor: default;
+		border: 1px solid transparent;
+
+		&:hover {
+			transform: translateY(-4px);
+			.card-glow { opacity: 1; }
+			.card-deco i { transform: rotate(15deg) scale(1.1); opacity: 0.12; }
+		}
+
+		.card-glow {
+			position: absolute; inset: 0; border-radius: 16px;
+			opacity: 0; transition: opacity 0.35s;
+		}
+
 		.card-icon {
-			width: 42px; height: 42px; border-radius: 10px;
+			width: 52px; height: 52px; border-radius: 14px;
 			display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-			.el-icon { font-size: 20px; color: #fff; }
+			position: relative; z-index: 1;
+			i { font-size: 24px; color: #fff; }
 		}
+
 		.card-info {
-			.card-num { font-size: 22px; font-weight: 700; color: $text; line-height: 1.2; }
-			.card-label { font-size: 11px; color: $text3; margin-top: 2px; }
+			position: relative; z-index: 1; flex: 1;
+			.card-num { font-size: 32px; font-weight: 800; color: #fff; line-height: 1.1; letter-spacing: -1px; }
+			.card-label { font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 4px; font-weight: 600; }
+			.card-sub { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 2px; }
 		}
+
+		.card-deco {
+			position: absolute; right: -8px; bottom: -8px; z-index: 0;
+			i { font-size: 80px; opacity: 0.07; color: #fff; transition: all 0.4s; }
+		}
+	}
+
+	.card-blue {
+		background: linear-gradient(135deg, #1e40af, #3b82f6);
+		border-color: rgba(59,130,246,0.3);
+		box-shadow: 0 4px 20px rgba(59,130,246,0.2);
+		.card-glow { box-shadow: 0 8px 40px rgba(59,130,246,0.35); }
+		.card-icon { background: rgba(255,255,255,0.2); }
+		&:hover { box-shadow: 0 8px 32px rgba(59,130,246,0.35); }
+	}
+
+	.card-purple {
+		background: linear-gradient(135deg, #5b21b6, #8b5cf6);
+		border-color: rgba(139,92,246,0.3);
+		box-shadow: 0 4px 20px rgba(139,92,246,0.2);
+		.card-glow { box-shadow: 0 8px 40px rgba(139,92,246,0.35); }
+		.card-icon { background: rgba(255,255,255,0.2); }
+		&:hover { box-shadow: 0 8px 32px rgba(139,92,246,0.35); }
+	}
+
+	.card-cyan {
+		background: linear-gradient(135deg, #0e7490, #06b6d4);
+		border-color: rgba(6,182,212,0.3);
+		box-shadow: 0 4px 20px rgba(6,182,212,0.2);
+		.card-glow { box-shadow: 0 8px 40px rgba(6,182,212,0.35); }
+		.card-icon { background: rgba(255,255,255,0.2); }
+		&:hover { box-shadow: 0 8px 32px rgba(6,182,212,0.35); }
+	}
+
+	.card-green {
+		background: linear-gradient(135deg, #047857, #10b981);
+		border-color: rgba(16,185,129,0.3);
+		box-shadow: 0 4px 20px rgba(16,185,129,0.2);
+		.card-glow { box-shadow: 0 8px 40px rgba(16,185,129,0.35); }
+		.card-icon { background: rgba(255,255,255,0.2); }
+		&:hover { box-shadow: 0 8px 32px rgba(16,185,129,0.35); }
+	}
+
+	.card-pink {
+		background: linear-gradient(135deg, #be185d, #ec4899);
+		border-color: rgba(236,72,153,0.3);
+		box-shadow: 0 4px 20px rgba(236,72,153,0.2);
+		.card-glow { box-shadow: 0 8px 40px rgba(236,72,153,0.35); }
+		.card-icon { background: rgba(255,255,255,0.2); }
+		&:hover { box-shadow: 0 8px 32px rgba(236,72,153,0.35); }
 	}
 }
 

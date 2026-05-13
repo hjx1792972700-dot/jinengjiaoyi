@@ -239,63 +239,67 @@
 			</template>
 		</el-dialog>
 
-		<el-dialog :visible.sync="chatVisible" @close="clearChat" :title="fname">
+		<el-dialog :visible.sync="chatVisible" @close="clearChat" :title="fname" custom-class="chat-dialog" width="680px" :modal-append-to-body="false" :append-to-body="false">
 			<div class="chat-content" id="chat-content">
+				<div class="chat-empty-hint" v-if="!chatList.length">
+					<i class="el-icon-chat-dot-round"></i>
+					<p>暂无消息，发送一条消息开始聊天吧</p>
+				</div>
 				<div v-bind:key="item.id" v-for="item in chatList">
 					<div v-if="item.addtime" class="addtime">{{timeFormat(item.addtime)}}</div>
 					<div v-if="item.uid==mid" class="right-content">
-						<el-alert v-if="item.format==1" class="text-content" :title="item.content" :closable="false"
-							type="warning"></el-alert>
-						<el-image v-else-if="item.format==2" fit="cover" :src="item.content?baseUrl + item.content:''" style="width: 100px;height: 100px;" :preview-src-list="[item.content?baseUrl + item.content:'']"></el-image>
-						<video v-else-if="item.format==3" :src="baseUrl + item.content" style="width: 280px;" controls></video>
-						<el-button v-else-if="item.format==4" type="primary" size="mini" @click="chatDownload(item.content)">文件预览</el-button>
+						<div v-if="item.format==1" class="chat-bubble chat-bubble-mine">{{item.content}}</div>
+						<el-image v-else-if="item.format==2" fit="cover" :src="item.content?baseUrl + item.content:''" style="width: 120px;height: 120px;border-radius:10px;" :preview-src-list="[item.content?baseUrl + item.content:'']"></el-image>
+						<video v-else-if="item.format==3" :src="baseUrl + item.content" style="width: 260px;border-radius:10px;" controls></video>
+						<el-button v-else-if="item.format==4" size="mini" @click="chatDownload(item.content)" class="chat-file-btn"><i class="el-icon-folder-opened"></i> 文件预览</el-button>
 						<audio v-else-if="item.format==5" :src="baseUrl + item.content" controls></audio>
-						<img :src="mpic?baseUrl + mpic:defaultAvatorUrl" alt="" style="width: 30px;border-radius: 50%;height: 30px;margin: 0 0 0 10px;" />
+						<img :src="mpic?baseUrl + mpic:defaultAvatorUrl" alt="" class="chat-avatar" />
 					</div>
 					<div v-else class="left-content">
-						<img :src="fpic?baseUrl + fpic:defaultAvatorUrl" alt="" style="width: 30px;border-radius: 50%;height: 30px;margin: 0 10px 0 0;" />
-						<el-alert v-if="item.format==1" class="text-content" :title="item.content" :closable="false"
-							type="success"></el-alert>
-						<el-image v-else-if="item.format==2" fit="cover" :src="item.content?baseUrl + item.content:''" style="width: 100px;height: 100px;" :preview-src-list="[item.content?baseUrl + item.content:'']"></el-image>
-						<video v-else-if="item.format==3" :src="baseUrl + item.content" style="width: 280px;" controls></video>
+						<img :src="fpic?baseUrl + fpic:defaultAvatorUrl" alt="" class="chat-avatar" />
+						<div v-if="item.format==1" class="chat-bubble chat-bubble-other">{{item.content}}</div>
+						<el-image v-else-if="item.format==2" fit="cover" :src="item.content?baseUrl + item.content:''" style="width: 120px;height: 120px;border-radius:10px;" :preview-src-list="[item.content?baseUrl + item.content:'']"></el-image>
+						<video v-else-if="item.format==3" :src="baseUrl + item.content" style="width: 260px;border-radius:10px;" controls></video>
 						<audio v-else-if="item.format==5" :src="baseUrl + item.content" controls></audio>
-						<el-button v-else-if="item.format==4" type="primary" size="mini" @click="chatDownload(item.content)">文件预览</el-button>
+						<el-button v-else-if="item.format==4" size="mini" @click="chatDownload(item.content)" class="chat-file-btn"><i class="el-icon-folder-opened"></i> 文件预览</el-button>
 					</div>
 					<div class="clear-float"></div>
 				</div>
 			</div>
 			<template #footer>
-				<div class="dialog-footer">
-				<div style="display: flex;align-items: center">
-					<el-input size="small" @keydown.enter="addChat(null)" v-model="chatForm.content" placeholder="请输入内容" style="width: calc(100% - 240px);float: left;">
-					</el-input>
-					<el-button size="small" :disabled="chatForm.content?false:true" type="primary" @click="addChat(null)">发送</el-button>
-					<el-button
-						type="warning"
-						size="small"
-						@click="toggleRecord"
-						:class="{'voice-record-btn': true, 'voice-recording': isRecording}"
-						style="margin: 0 0 0 6px;">
-						<template #icon>
-							<VideoPause v-if="isRecording" />
-							<Microphone v-else />
-						</template>
-						{{ isRecording ? `录音中 ${recordDuration}秒 (点击停止)` : '点击录音' }}
-					</el-button>
-					<el-upload style="display: inline-block;margin: 0 0 0 6px;" class="upload-demo" :action="uploadUrl" :on-success="uploadSuccess" accept=".jpg,.png"
-						:show-file-list="false">
-						<el-button size="small" type="success">上传图片</el-button>
-					</el-upload>
-					<el-upload style="display: inline-block;margin: 0 0 0 6px;" class="upload-demo" :action="uploadUrl" :on-success="uploadSuccess2" accept=".mp4"
-						:show-file-list="false">
-						<el-button size="small" type="success">上传视频</el-button>
-					</el-upload>
-					<el-upload style="display: inline-block;margin: 0 0 0 6px;" class="upload-demo" :action="uploadUrl" :on-success="uploadSuccess3"
-						:show-file-list="false">
-						<el-button size="small" type="success">上传文件</el-button>
-					</el-upload>
-					<el-button v-if="showSaveType" size="small" type="primary" @click="saveGood">详情图发送</el-button>
-				</div>
+				<div class="chat-footer">
+					<div class="chat-input-row">
+						<el-input size="small" @keydown.enter.native="addChat(null)" v-model="chatForm.content" placeholder="输入消息...">
+						</el-input>
+						<el-button size="small" :disabled="!chatForm.content" type="primary" @click="addChat(null)" class="chat-send-btn">
+							<i class="el-icon-s-promotion"></i> 发送
+						</el-button>
+					</div>
+					<div class="chat-action-row">
+						<el-button
+							:type="isRecording ? 'danger' : 'warning'"
+							size="mini"
+							@click="toggleRecord"
+							class="chat-act-btn">
+							<i :class="isRecording ? 'el-icon-video-pause' : 'el-icon-microphone'"></i>
+							{{ isRecording ? `录音中 ${recordDuration}s` : '录音' }}
+						</el-button>
+						<el-upload style="display:inline-block;" class="upload-demo" :action="uploadUrl" :on-success="uploadSuccess" accept=".jpg,.png"
+							:show-file-list="false">
+							<el-button size="mini" type="success" class="chat-act-btn"><i class="el-icon-picture"></i> 图片</el-button>
+						</el-upload>
+						<el-upload style="display:inline-block;" class="upload-demo" :action="uploadUrl" :on-success="uploadSuccess2" accept=".mp4"
+							:show-file-list="false">
+							<el-button size="mini" type="success" class="chat-act-btn"><i class="el-icon-video-camera"></i> 视频</el-button>
+						</el-upload>
+						<el-upload style="display:inline-block;" class="upload-demo" :action="uploadUrl" :on-success="uploadSuccess3"
+							:show-file-list="false">
+							<el-button size="mini" type="success" class="chat-act-btn"><i class="el-icon-folder-opened"></i> 文件</el-button>
+						</el-upload>
+						<el-button v-if="showSaveType && detailBanner.length" size="mini" type="info" @click="saveGood" class="chat-act-btn">
+							<i class="el-icon-picture-outline"></i> 发送详情图
+						</el-button>
+					</div>
 				</div>
 			</template>
 		</el-dialog>
@@ -1048,16 +1052,20 @@
 			},
 			saveGood(){
 				this.showSaveType = false
-				this.$http.get('friend/page', {
+				let myUid = Number(localStorage.getItem('frontUserid'))
+				this.$http.get('friend/list', {
 					params: {
-						uid: Number(localStorage.getItem('frontUserid')),
+						uid: myUid,
 						fid: this.fid,
+						type: 2,
+						page: 1,
+						limit: 1,
 					}
 				}).then(obj => {
 					if (obj.data && obj.data.code == 0) {
 						if (!obj.data.data.list.length) {
 							this.$http.post('friend/add', {
-								uid: Number(localStorage.getItem('frontUserid')),
+								uid: myUid,
 								fid: this.fid,
 								name: this.fname,
 								picture: this.fpic,
@@ -1066,18 +1074,16 @@
 							}).then(res => {
 								this.$http.post('friend/add', {
 									uid: this.fid,
-									fid: Number(localStorage.getItem('frontUserid')),
+									fid: myUid,
 									type: 2,
 									tablename: localStorage.getItem('frontSessionTable'),
-									name: localStorage.getItem('username'),
+									name: localStorage.getItem('displayName') || localStorage.getItem('username'),
 									picture: this.mpic,
-								}).then(res1 => {
-				
 								})
 							})
 						}
 						this.$http.post('chatmessage/add', {
-							uid: Number(localStorage.getItem('frontUserid')),
+							uid: myUid,
 							fid: this.fid,
 							content: this.detailBanner[0],
 							format: 2
@@ -1368,16 +1374,20 @@
 				}
 			},
 			addChat(ask=null,type=1) {
-				this.$http.get('friend/page', {
+				let myUid = Number(localStorage.getItem('frontUserid'))
+				this.$http.get('friend/list', {
 					params: {
-						uid: Number(localStorage.getItem('frontUserid')),
+						uid: myUid,
 						fid: this.fid,
+						type: 2,
+						page: 1,
+						limit: 1,
 					}
 				}).then(obj => {
 					if (obj.data && obj.data.code == 0) {
 						if (!obj.data.data.list.length) {
 							this.$http.post('friend/add', {
-								uid: Number(localStorage.getItem('frontUserid')),
+								uid: myUid,
 								fid: this.fid,
 								name: this.fname,
 								picture: this.fpic,
@@ -1386,13 +1396,11 @@
 							}).then(res => {
 								this.$http.post('friend/add', {
 									uid: this.fid,
-									fid: Number(localStorage.getItem('frontUserid')),
+									fid: myUid,
 									type: 2,
 									tablename: localStorage.getItem('frontSessionTable'),
-									name: localStorage.getItem('username'),
+									name: localStorage.getItem('displayName') || localStorage.getItem('username'),
 									picture: this.mpic,
-								}).then(res1 => {
-			
 								})
 							})
 						}
@@ -1763,15 +1771,73 @@ $border-light: rgba(14,165,233,0.10);
 ::v-deep #pagination .el-pager li.active,
 ::v-deep #pagination .el-pager li:hover { color: $primary; }
 
+::v-deep .chat-dialog {
+	border-radius: 16px !important;
+	background: #0f172a !important;
+	border: 1px solid rgba(14,165,233,0.15);
+	box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(14,165,233,0.08) !important;
+	overflow: hidden;
+
+	.el-dialog__header {
+		background: linear-gradient(135deg, rgba(14,165,233,0.12), rgba(124,58,237,0.08));
+		border-bottom: 1px solid rgba(255,255,255,0.06);
+		padding: 14px 22px;
+		.el-dialog__title { color: #e2e8f0; font-size: 16px; font-weight: 600; }
+		.el-dialog__headerbtn .el-dialog__close { color: #94a3b8; font-size: 18px; &:hover { color: #fff; } }
+	}
+	.el-dialog__body { padding: 0; background: #0f172a; }
+	.el-dialog__footer { padding: 0; background: #0f172a; border-top: 1px solid rgba(255,255,255,0.06); }
+}
+
 .chat-content {
-	padding-bottom: 10px; width: 100%; margin-bottom: 10px;
-	max-height: 300px; height: 300px; overflow-y: scroll;
-	border: 1px solid $border; background: $white; border-radius: 10px;
-	.addtime { width: 100%; text-align: center; font-size: 12px; color: $text-sub; padding: 6px 0; }
-	.left-content { float: left; margin-bottom: 8px; padding: 8px; max-width: 80%; display: flex; align-items: center; }
-	.right-content { float: right; margin-bottom: 8px; padding: 8px; max-width: 80%; display: flex; align-items: center; }
+	padding: 14px 16px 6px; width: 100%;
+	max-height: 380px; height: 380px; overflow-y: auto;
+	background: rgba(15,23,42,0.95);
+	&::-webkit-scrollbar { width: 4px; }
+	&::-webkit-scrollbar-thumb { background: rgba(14,165,233,0.2); border-radius: 4px; }
+	.addtime { width: 100%; text-align: center; font-size: 11px; color: rgba(255,255,255,0.3); padding: 8px 0; }
+	.left-content { float: left; margin-bottom: 10px; padding: 4px 8px; max-width: 75%; display: flex; align-items: flex-end; }
+	.right-content { float: right; margin-bottom: 10px; padding: 4px 8px; max-width: 75%; display: flex; align-items: flex-end; }
+}
+.chat-empty-hint {
+	display: flex; flex-direction: column; align-items: center; justify-content: center;
+	height: 100%; color: rgba(255,255,255,0.2);
+	i { font-size: 48px; margin-bottom: 12px; }
+	p { font-size: 13px; }
+}
+.chat-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(14,165,233,0.2); flex-shrink: 0; margin: 0 8px; }
+.chat-bubble {
+	padding: 10px 14px; border-radius: 14px; font-size: 13px; line-height: 1.6; max-width: 100%; word-break: break-all;
+	&.chat-bubble-mine { background: linear-gradient(135deg, #0ea5e9, #0284c7); color: #fff; border-bottom-right-radius: 4px; }
+	&.chat-bubble-other { background: rgba(255,255,255,0.08); color: #e2e8f0; border-bottom-left-radius: 4px; }
+}
+.chat-file-btn {
+	border-radius: 10px !important; background: rgba(14,165,233,0.12) !important;
+	border: 1px solid rgba(14,165,233,0.25) !important; color: #38bdf8 !important;
+}
+.chat-footer { padding: 12px 16px; }
+.chat-input-row {
+	display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+	::v-deep .el-input__inner {
+		background: rgba(255,255,255,0.05) !important; border: 1.5px solid rgba(255,255,255,0.1) !important;
+		border-radius: 20px !important; color: #e2e8f0 !important; height: 36px; padding: 0 16px;
+		&:focus { border-color: rgba(14,165,233,0.4) !important; }
+		&::placeholder { color: rgba(255,255,255,0.25) !important; }
+	}
+}
+.chat-send-btn {
+	background: linear-gradient(135deg, #0ea5e9, #38bdf8) !important; border: none !important;
+	border-radius: 20px !important; padding: 8px 18px !important; font-weight: 600;
+	&:hover { box-shadow: 0 4px 12px rgba(14,165,233,0.3); }
+	&.is-disabled { opacity: 0.4; }
+}
+.chat-action-row {
+	display: flex; gap: 6px; flex-wrap: wrap;
+	.chat-act-btn { border-radius: 16px !important; font-size: 12px; padding: 5px 12px; }
 }
 .clear-float { clear: both; }
+
+::v-deep .v-modal { background: rgba(0,0,0,0.6) !important; backdrop-filter: blur(4px); }
 
 @media (max-width: 768px) {
 	.detail-card { flex-direction: column; padding: 14px; }

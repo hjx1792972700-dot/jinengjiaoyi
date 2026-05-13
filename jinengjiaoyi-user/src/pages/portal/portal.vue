@@ -376,10 +376,12 @@ $border-glow: rgba(0,212,255,0.15);
     z-index: 2;
     transition: color 0.3s;
 
-    .el-icon { font-size: 16px; }
+    .el-icon,
+    i[class^="el-icon"] { font-size: 16px; }
 
     &.active {
       color: #fff;
+      i[class^="el-icon"] { color: #fff; }
     }
   }
 
@@ -432,13 +434,15 @@ $border-glow: rgba(0,212,255,0.15);
   align-items: center;
   gap: 10px;
 
-  .el-icon {
+  .el-icon,
+  i[class^="el-icon"] {
     font-size: 22px;
-    color: $cyan;
+    color: #ffffff;
   }
 
-  &.admin-title .el-icon {
-    color: $purple;
+  &.admin-title .el-icon,
+  &.admin-title i[class^="el-icon"] {
+    color: #ffffff;
   }
 }
 
@@ -462,9 +466,10 @@ $border-glow: rgba(0,212,255,0.15);
     box-shadow: 0 0 20px rgba(0,212,255,0.08);
   }
 
-  > .el-icon:first-child {
+  > .el-icon:first-child,
+  > i[class^="el-icon"]:first-child {
     font-size: 17px;
-    color: rgba(0,212,255,0.5);
+    color: rgba(255,255,255,0.85);
     margin-right: 12px;
   }
 
@@ -482,11 +487,11 @@ $border-glow: rgba(0,212,255,0.15);
 
   .pwd-toggle {
     font-size: 17px;
-    color: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.7);
     cursor: pointer;
     transition: color 0.2s;
 
-    &:hover { color: $cyan; }
+    &:hover { color: #fff; }
   }
 
   &.admin-input {
@@ -498,7 +503,8 @@ $border-glow: rgba(0,212,255,0.15);
       box-shadow: 0 0 20px rgba(124,58,237,0.08);
     }
 
-    > .el-icon:first-child { color: rgba(124,58,237,0.5); }
+    > .el-icon:first-child,
+    > i[class^="el-icon"]:first-child { color: rgba(255,255,255,0.85); }
     .pwd-toggle:hover { color: $purple; }
   }
 }
@@ -601,14 +607,15 @@ $border-glow: rgba(0,212,255,0.15);
   gap: 10px;
   transition: all 0.3s;
 
-  .el-icon {
+  .el-icon,
+  i[class^="el-icon"] {
     font-size: 22px;
-    color: $cyan;
+    color: #ffffff;
   }
 
   span {
     font-size: 12px;
-    color: rgba(255,255,255,0.6);
+    color: rgba(255,255,255,0.7);
     letter-spacing: 1px;
   }
 
@@ -621,7 +628,8 @@ $border-glow: rgba(0,212,255,0.15);
   &.admin-feature {
     border-color: rgba(124,58,237,0.1);
 
-    .el-icon { color: $purple; }
+    .el-icon,
+    i[class^="el-icon"] { color: #ffffff; }
 
     &:hover {
       border-color: rgba(124,58,237,0.3);

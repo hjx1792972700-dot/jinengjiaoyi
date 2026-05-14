@@ -78,8 +78,8 @@ export default {
 				params: { page: 1, limit: 1, leixing: '需求', sfsh: '待审核' }
 			}).then(({ data }) => {
 				if (data && data.code === 0) {
-					let demandTab = this.tabs.find(t => t.name === 'demand-audit')
-					if (demandTab) demandTab.badge = data.data.total || 0
+					let auditTab = this.tabs.find(t => t.name === 'demand-audit')
+					if (auditTab) auditTab.badge = data.data.total || 0
 				}
 			})
 		}

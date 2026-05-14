@@ -6,12 +6,21 @@
 				<span class="field-label">技能名称</span>
 				<el-input v-model="searchForm.xuqiubiaoti" placeholder="请输入技能名称" @keydown.enter="search()" clearable size="small"></el-input>
 			</div>
+			<div class="search-field">
+				<span class="field-label">审核状态</span>
+				<el-select v-model="searchForm.sfsh" placeholder="全部" clearable size="small" @change="search()">
+					<el-option label="全部" value=""></el-option>
+					<el-option label="待审核" value="待审核"></el-option>
+					<el-option label="已通过" value="是"></el-option>
+					<el-option label="已拒绝" value="否"></el-option>
+				</el-select>
+			</div>
 			<div class="search-actions">
 				<el-button class="btn-primary" size="small" @click="search()">
 					<template #icon><Search /></template>
 					查询
 				</el-button>
-				<el-button class="btn-plain" size="small" @click="searchForm.xuqiubiaoti='';search()">
+				<el-button class="btn-plain" size="small" @click="searchForm.xuqiubiaoti='';searchForm.sfsh='';search()">
 					<template #icon><Refresh /></template>
 					重置
 				</el-button>
@@ -44,7 +53,7 @@
 				style="width:100%"
 				@selection-change="selectionChangeHandler">
 			<el-table-column type="selection" align="center" width="42"></el-table-column>
-			<el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
+			<el-table-column type="index" :index="indexMethod" label="序号" width="55" align="center"></el-table-column>
 			<el-table-column prop="fengmian" width="70" label="封面" align="center">
 					<template #default="scope">
 						<div v-if="scope.row.fengmian">
@@ -186,11 +195,11 @@ export default {
 			searchForm: {
 				xuqiubiaoti: '',
 				yonghuxingming: '',
-				sfsh: '待审核',
+				sfsh: '',
 			},
 			dataList: [],
 			pageIndex: 1,
-			pageSize: 15,
+			pageSize: 7,
 			totalPage: 0,
 			loading: false,
 			dataListSelections: [],
@@ -217,6 +226,9 @@ export default {
 		this.getDataList();
 	},
 	methods: {
+		indexMethod(index) {
+			return (this.pageIndex - 1) * this.pageSize + index + 1;
+		},
 		search() {
 			this.pageIndex = 1;
 			this.getDataList();
@@ -226,8 +238,7 @@ export default {
 			let params = {
 				page: this.pageIndex,
 				limit: this.pageSize,
-				sort: 'id',
-				order: 'desc',
+				auditSort: 'true',
 				leixing: '技能',
 			};
 			if (this.searchForm.xuqiubiaoti) params['xuqiubiaoti'] = '%' + this.searchForm.xuqiubiaoti + '%';

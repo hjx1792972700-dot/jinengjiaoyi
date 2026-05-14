@@ -5,23 +5,23 @@
 		</div>
 
 		<div class="summary-cards">
-			<div class="summary-card" v-if="isAuth('yonghu','首页总数')">
+			<div class="summary-card" v-if="isAuth('yonghu','首页总数')" @click="$router.push('/yonghu')" style="cursor:pointer">
 				<div class="card-icon" style="background:linear-gradient(135deg,#3b82f6,#60a5fa)"><el-icon><UserFilled /></el-icon></div>
 				<div class="card-info"><div class="card-num">{{counts.yonghu}}</div><div class="card-label">用户总数</div></div>
 			</div>
-			<div class="summary-card" v-if="isAuth('jinengfenlei','首页总数')">
+			<div class="summary-card" v-if="isAuth('jinengfenlei','首页总数')" @click="$router.push('/jinengfenlei')" style="cursor:pointer">
 				<div class="card-icon" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)"><el-icon><Grid /></el-icon></div>
 				<div class="card-info"><div class="card-num">{{counts.fenlei}}</div><div class="card-label">技能分类</div></div>
 			</div>
-			<div class="summary-card" v-if="isAuth('jinengxuqiu','首页总数')">
+			<div class="summary-card" v-if="isAuth('jinengxuqiu','首页总数')" @click="$router.push('/jinengxuqiu')" style="cursor:pointer">
 				<div class="card-icon" style="background:linear-gradient(135deg,#06b6d4,#22d3ee)"><el-icon><List /></el-icon></div>
 				<div class="card-info"><div class="card-num">{{counts.xuqiu}}</div><div class="card-label">技能市场</div></div>
 			</div>
-			<div class="summary-card" v-if="isAuth('jiaohuanjilu','首页总数')">
+			<div class="summary-card" v-if="isAuth('jiaohuanjilu','首页总数')" @click="$router.push('/jiaohuanjilu')" style="cursor:pointer">
 				<div class="card-icon" style="background:linear-gradient(135deg,#10b981,#34d399)"><el-icon><Promotion /></el-icon></div>
 				<div class="card-info"><div class="card-num">{{counts.jiaohuan}}</div><div class="card-label">交换记录</div></div>
 			</div>
-			<div class="summary-card" v-if="isAuth('xuexiziliao','首页总数')">
+			<div class="summary-card" v-if="isAuth('xuexiziliao','首页总数')" @click="$router.push('/xuexiziliao')" style="cursor:pointer">
 				<div class="card-icon" style="background:linear-gradient(135deg,#ec4899,#f472b6)"><el-icon><Reading /></el-icon></div>
 				<div class="card-info"><div class="card-num">{{counts.ziliao}}</div><div class="card-label">学习资料</div></div>
 			</div>
@@ -94,7 +94,6 @@ export default {
 			const apis = [
 				{ key: 'yonghu', url: 'yonghu/count' },
 				{ key: 'fenlei', url: 'jinengfenlei/count' },
-				{ key: 'xuqiu', url: 'jinengxuqiu/count' },
 				{ key: 'jiaohuan', url: 'jiaohuanjilu/count' },
 				{ key: 'ziliao', url: 'xuexiziliao/count' },
 			]
@@ -102,6 +101,9 @@ export default {
 				this.$http({ url: item.url, method: 'get' }).then(({ data }) => {
 					if (data && data.code == 0) this.counts[item.key] = data.data
 				})
+			})
+			this.$http({ url: 'jinengxuqiu/page', method: 'get', params: { page: 1, limit: 1, sfsh: '是', leixing: '技能' } }).then(({ data }) => {
+				if (data && data.code === 0) this.counts.xuqiu = data.data.total
 			})
 		},
 		loadAllCharts() {

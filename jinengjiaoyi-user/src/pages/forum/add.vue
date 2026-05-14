@@ -54,17 +54,17 @@
 					</el-form-item>
 				</div>
 
-				<div class="form-section">
-					<div class="section-label">帖子内容</div>
-					<el-form-item prop="content" class="editor-wrapper">
-						<editor
-							myQuillEditor="content"
-							v-model="form.content"
-							class="editor"
-							action="file/upload">
-						</editor>
-					</el-form-item>
-				</div>
+			<div class="form-section">
+				<div class="section-label">帖子内容</div>
+				<el-form-item prop="content">
+					<el-input
+						type="textarea"
+						:rows="8"
+						v-model="form.content"
+						placeholder="请输入内容...">
+					</el-input>
+				</el-form-item>
+			</div>
 			</div>
 
 			<div class="form-actions">
@@ -172,7 +172,7 @@
 						this.$http.post(`forum/${this.isEdit ? 'update' : 'add'}`, this.form).then(res => {
 							if (res.data.code === 0) {
 								this.$message({
-									message: this.isEdit ? '修改成功' : '发布成功，帖子将在管理员审核通过后展示',
+									message: this.isEdit ? '修改成功' : '发布成功',
 									type: 'success',
 									duration: 2000,
 									onClose: () => {

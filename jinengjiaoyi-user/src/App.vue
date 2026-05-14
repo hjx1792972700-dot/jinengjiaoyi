@@ -519,4 +519,105 @@
 	#pagination.el-pagination .el-pager .number.active {
 		background: linear-gradient(135deg, #0ea5e9, #7c3aed) !important;
 	}
+
+	/* ===== 全局交互增强 ===== */
+
+	/* 平滑滚动 */
+	html { scroll-behavior: smooth; }
+
+	/* 全局选中颜色 */
+	::selection {
+		background: rgba(14,165,233,0.25);
+		color: inherit;
+	}
+
+	/* 全局链接过渡 */
+	a { transition: color 0.25s, opacity 0.25s; }
+
+	/* Element UI 按钮增强 */
+	.el-button {
+		transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important;
+	}
+	.el-button:active {
+		transform: scale(0.96) !important;
+	}
+
+	/* Element UI 对话框增强 */
+	.el-dialog__wrapper .el-dialog {
+		animation: dialogPopIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+	}
+	@keyframes dialogPopIn {
+		from { opacity: 0; transform: scale(0.92) translateY(10px); }
+		to { opacity: 1; transform: scale(1) translateY(0); }
+	}
+
+	/* 消息提示增强 */
+	.el-message {
+		border-radius: 12px !important;
+		box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
+		border: none !important;
+		animation: msgSlideIn 0.35s cubic-bezier(0.34,1.3,0.64,1) !important;
+	}
+	@keyframes msgSlideIn {
+		from { opacity: 0; transform: translateY(-20px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+
+	/* Element UI 输入框 focus 增强 */
+	.el-input__inner:focus {
+		box-shadow: 0 0 0 3px rgba(14,165,233,0.1) !important;
+		transition: all 0.3s !important;
+	}
+
+	/* 全局加载旋转增强 */
+	.el-loading-spinner {
+		.circular { animation: loading-rotate 1.5s linear infinite !important; }
+		.el-loading-text {
+			font-weight: 500;
+			letter-spacing: 1px;
+		}
+	}
+
+	/* 表格行 hover 过渡增强 */
+	.el-table__row {
+		transition: background-color 0.25s ease !important;
+	}
+
+	/* 卡片全局悬浮增强 */
+	.el-card {
+		transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important;
+	}
+	.el-card:hover {
+		box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important;
+	}
+
+	/* 标签页切换动画 */
+	.el-tabs__active-bar {
+		transition: all 0.35s cubic-bezier(0.4,0,0.2,1) !important;
+	}
+
+	/* 全局自定义滚动条 */
+	::-webkit-scrollbar { width: 6px; height: 6px; }
+	::-webkit-scrollbar-track { background: transparent; }
+	::-webkit-scrollbar-thumb {
+		background: rgba(14,165,233,0.15);
+		border-radius: 3px;
+		transition: background 0.3s;
+	}
+	::-webkit-scrollbar-thumb:hover { background: rgba(14,165,233,0.3); }
+
+	/* 工具提示增强 */
+	.el-tooltip__popper {
+		border-radius: 8px !important;
+		box-shadow: 0 4px 16px rgba(0,0,0,0.15) !important;
+		font-size: 13px !important;
+	}
+
+	/* "查看更多"按钮全局样式增强 */
+	.moreBtn-new {
+		transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important;
+		&:active {
+			transform: scale(0.96) !important;
+		}
+	}
 </style>

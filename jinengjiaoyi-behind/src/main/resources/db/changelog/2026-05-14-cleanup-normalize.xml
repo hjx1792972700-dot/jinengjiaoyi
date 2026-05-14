@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- ====================================================== -->
+    <!-- 1. 删除手动添加的垃圾分类                                -->
+    <!-- ====================================================== -->
+    <changeSet id="cleanup-garbage-categories" author="system">
+        <comment>删除手动测试中误添加的无效分类数据</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+DELETE FROM jinengfenlei WHERE jinengfenlei = '放到';
+DELETE FROM ziliaoleixing WHERE ziliaoleixing = '阿斯顿';
+DELETE FROM newstype WHERE typename = '阿斯顿 撒的';
+DELETE FROM forumtype WHERE typename = '撒打算';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ====================================================== -->
+    <!-- 2. 删除垃圾新闻记录                                     -->
+    <!-- ====================================================== -->
+    <changeSet id="cleanup-garbage-news" author="system">
+        <comment>删除手动添加的无效新闻公告</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+DELETE FROM news WHERE id = 9 AND title = '撒的';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ====================================================== -->
+    <!-- 3. 规范化用户 GGB → sunting/孙婷                        -->
+    <!-- ====================================================== -->
+    <changeSet id="normalize-user-ggb-to-sunting" author="system">
+        <comment>将手动创建的测试用户GGB替换为合理的校园用户孙婷</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE yonghu SET
+    yonghuzhanghao = 'sunting',
+    yonghuxingming = '孙婷',
+    mima           = '123456',
+    xingbie        = '女',
+    idcard         = '510101200501156789',
+    age            = 21,
+    xinyuzhishu    = '82',
+    shoujihao      = '18612349087',
+    touxiang       = 'upload/yonghu_touxiang9.jpg',
+    sfsh           = '是',
+    shhf           = '',
+    vip            = '是',
+    vip_expire     = '2026-12-31 23:59:59'
+WHERE yonghuzhanghao = 'GGB';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ====================================================== -->
+    <!-- 4. 规范化技能/需求记录（原 GGB 的乱填数据）                 -->
+    <!-- ====================================================== -->
+    <changeSet id="normalize-jinengxuqiu-ggb" author="system">
+        <comment>将GGB的乱填技能需求替换为合理的校园技能交换内容</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+-- id=45: "c语言教学" → "C语言与数据结构教学"（技能）
+UPDATE jinengxuqiu SET
+    xuqiubianhao   = 'JN20260510001',
+    xuqiubiaoti    = 'C语言与数据结构教学',
+    jinengfenlei   = '编程',
+    fengmian       = 'upload/jinengxuqiu_C语言与数据结构教学1.jpg',
+    fabushijian    = '2026-05-01',
+    xuqiufeiyong   = 60,
+    xuqiumiaoshu   = '计算机专业大二学生，熟练掌握C语言编程与数据结构算法，可提供一对一辅导',
+    xuqiuxiangqing = '具备扎实的C语言基础，熟悉指针、结构体、链表、树、图等数据结构与常见算法，有ACM竞赛经验，可辅导课程作业、实验报告和期末复习',
+    yonghuzhanghao = 'sunting',
+    yonghuxingming = '孙婷',
+    shoujihao      = '18612349087',
+    xinyuzhishu    = '82',
+    sfsh           = '是',
+    shhf           = '',
+    leixing        = '技能',
+    thumbsupnum    = 3,
+    crazilynum     = 1,
+    clicknum       = 12,
+    discussnum     = 2,
+    storeupnum     = 4
+WHERE id = 45;
+
+-- id=46: "我想学习如何睡觉" → "想学摄影构图技巧"（需求）
+UPDATE jinengxuqiu SET
+    xuqiubianhao   = 'XQ20260510001',
+    xuqiubiaoti    = '想学摄影构图技巧',
+    jinengfenlei   = '生活',
+    fengmian       = 'upload/jinengxuqiu_想学摄影构图技巧1.jpg',
+    fabushijian    = '2026-05-02',
+    xuqiufeiyong   = 50,
+    xuqiumiaoshu   = '想系统学习摄影构图和光线运用，拍出好看的校园风景和人像照片',
+    xuqiuxiangqing = '刚入手一台微单相机，想学习三分法、对称构图等基础构图法则，了解自然光和人造光的运用技巧，希望能拍出有质感的校园生活照和人像写真',
+    yonghuzhanghao = 'sunting',
+    yonghuxingming = '孙婷',
+    shoujihao      = '18612349087',
+    xinyuzhishu    = '82',
+    sfsh           = '是',
+    shhf           = '',
+    leixing        = '需求',
+    thumbsupnum    = 2,
+    crazilynum     = 0,
+    clicknum       = 8,
+    discussnum     = 1,
+    storeupnum     = 2
+WHERE id = 46;
+        ]]></sql>
+    </changeSet>
+
+    <!-- ====================================================== -->
+    <!-- 5. 修复交换申请中对 GGB 的引用                            -->
+    <!-- ====================================================== -->
+    <changeSet id="normalize-jiaohuanshenqing-ggb" author="system">
+        <comment>将引用GGB的交换申请更新为引用孙婷</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE jiaohuanshenqing SET
+    gongjirenzhanghao  = 'sunting',
+    gongjirenxingming  = '孙婷',
+    lianxifangshi      = '18612349087',
+    xuanzejinengbiaoti = 'C语言与数据结构教学'
+WHERE id = 23 AND gongjirenzhanghao = 'GGB';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ====================================================== -->
+    <!-- 6. 规范化会员充值记录                                    -->
+    <!-- ====================================================== -->
+    <changeSet id="normalize-huiyuanchongzhi" author="system">
+        <comment>修复GGB的充值记录和异常编号</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+-- id=16: GGB 充值记录 → 孙婷，编号规范化
+UPDATE huiyuanchongzhi SET
+    chongzhibianhao = 'CZ20260501001',
+    chongzhijine    = 30,
+    chongzhiriqi    = '2026-05-01',
+    yonghuzhanghao  = 'sunting',
+    yonghuxingming  = '孙婷',
+    zhuangtai       = '已支付',
+    taocan          = '月度会员',
+    zhifufangshi    = '微信支付'
+WHERE id = 16;
+
+-- id=17: 刘敏充值记录编号异常 → 规范化
+UPDATE huiyuanchongzhi SET
+    chongzhibianhao = 'CZ20260505001'
+WHERE id = 17 AND chongzhibianhao LIKE 'VIP%';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ====================================================== -->
+    <!-- 7. 规范化资料购买记录                                    -->
+    <!-- ====================================================== -->
+    <changeSet id="normalize-ziliaogoumai-ggb" author="system">
+        <comment>将GGB的资料购买记录更新为孙婷</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE ziliaogoumai SET
+    dingdanhao     = 'ZL20260501001',
+    yonghuzhanghao = 'sunting',
+    yonghuxingming = '孙婷'
+WHERE id = 1 AND yonghuzhanghao = 'GGB';
+        ]]></sql>
+    </changeSet>
+
+    <!-- ====================================================== -->
+    <!-- 8. 修复垃圾学习资料                                      -->
+    <!-- ====================================================== -->
+    <changeSet id="normalize-xuexiziliao-garbage" author="system">
+        <comment>替换手动添加的无效学习资料为合理内容</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE xuexiziliao SET
+    ziliaobiaoti   = '商务英语写作与沟通技巧',
+    ziliaoleixing  = '全行业',
+    ziliaoxiangqing = '本资料涵盖商务邮件撰写规范、会议纪要模板、项目汇报英文表达等实用内容，配合真实职场案例讲解，帮助提升英文工作沟通能力',
+    jiage          = 15
+WHERE id = 25;
+        ]]></sql>
+    </changeSet>
+
+    <!-- ====================================================== -->
+    <!-- 9. 修复交换记录 id=10 缺失的字段                          -->
+    <!-- ====================================================== -->
+    <changeSet id="fix-jiaohuanjilu-10-missing-fields" author="system">
+        <comment>补充交换记录10缺失的发布者/申请人提供技能字段</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+UPDATE jiaohuanjilu SET
+    fabuzhetigong     = '吉他弹唱教学',
+    shenqingrentigong = '硬笔书法'
+WHERE id = 10 AND fabuzhetigong IS NULL;
+        ]]></sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -53,11 +53,10 @@
 					<div v-for="(item,index) in dataList" :key="index" class="list-item" @click.stop="toDetail(item)" >
 						<div class="card-inner">
 							<div class="imgbox">
-								<img v-if="item.gongjitupian && item.gongjitupian.substr(0,4)=='http'&&item.gongjitupian.split(',w').length>1" :src="item.gongjitupian" class="image" />
-								<img v-else-if="item.gongjitupian && item.gongjitupian.substr(0,4)=='http'" :src="item.gongjitupian.split(',')[0]" class="image" />
-								<img v-else :src="baseUrl + (item.gongjitupian?item.gongjitupian.split(',')[0]:'')" class="image" />
+								<img v-if="item.gongjitupian && item.gongjitupian.substr(0,4)=='http'" :src="item.gongjitupian.split(',')[0]" class="image" />
+								<img v-else-if="item.gongjitupian" :src="baseUrl + item.gongjitupian.split(',')[0]" class="image" />
 								<div class="card-badge">
-									<el-icon><Refresh /></el-icon> 记录
+									<i class="el-icon-refresh"></i> 记录
 								</div>
 							</div>
 					<div class="infoBox">
@@ -65,17 +64,17 @@
 							<div class="card-tag">{{item.jinengfenlei}}</div>
 							<div class="bottomInfo">
 								<div class="time_item">
-										<el-icon><Clock /></el-icon>
+										<i class="el-icon-time"></i>
 										<span class="text">{{item.addtime.split(' ')[0]}}</span>
 									</div>
 									<div class="publisher_item">
-										<el-icon><User /></el-icon>
+										<i class="el-icon-user"></i>
 									<span class="text">{{getOtherPartyName(item)}}</span>
 								</div>
 							</div>
 								<div class="card-action">
 									<span class="action-text">查看详情</span>
-									<el-icon><ArrowRight /></el-icon>
+									<i class="el-icon-arrow-right"></i>
 								</div>
 							</div>
 						</div>
@@ -551,6 +550,7 @@ $shadow: 0 4px 20px rgba(0,0,0,0.3);
 			height: 200px;
 			overflow: hidden;
 			position: relative;
+			background: #0f172a;
 			img {
 				width: 100%;
 				height: 100%;
@@ -558,6 +558,7 @@ $shadow: 0 4px 20px rgba(0,0,0,0.3);
 				display: block;
 				transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 			}
+		
 			&::after {
 				content: '';
 				position: absolute;

@@ -5,7 +5,7 @@ function resolve(dir) {
 }
 
 module.exports = {
-	publicPath: '/admin/',
+	publicPath: process.env.NODE_ENV === 'production' ? '/admin/' : '/',
 	lintOnSave: false,
 	configureWebpack: {
 		resolve: {

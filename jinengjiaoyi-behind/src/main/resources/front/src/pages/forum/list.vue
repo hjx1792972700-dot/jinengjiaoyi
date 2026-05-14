@@ -47,10 +47,6 @@
 						<input class="inline-search-input" v-model="title" placeholder="搜索帖子标题..." @keydown.enter="getForumList(1)" />
 						<button class="inline-search-btn" type="button" @click="getForumList(1)"><el-icon><Search /></el-icon></button>
 					</div>
-					<button class="publish-btn" type="button" @click="toForumAdd">
-						<el-icon><EditPen /></el-icon>
-						发布帖子
-					</button>
 				</div>
 			</div>
 

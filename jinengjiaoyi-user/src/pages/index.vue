@@ -82,7 +82,19 @@
 				</div>
 			</div>
 
-			<router-view id="scrollView"></router-view>
+			<!-- 滚动进度条 -->
+		<div class="scroll-progress-bar" :style="{width: scrollProgress + '%'}"></div>
+
+		<transition name="page-fade" mode="out-in">
+			<router-view id="scrollView" :key="$route.path"></router-view>
+		</transition>
+
+		<!-- 回到顶部按钮 -->
+		<transition name="fade-up">
+			<div class="back-to-top" v-show="showBackTop" @click="scrollToTop">
+				<i class="el-icon-arrow-up"></i>
+			</div>
+		</transition>
 			
 		<div class="bottom-preview">
 			<div class="footer">
@@ -298,6 +310,8 @@
 				'CircleCheck',
 			],
 			bottomContent: '',
+			scrollProgress: 0,
+			showBackTop: false,
 			musicType: false,
 			showTimer: null,
 			showType: false,
@@ -335,12 +349,15 @@
 		this.activeIndex = localStorage.getItem('keyPath') || '0';
 		this.musicType = localStorage.getItem('musicType') ? true : false;
 
+		window.addEventListener('scroll', this.onPageScroll, { passive: true });
 
-		// banner
 		setTimeout(()=>{
 			this.mySwiper3Timer = new Swiper(".mySwiper3", {"navigation":{"nextEl":".swiper-button-next","prevEl":".swiper-button-prev"},"pagination":{"el":".swiper-pagination","clickable":true},"slidesPerView":3,"speed":300,"autoplay":{"delay":2500,"disableOnInteraction":false},"effect":"fade"})
 		}, 500)
 
+	},
+	beforeDestroy() {
+		window.removeEventListener('scroll', this.onPageScroll);
 	},
 	computed: {
 		activeMenu() {
@@ -728,6 +745,15 @@
 				this.initWebSocket(1)
 			}
 		},
+		onPageScroll() {
+			const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+			const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			this.scrollProgress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+			this.showBackTop = scrollTop > 400;
+		},
+		scrollToTop() {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		},
 		menuShowClick4(index){
 			this.showType4 = index
 		},
@@ -870,6 +896,7 @@ $text-sub: #94a3b8;
 					flex-shrink: 0;
 					filter: drop-shadow(0 0 6px rgba(14,165,233,0.3));
 					animation: logoSpin 12s linear infinite;
+					transition: filter 0.3s;
 				}
 				@keyframes logoSpin {
 					0% { transform: rotate(0deg); }
@@ -886,6 +913,11 @@ $text-sub: #94a3b8;
 					line-height: 56px;
 					letter-spacing: 2px;
 					cursor: pointer;
+					transition: all 0.3s;
+				}
+				&:hover {
+					.top-logo-icon { filter: drop-shadow(0 0 12px rgba(14,165,233,0.6)); }
+					span { letter-spacing: 3px; }
 				}
 			}
 			.top_tel {
@@ -994,7 +1026,8 @@ $text-sub: #94a3b8;
 						display: flex;
 						align-items: center;
 						border: none;
-						transition: all 0.3s;
+						transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+						border-radius: 8px;
 						.menu-nav-icon {
 							margin: 0 6px 0 0;
 							color: rgba(255,255,255,0.4);
@@ -1032,13 +1065,26 @@ $text-sub: #94a3b8;
 					}
 
 					&:hover {
-						.title { color: $cyan; }
+						.title {
+							color: $cyan;
+							background: rgba(14,165,233,0.06);
+							.menu-nav-icon, .icon { color: $cyan; opacity: 0.8; }
+						}
 						&::after { width: 60%; }
 					}
 
 					&.menu-active {
-						.title { color: #fff; font-weight: 600; }
+						.title {
+							color: #fff;
+							font-weight: 600;
+							background: rgba(14,165,233,0.1);
+							.menu-nav-icon, .icon { color: $cyan; opacity: 1; }
+						}
 						&::after { width: 80%; box-shadow: 0 0 8px rgba(14,165,233,0.4); }
+					}
+
+					&:active .title {
+						transform: scale(0.97);
 					}
 				}
 
@@ -1123,6 +1169,68 @@ $text-sub: #94a3b8;
 			}
 		}
 	}
+}
+
+/* 路由切换过渡 */
+.page-fade-enter-active {
+	animation: pageFadeIn 0.35s ease-out;
+}
+.page-fade-leave-active {
+	animation: pageFadeOut 0.2s ease-in;
+}
+@keyframes pageFadeIn {
+	from { opacity: 0; transform: translateY(12px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pageFadeOut {
+	from { opacity: 1; transform: translateY(0); }
+	to { opacity: 0; transform: translateY(-8px); }
+}
+
+/* 滚动进度条 */
+.scroll-progress-bar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 3px;
+	background: linear-gradient(90deg, $cyan, $purple, #e040fb);
+	z-index: 9999;
+	transition: width 0.15s ease-out;
+	border-radius: 0 2px 2px 0;
+	box-shadow: 0 0 10px rgba(14,165,233,0.5);
+}
+
+/* 回到顶部 */
+.back-to-top {
+	position: fixed;
+	bottom: 40px;
+	right: 32px;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, $cyan, $purple);
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	z-index: 999;
+	box-shadow: 0 4px 20px rgba(14,165,233,0.35);
+	transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+	font-size: 20px;
+	&:hover {
+		transform: translateY(-3px) scale(1.08);
+		box-shadow: 0 8px 28px rgba(14,165,233,0.45);
+	}
+	&:active {
+		transform: translateY(-1px) scale(0.95);
+	}
+}
+.fade-up-enter-active { transition: all 0.35s cubic-bezier(0.4,0,0.2,1); }
+.fade-up-leave-active { transition: all 0.25s ease-in; }
+.fade-up-enter, .fade-up-leave-to {
+	opacity: 0;
+	transform: translateY(16px);
 }
 
 .audioAnimation-box {

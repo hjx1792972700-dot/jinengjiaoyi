@@ -8,11 +8,14 @@
 			</div>
 			<div class="list list21 index-pv1">
 				<div class="list-body">
-					<div class="list-item" v-for="(item,index) in jinengxuqiuRecommend.slice(0, 4)" :key="index" @click="toDetail('jinengxuqiuDetail', item)">
+					<div class="list-item" v-for="(item,index) in jinengxuqiuRecommend.slice(0, 4)" :key="index" @click="toDetail('jinengxuqiuDetail', item)" :style="{'animation-delay': (index * 0.1) + 's'}">
 						<div class="img" :style="getDefaultBg(index, 'skill')">
 							<img v-if="preHttp(item.fengmian)&&preHttp2(item.fengmian)" :src="item.fengmian" alt="" @error="onImgError($event, index, 'skill')" />
 							<img v-else-if="preHttp(item.fengmian)" :src="item.fengmian.split(',')[0]" alt="" @error="onImgError($event, index, 'skill')" />
 							<img v-else :src="baseUrl + (item.fengmian?item.fengmian.split(',')[0]:'')" alt="" @error="onImgError($event, index, 'skill')" />
+							<div class="img-overlay">
+								<span class="overlay-text">查看详情</span>
+							</div>
 						</div>
 						<div class="infoBox">
 							<div class="name">{{item.xuqiubiaoti}}</div>
@@ -46,11 +49,14 @@
 			</div>
 			<div class="list list21 index-pv1">
 				<div class="list-body">
-					<div class="list-item" v-for="(item,index) in xuexiziliaoRecommend.slice(0, 4)" :key="index" @click="toDetail('xuexiziliaoDetail', item)">
+					<div class="list-item" v-for="(item,index) in xuexiziliaoRecommend.slice(0, 4)" :key="index" @click="toDetail('xuexiziliaoDetail', item)" :style="{'animation-delay': (index * 0.1) + 's'}">
 						<div class="img" :style="getDefaultBg(index, 'material')">
 							<img v-if="preHttp(item.ziliaofengmian)&&preHttp2(item.ziliaofengmian)" :src="item.ziliaofengmian" alt="" @error="onImgError($event, index, 'material')" />
 							<img v-else-if="preHttp(item.ziliaofengmian)" :src="item.ziliaofengmian.split(',')[0]" alt="" @error="onImgError($event, index, 'material')" />
 							<img v-else :src="baseUrl + (item.ziliaofengmian?item.ziliaofengmian.split(',')[0]:'')" alt="" @error="onImgError($event, index, 'material')" />
+							<div class="img-overlay">
+								<span class="overlay-text">查看详情</span>
+							</div>
 						</div>
 						<div class="infoBox">
 							<div class="name">{{item.ziliaobiaoti}}</div>
@@ -409,11 +415,24 @@ $text-sub: #94a3b8;
 	flex-wrap: wrap;
 
 	.recommend_title_box {
-		margin: 24px auto 12px;
+		margin: 32px auto 16px;
 		display: flex;
 		width: 100%;
 		justify-content: center;
 		flex-wrap: wrap;
+		position: relative;
+		&::before {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 120px;
+			height: 120px;
+			background: radial-gradient(circle, rgba(14,165,233,0.06) 0%, transparent 70%);
+			border-radius: 50%;
+			pointer-events: none;
+		}
 		.recommend_title {
 			background: linear-gradient(90deg, $text-dark 0%, $cyan 60%, $purple 100%);
 			-webkit-background-clip: text;
@@ -426,6 +445,7 @@ $text-sub: #94a3b8;
 			font-size: 22px;
 			line-height: 1.5;
 			text-align: center;
+			position: relative;
 		}
 		.recommend_subhead {
 			color: $text-sub;
@@ -435,6 +455,7 @@ $text-sub: #94a3b8;
 			font-size: 13px;
 			line-height: 24px;
 			text-align: center;
+			position: relative;
 		}
 	}
 
@@ -462,8 +483,9 @@ $text-sub: #94a3b8;
 					position: relative;
 					border-radius: 14px;
 					overflow: hidden;
-					transition: all 0.3s ease;
+					transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
 					box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+					animation: cardStaggerIn 0.5s ease-out both;
 
 					.img {
 						width: 100%;
@@ -472,11 +494,34 @@ $text-sub: #94a3b8;
 						display: flex;
 						align-items: center;
 						justify-content: center;
+						position: relative;
 						img {
 							object-fit: cover;
 							width: 100%;
 							height: 100%;
-							transition: transform 0.4s ease;
+							transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+						}
+						.img-overlay {
+							position: absolute;
+							inset: 0;
+							background: rgba(14,165,233,0.0);
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							transition: all 0.35s;
+							.overlay-text {
+								color: #fff;
+								font-size: 14px;
+								font-weight: 600;
+								letter-spacing: 2px;
+								opacity: 0;
+								transform: translateY(10px);
+								transition: all 0.35s;
+								padding: 8px 20px;
+								border-radius: 20px;
+								border: 1.5px solid rgba(255,255,255,0.6);
+								backdrop-filter: blur(4px);
+							}
 						}
 					}
 					.infoBox {
@@ -554,10 +599,21 @@ $text-sub: #94a3b8;
 				}
 				.list-item:hover {
 					border-color: rgba(14,165,233,0.3);
-					box-shadow: 0 8px 28px rgba(14,165,233,0.1);
-					transform: translateY(-4px);
-					.img img { transform: scale(1.05); }
+					box-shadow: 0 12px 32px rgba(14,165,233,0.12), 0 4px 12px rgba(0,0,0,0.06);
+					transform: translateY(-6px);
+					.img img { transform: scale(1.08); }
+					.img .img-overlay {
+						background: rgba(14,165,233,0.25);
+						.overlay-text {
+							opacity: 1;
+							transform: translateY(0);
+						}
+					}
 					.infoBox .bottomInfo { height: 24px; }
+				}
+				.list-item:active {
+					transform: translateY(-2px);
+					box-shadow: 0 4px 16px rgba(14,165,233,0.15);
 				}
 				.list-item:hover::after { width: 100%; }
 			}
@@ -731,9 +787,10 @@ $text-sub: #94a3b8;
 			background: $bg-card;
 			border-radius: 12px;
 			cursor: pointer;
-			transition: all 0.25s ease;
+			transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 			border: 1px solid $border-light;
 			box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+			animation: cardStaggerIn 0.5s ease-out both;
 
 			&:hover {
 				transform: translateX(4px);
@@ -855,12 +912,21 @@ $text-sub: #94a3b8;
 		background: #fff;
 		border-radius: 14px;
 		border: 1px solid $border-light;
-		transition: all 0.3s;
+		transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
 		cursor: default;
+		animation: cardStaggerIn 0.5s ease-out both;
+		&:nth-child(1) { animation-delay: 0s; }
+		&:nth-child(2) { animation-delay: 0.08s; }
+		&:nth-child(3) { animation-delay: 0.16s; }
+		&:nth-child(4) { animation-delay: 0.24s; }
 		&:hover {
-			transform: translateY(-3px);
-			box-shadow: 0 8px 24px rgba(14, 165, 233, 0.1);
+			transform: translateY(-5px);
+			box-shadow: 0 12px 28px rgba(14, 165, 233, 0.12);
 			border-color: rgba(14, 165, 233, 0.3);
+			.user-avatar {
+				transform: scale(1.08);
+				box-shadow: 0 4px 16px rgba(14, 165, 233, 0.25);
+			}
 		}
 		.user-avatar {
 			flex-shrink: 0;
@@ -872,6 +938,7 @@ $text-sub: #94a3b8;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
 			img {
 				width: 100%;
 				height: 100%;
@@ -921,6 +988,11 @@ $text-sub: #94a3b8;
 				color: $purple;
 			}
 		}
+	}
+
+	@keyframes cardStaggerIn {
+		from { opacity: 0; transform: translateY(24px) scale(0.96); }
+		to { opacity: 1; transform: translateY(0) scale(1); }
 	}
 
 	@media (max-width: 900px) {

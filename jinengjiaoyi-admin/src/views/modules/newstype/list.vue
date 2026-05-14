@@ -23,7 +23,7 @@
 					v-loading="dataListLoading"
 					@selection-change="selectionChangeHandler">
 					<el-table-column :resizable='true' type="selection" align="center" width="50"></el-table-column>
-					<el-table-column :resizable='true' :sortable='true' label="序号" type="index" width="50" />
+					<el-table-column type="index" :index="indexMethod" :resizable='true' :sortable='true' label="序号" width="50" />
 					<el-table-column :resizable='true' :sortable='true'
 												prop="typename"
 						label="分类名称">
@@ -31,12 +31,12 @@
 							{{scope.row.typename}}
 						</template>
 					</el-table-column>
-					<el-table-column width="300" label="操作">
-						<template #default="scope">
-							<el-button v-if=" isAuth('newstype','修改') " type="warning" plain size="small" @click="addOrUpdateHandler(scope.row.id)">修改</el-button>
-							<el-button v-if="isAuth('newstype','删除')" type="danger" plain size="small" @click="deleteHandler(scope.row.id)">删除</el-button>
-						</template>
-					</el-table-column>
+				<el-table-column width="200" label="操作">
+					<template #default="scope">
+						<el-button v-if=" isAuth('newstype','修改') " type="warning" plain size="small" @click="modifyWithCheck(scope.row)">修改</el-button>
+						<el-button v-if="isAuth('newstype','删除')" type="danger" plain size="small" @click="deleteWithCheck(scope.row)">删除</el-button>
+					</template>
+				</el-table-column>
 				</el-table>
 			</div>
 			<div class="admin-pagination">
@@ -80,7 +80,7 @@
 				form:{},
 				dataList: [],
 				pageIndex: 1,
-				pageSize: 15,
+				pageSize: 7,
 				totalPage: 0,
 				dataListLoading: false,
 				dataListSelections: [],
@@ -123,6 +123,9 @@
 				return false
 			},
 			init () {
+			},
+			indexMethod(index) {
+				return (this.pageIndex - 1) * this.pageSize + index + 1;
 			},
 			search() {
 				this.pageIndex = 1;
@@ -171,6 +174,41 @@
 			// 多选
 			selectionChangeHandler(val) {
 				this.dataListSelections = val;
+			},
+			async checkRelatedData(row) {
+				try {
+					const { data } = await this.$http({
+						url: 'news/list',
+						method: 'get',
+						params: { page: 1, limit: 1, typename: row.typename }
+					});
+					if (data && data.code === 0 && data.data.list && data.data.list.length > 0) {
+						return true;
+					}
+				} catch(e) {}
+				return false;
+			},
+			async modifyWithCheck(row) {
+				const hasData = await this.checkRelatedData(row);
+				if (hasData) {
+					await this.$confirm('该分类下已有资讯数据，确定要修改吗？', '提示', {
+						confirmButtonText: '确定修改',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						this.addOrUpdateHandler(row.id);
+					}).catch(() => {});
+				} else {
+					this.addOrUpdateHandler(row.id);
+				}
+			},
+			async deleteWithCheck(row) {
+				const hasData = await this.checkRelatedData(row);
+				if (hasData) {
+					this.$message.error('该分类下已有资讯数据，无法删除');
+					return;
+				}
+				this.deleteHandler(row.id);
 			},
 			// 添加/修改
 			addOrUpdateHandler(id,type) {

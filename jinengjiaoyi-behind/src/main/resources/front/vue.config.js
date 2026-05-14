@@ -38,7 +38,7 @@ module.exports = {
 lintOnSave: false,
 	devServer: {
 		host: "0.0.0.0",
-		port: 8080,
+		port: 8081,
 		hot: true,
 		https: false,
 		watchOptions: {
@@ -47,7 +47,7 @@ lintOnSave: false,
 		},
 		proxy: {
 			'/': {
-				target: 'http://localhost:8082/',
+				target: 'http://localhost:48081/',
 				changeOrigin: true,
 				secure: false,
 				ws: false

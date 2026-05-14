@@ -215,11 +215,25 @@ public class JinengfenleiController {
         for (Long id : ids) {
             JinengfenleiEntity fenlei = jinengfenleiService.selectById(id);
             if (fenlei != null) {
-                int count = jinengxuqiuService.selectCount(
-                    new EntityWrapper<JinengxuqiuEntity>().eq("jinengfenlei", fenlei.getJinengfenlei())
+                String name = fenlei.getJinengfenlei();
+                int skillCount = jinengxuqiuService.selectCount(
+                    new EntityWrapper<JinengxuqiuEntity>().eq("jinengfenlei", name).eq("leixing", "技能")
                 );
-                if (count > 0) {
-                    return R.error("分类「" + fenlei.getJinengfenlei() + "」下存在" + count + "条技能需求，无法删除");
+                int demandCount = jinengxuqiuService.selectCount(
+                    new EntityWrapper<JinengxuqiuEntity>().eq("jinengfenlei", name).eq("leixing", "需求")
+                );
+                if (skillCount > 0 || demandCount > 0) {
+                    StringBuilder msg = new StringBuilder("分类「" + name + "」下存在");
+                    java.util.List<String> parts = new java.util.ArrayList<>();
+                    if (skillCount > 0) {
+                        parts.add(skillCount + "条技能市场记录");
+                    }
+                    if (demandCount > 0) {
+                        parts.add(demandCount + "条技能需求记录");
+                    }
+                    msg.append(String.join("、", parts));
+                    msg.append("，无法删除");
+                    return R.error(msg.toString());
                 }
             }
         }

@@ -37,9 +37,14 @@
 				</div>
 				<div class="form-section">
 					<div class="section-label"><el-icon><Notebook /></el-icon> 详细描述</div>
-					<el-form-item label="需求详情" prop="xuqiuxiangqing" class="editor-item">
-						<editor v-model="ruleForm.xuqiuxiangqing" class="editor" myQuillEditor="xuqiuxiangqing" action="file/upload"></editor>
-					</el-form-item>
+				<el-form-item label="需求详情" prop="xuqiuxiangqing">
+					<el-input
+						type="textarea"
+						:rows="8"
+						v-model="ruleForm.xuqiuxiangqing"
+						placeholder="请详细描述你的需求...">
+					</el-input>
+				</el-form-item>
 				</div>
 			</el-form>
 

@@ -8,16 +8,16 @@
 				<el-input v-model="searchForm.yonghuxingming" placeholder="请输入姓名搜索" @keydown.enter="search()" clearable size="small"></el-input>
 			</div>
 			<div class="search-actions">
-				<el-button class="btn-primary" size="small" :icon="Search" @click="search()">查询</el-button>
-				<el-button class="btn-plain" size="small" :icon="Refresh" @click="searchForm={};search()">重置</el-button>
+				<el-button class="btn-primary" size="small" icon="el-icon-search" @click="search()">查询</el-button>
+				<el-button class="btn-plain" size="small" icon="el-icon-refresh" @click="searchForm={};search()">重置</el-button>
 			</div>
 		</div>
 
 			<!-- Action Bar -->
 			<div class="admin-actions">
 				<div class="action-left">
-				<el-button class="btn-primary" size="small" :icon="Plus" v-if="isAuth('yonghu','新增')" @click="addOrUpdateHandler()">新增用户</el-button>
-				<el-button class="btn-danger" size="small" :icon="Delete" v-if="isAuth('yonghu','删除')" :disabled="!dataListSelections.length" @click="deleteHandler()">批量删除</el-button>
+				<el-button class="btn-primary" size="small" icon="el-icon-plus" v-if="isAuth('yonghu','新增')" @click="addOrUpdateHandler()">新增用户</el-button>
+				<el-button class="btn-danger" size="small" icon="el-icon-delete" v-if="isAuth('yonghu','删除')" :disabled="!dataListSelections.length" @click="deleteHandler()">批量删除</el-button>
 				</div>
 				<div class="action-right">
 					<span style="font-size:12px;color:#64748b;">已选 {{dataListSelections.length}} 项</span>
@@ -34,54 +34,56 @@
 					:stripe="false"
 					style="width:100%"
 					@selection-change="selectionChangeHandler">
-				<el-table-column type="selection" align="center" width="42"></el-table-column>
-				<el-table-column sortable label="序号" type="index" width="60" align="center" />
-				<el-table-column prop="touxiang" width="70" label="头像" align="center">
-					<template #default="scope">
-						<div v-if="scope.row.touxiang">
-							<img v-if="scope.row.touxiang.substring(0,4)=='http'" :src="scope.row.touxiang.split(',')[0]" width="36" height="36" style="object-fit:cover;border-radius:6px;cursor:pointer" @click="imgPreView(scope.row.touxiang.split(',')[0])">
-							<img v-else :src="$base.url+scope.row.touxiang.split(',')[0]" width="36" height="36" style="object-fit:cover;border-radius:6px;cursor:pointer" @click="imgPreView($base.url+scope.row.touxiang.split(',')[0])">
-						</div>
-						<div v-else style="color:#475569;font-size:11px;">-</div>
-					</template>
-				</el-table-column>
-				<el-table-column sortable prop="yonghuzhanghao" label="账号" min-width="110">
-					<template #default="scope">{{scope.row.yonghuzhanghao}}</template>
-				</el-table-column>
-				<el-table-column prop="yonghuxingming" label="姓名" min-width="90">
-					<template #default="scope">{{scope.row.yonghuxingming}}</template>
-				</el-table-column>
-				<el-table-column prop="xingbie" label="性别" width="65" align="center">
-					<template #default="scope">{{scope.row.xingbie || '-'}}</template>
-				</el-table-column>
-				<el-table-column prop="age" label="年龄" width="65" align="center">
-					<template #default="scope">{{scope.row.age || '-'}}</template>
-				</el-table-column>
-				<el-table-column prop="xinyuzhishu" label="信誉" width="70" align="center">
-					<template #default="scope">{{scope.row.xinyuzhishu != null ? parseInt(scope.row.xinyuzhishu) || 0 : '-'}}</template>
-				</el-table-column>
-				<el-table-column prop="shoujihao" label="手机号" min-width="130">
-					<template #default="scope">{{scope.row.shoujihao || '-'}}</template>
-				</el-table-column>
-				<el-table-column sortable prop="vip" label="VIP" width="70" align="center">
-					<template #default="scope">
-						<span class="vip-badge" v-if="scope.row.vip=='是'">VIP</span>
-						<span v-else style="color:#475569;">-</span>
-					</template>
-				</el-table-column>
-				<el-table-column sortable prop="vipExpire" label="VIP到期" min-width="110">
-					<template #default="scope">
-						<span v-if="scope.row.vipExpire">{{scope.row.vipExpire.substring(0,10)}}</span>
-						<span v-else style="color:#475569;">-</span>
-					</template>
-				</el-table-column>
-				<el-table-column width="180" label="操作" fixed="right" align="center">
-					<template #default="scope">
-						<el-button size="small" v-if="isAuth('yonghu','查看')" type="success" plain @click="addOrUpdateHandler(scope.row.id,'info')">查看</el-button>
-						<el-button size="small" v-if="isAuth('yonghu','修改')" type="warning" plain @click="addOrUpdateHandler(scope.row.id)">修改</el-button>
-						<el-button size="small" v-if="isAuth('yonghu','删除')" type="danger" plain @click="deleteHandler(scope.row.id)">删除</el-button>
-					</template>
-				</el-table-column>
+			<el-table-column type="selection" align="center" width="40"></el-table-column>
+			<el-table-column sortable type="index" :index="indexMethod" label="序号" width="50" align="center" />
+			<el-table-column prop="touxiang" width="60" label="头像" align="center">
+				<template #default="scope">
+					<div v-if="scope.row.touxiang">
+						<img v-if="scope.row.touxiang.substring(0,4)=='http'" :src="scope.row.touxiang.split(',')[0]" width="32" height="32" style="object-fit:cover;border-radius:6px;cursor:pointer" @click="imgPreView(scope.row.touxiang.split(',')[0])">
+						<img v-else :src="$base.url+scope.row.touxiang.split(',')[0]" width="32" height="32" style="object-fit:cover;border-radius:6px;cursor:pointer" @click="imgPreView($base.url+scope.row.touxiang.split(',')[0])">
+					</div>
+					<div v-else style="color:#475569;font-size:11px;">-</div>
+				</template>
+			</el-table-column>
+			<el-table-column sortable prop="yonghuzhanghao" label="账号" min-width="90" show-overflow-tooltip>
+				<template #default="scope">{{scope.row.yonghuzhanghao}}</template>
+			</el-table-column>
+			<el-table-column prop="yonghuxingming" label="姓名" width="72" align="center">
+				<template #default="scope">{{scope.row.yonghuxingming}}</template>
+			</el-table-column>
+			<el-table-column prop="xingbie" label="性别" width="50" align="center">
+				<template #default="scope">{{scope.row.xingbie || '-'}}</template>
+			</el-table-column>
+			<el-table-column prop="age" label="年龄" width="50" align="center">
+				<template #default="scope">{{scope.row.age || '-'}}</template>
+			</el-table-column>
+			<el-table-column prop="xinyuzhishu" label="信誉" width="55" align="center">
+				<template #default="scope">{{scope.row.xinyuzhishu != null ? parseInt(scope.row.xinyuzhishu) || 0 : '-'}}</template>
+			</el-table-column>
+			<el-table-column prop="shoujihao" label="手机号" min-width="110" show-overflow-tooltip>
+				<template #default="scope">{{scope.row.shoujihao || '-'}}</template>
+			</el-table-column>
+			<el-table-column sortable prop="vip" label="VIP" width="60" align="center">
+				<template #default="scope">
+					<span class="vip-badge" v-if="scope.row.vip=='是'">VIP</span>
+					<span v-else style="color:#475569;">-</span>
+				</template>
+			</el-table-column>
+			<el-table-column sortable prop="vipExpire" label="VIP到期" width="100" align="center">
+				<template #default="scope">
+					<span v-if="scope.row.vipExpire">{{scope.row.vipExpire.substring(0,10)}}</span>
+					<span v-else style="color:#475569;">-</span>
+				</template>
+			</el-table-column>
+			<el-table-column label="操作" fixed="right" align="center">
+				<template #default="scope">
+					<div style="display:flex;justify-content:center;gap:4px;flex-wrap:nowrap;">
+						<el-button size="mini" v-if="isAuth('yonghu','查看')" type="success" plain @click="addOrUpdateHandler(scope.row.id,'info')">查看</el-button>
+						<el-button size="mini" v-if="isAuth('yonghu','修改')" type="warning" plain @click="addOrUpdateHandler(scope.row.id)">修改</el-button>
+						<el-button size="mini" v-if="isAuth('yonghu','删除')" type="danger" plain @click="deleteHandler(scope.row.id)">删除</el-button>
+					</div>
+				</template>
+			</el-table-column>
 				</el-table>
 			</div>
 
@@ -114,7 +116,7 @@
 			</div>
 		</template>
 
-		<el-dialog v-model="chatVisible" @close="clearChat" :title="nowname" :append-to-body="true">
+		<el-dialog :visible.sync="chatVisible" @close="clearChat" :title="nowname" :append-to-body="true">
 			<div class="chat-content" id="chat-content">
 				<div v-bind:key="item.id" v-for="item in chatList">
 					<div v-if="item.addtime" class="addtime">{{timeFormat(item.addtime)}}</div>
@@ -154,7 +156,7 @@
 					<el-button :disabled="chatForm.content?false:true" type="primary" @click="addChat(null)">发送</el-button>
 					<el-button
 						type="warning" 
-						:icon="isRecording ? VideoPause : Microphone"
+						:icon="isRecording ? 'el-icon-video-pause' : 'el-icon-microphone'"
 						@click="toggleRecord"
 						:class="{'voice-record-btn': true, 'voice-recording': isRecording}"
 						style="margin: 0 0 0 6px;">
@@ -176,7 +178,7 @@
 			</div>
 			</template>
 		</el-dialog>
-		<el-dialog title="预览图" v-model="previewVisible" width="50%">
+		<el-dialog title="预览图" :visible.sync="previewVisible" width="50%">
 			<img :src="previewImg" alt="" style="width: 100%;">
 		</el-dialog>
 	</div>
@@ -191,7 +193,6 @@
 	import {
 		WebsocketMixin
 	} from '@/mixins/WebsocketMixin'
-	import { Search, Refresh, Plus, Delete, Microphone, VideoPause } from '@element-plus/icons-vue'
 	export default {
 		mixins: [WebsocketMixin],
 		data() {
@@ -204,7 +205,7 @@
 				sfshOptions: [],
 				dataList: [],
 				pageIndex: 1,
-				pageSize: 15,
+				pageSize: 7,
 				totalPage: 0,
 				dataListLoading: false,
 				dataListSelections: [],
@@ -291,14 +292,7 @@
 			}
 		},
 		components: {
-			AddOrUpdate,
-			Search,
-			Refresh,
-			Plus,
-			Delete,
-			Microphone,
-			VideoPause,
-		},
+			AddOrUpdate},
 		methods: {
 			statChartClick() {
 				if(this.isAuth('yonghu','用户量统计')) {
@@ -804,6 +798,9 @@
 			},
 			init () {
 				this.sfshOptions = "是,否,待审核".split(',');
+			},
+			indexMethod(index) {
+				return (this.pageIndex - 1) * this.pageSize + index + 1;
 			},
 			search() {
 				this.pageIndex = 1;

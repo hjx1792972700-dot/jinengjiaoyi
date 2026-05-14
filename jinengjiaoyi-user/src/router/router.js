@@ -37,9 +37,7 @@ import jiaohuanshenqingAdd from '../pages/jiaohuanshenqing/add.vue'
 import jiaohuanjiluList from '../pages/jiaohuanjilu/list.vue'
 import jiaohuanjiluDetail from '../pages/jiaohuanjilu/detail.vue'
 import jiaohuanjiluAdd from '../pages/jiaohuanjilu/add.vue'
-import pingjiafankuiList from '../pages/pingjiafankui/list.vue'
-import pingjiafankuiDetail from '../pages/pingjiafankui/detail.vue'
-import pingjiafankuiAdd from '../pages/pingjiafankui/add.vue'
+
 import ziliaoleixingList from '../pages/ziliaoleixing/list.vue'
 import ziliaoleixingDetail from '../pages/ziliaoleixing/detail.vue'
 import ziliaoleixingAdd from '../pages/ziliaoleixing/add.vue'
@@ -114,9 +112,7 @@ const routes = [
 			{ path: 'jiaohuanjilu', component: jiaohuanjiluList },
 			{ path: 'jiaohuanjiluDetail', component: jiaohuanjiluDetail },
 			{ path: 'jiaohuanjiluAdd', component: jiaohuanjiluAdd },
-			{ path: 'pingjiafankui', component: pingjiafankuiList },
-			{ path: 'pingjiafankuiDetail', component: pingjiafankuiDetail },
-			{ path: 'pingjiafankuiAdd', component: pingjiafankuiAdd },
+
 			{ path: 'ziliaoleixing', component: ziliaoleixingList },
 			{ path: 'ziliaoleixingDetail', component: ziliaoleixingDetail },
 			{ path: 'ziliaoleixingAdd', component: ziliaoleixingAdd },

@@ -23,7 +23,7 @@
 					v-loading="dataListLoading"
 					@selection-change="selectionChangeHandler">
 					<el-table-column type="selection" align="center" width="50"></el-table-column>
-				<el-table-column :sortable='true' label="序号" type="index" align="center" />
+				<el-table-column type="index" :index="indexMethod" :sortable='true' label="序号" align="center" />
 				<el-table-column :sortable='true' prop="jinengfenlei" label="技能分类" align="center" />
 				<el-table-column label="操作" align="center">
 					<template #default="scope">
@@ -76,7 +76,7 @@
 				form:{},
 				dataList: [],
 				pageIndex: 1,
-				pageSize: 15,
+				pageSize: 7,
 				totalPage: 0,
 				dataListLoading: false,
 				dataListSelections: [],
@@ -118,6 +118,9 @@
 			},
 		init () {
 		},
+			indexMethod(index) {
+				return (this.pageIndex - 1) * this.pageSize + index + 1;
+			},
 			search() {
 				this.pageIndex = 1;
 				this.getDataList();

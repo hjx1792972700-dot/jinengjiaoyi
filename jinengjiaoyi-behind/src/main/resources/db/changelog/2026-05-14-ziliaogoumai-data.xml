@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="init-ziliaogoumai-data" author="system">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM ziliaogoumai WHERE dingdanhao LIKE 'ZL2026%'</sqlCheck>
+        </preConditions>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+INSERT INTO ziliaogoumai (addtime, dingdanhao, xuexiziliaoid, ziliaobiaoti, jiage, yonghuzhanghao, yonghuxingming, zhuangtai, zhifufangshi) VALUES
+('2026-04-20 10:30:00', 'ZL20260420001', 1, 'UI原型快速设计', 10, 'wanghao', '王浩', '已支付', '微信支付'),
+('2026-04-21 14:00:00', 'ZL20260421001', 2, 'Python自动化脚本编写', 20, 'wanghao', '王浩', '已支付', '支付宝'),
+('2026-04-22 09:15:00', 'ZL20260422001', 5, '职场压力管理', 30, 'zhangqiang', '张强', '已支付', '微信支付'),
+('2026-04-23 16:00:00', 'ZL20260423001', 7, '财务报表解读', 25, 'chenxi', '陈曦', '已支付', '支付宝'),
+('2026-04-24 11:30:00', 'ZL20260424001', 4, '市场竞品分析', 15, 'lina', '李娜', '已支付', '微信支付'),
+('2026-04-25 08:45:00', 'ZL20260425001', 8, '供应链库存优化', 10, 'zhoukai', '周凯', '已支付', '支付宝'),
+('2026-04-26 13:20:00', 'ZL20260426001', 2, 'Python自动化脚本编写', 20, 'liumin', '刘敏', '已支付', '微信支付'),
+('2026-04-27 15:00:00', 'ZL20260427001', 1, 'UI原型快速设计', 10, 'wufang', '吴芳', '待支付', '支付宝');
+        ]]></sql>
+    </changeSet>
+
+</databaseChangeLog>

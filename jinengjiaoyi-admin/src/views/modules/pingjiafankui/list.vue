@@ -28,7 +28,8 @@
 					:data="dataList"
 					v-loading="dataListLoading"
 					style="width:100%">
-				<el-table-column :resizable='true' prop="huifutupian" width="80" label="图片">
+				<el-table-column type="index" :index="indexMethod" label="序号" width="55" align="center"></el-table-column>
+			<el-table-column :resizable='true' prop="huifutupian" width="80" label="图片">
 					<template #default="scope">
 						<div v-if="scope.row.huifutupian">
 							<img v-if="scope.row.huifutupian.substring(0,4)=='http'&&scope.row.huifutupian.split(',w').length>1" :src="scope.row.huifutupian" width="56" height="56" style="object-fit: cover;border-radius:6px;cursor:pointer" @click="imgPreView(scope.row.huifutupian)">
@@ -170,7 +171,7 @@
 				sfshOptions: [],
 				dataList: [],
 				pageIndex: 1,
-				pageSize: 15,
+				pageSize: 7,
 				totalPage: 0,
 				dataListLoading: false,
 				dataListSelections: [],
@@ -375,6 +376,9 @@
 			init () {
 				this.sfshOptions = "是,否,待审核".split(',');
 				this.pingjiajieguoOptions = "好评,差评,一般".split(',')
+			},
+			indexMethod(index) {
+				return (this.pageIndex - 1) * this.pageSize + index + 1;
 			},
 			search() {
 				this.pageIndex = 1;

@@ -20,7 +20,7 @@
 					v-if="isAuth('huiyuanchongzhi','查看')"
 					:data="dataList"
 					v-loading="dataListLoading">
-					<el-table-column :resizable='true' :sortable='true' label="序号" type="index" width="60" />
+					<el-table-column :resizable='true' :sortable='true' type="index" :index="indexMethod" label="序号" width="60" />
 				<el-table-column :resizable='true' :sortable='true'
 											prop="yonghuxingming"
 					label="用户" min-width="100">
@@ -114,7 +114,7 @@
 				form:{},
 				dataList: [],
 				pageIndex: 1,
-				pageSize: 15,
+				pageSize: 7,
 				totalPage: 0,
 				dataListLoading: false,
 				dataListSelections: [],
@@ -162,6 +162,9 @@
 				
 			},
 			init () {
+			},
+			indexMethod(index) {
+				return (this.pageIndex - 1) * this.pageSize + index + 1;
 			},
 			search() {
 				this.pageIndex = 1;

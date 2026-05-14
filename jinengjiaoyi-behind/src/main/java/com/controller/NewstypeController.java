@@ -27,9 +27,11 @@ import com.annotation.IgnoreAuth;
 import com.annotation.SysLog;
 
 import com.entity.NewstypeEntity;
+import com.entity.NewsEntity;
 import com.entity.view.NewstypeView;
 
 import com.service.NewstypeService;
+import com.service.NewsService;
 import com.utils.PageUtils;
 import com.utils.R;
 import com.utils.MPUtil;
@@ -49,6 +51,9 @@ import java.io.IOException;
 public class NewstypeController {
     @Autowired
     private NewstypeService newstypeService;
+
+    @Autowired
+    private NewsService newsService;
 
 
 
@@ -197,6 +202,18 @@ public class NewstypeController {
     @RequestMapping("/delete")
     @SysLog("删除资讯分类")
     public R delete(@RequestBody Long[] ids){
+        for (Long id : ids) {
+            NewstypeEntity entity = newstypeService.selectById(id);
+            if (entity != null) {
+                String name = entity.getTypename();
+                int count = newsService.selectCount(
+                    new EntityWrapper<NewsEntity>().eq("typename", name)
+                );
+                if (count > 0) {
+                    return R.error("资讯分类「" + name + "」下存在" + count + "条公告资讯记录，无法删除");
+                }
+            }
+        }
         newstypeService.deleteBatchIds(Arrays.asList(ids));
         return R.ok();
     }

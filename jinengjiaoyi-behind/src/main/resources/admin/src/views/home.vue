@@ -26,14 +26,14 @@
 			<div class="stat-card" v-for="(s, i) in statList" :key="i" @click="s.path && $router.push(s.path)">
 				<div class="stat-glow" :style="{background: s.glow}"></div>
 				<div class="stat-icon-wrap" :style="{background: s.bg}">
-					<el-icon><component :is="s.icon" /></el-icon>
+					<i :class="'el-icon-' + s.icon"></i>
 				</div>
 				<div class="stat-body">
 					<div class="stat-num">{{s.value}}</div>
 					<div class="stat-label">{{s.label}}</div>
 				</div>
 				<div class="stat-trend" :class="s.trendDir">
-					<el-icon><component :is="s.trendDir === 'up' ? 'Top' : 'Bottom'" /></el-icon>
+					<i :class="s.trendDir === 'up' ? 'el-icon-top' : 'el-icon-bottom'"></i>
 					<span>{{s.trend}}</span>
 				</div>
 			</div>
@@ -42,7 +42,7 @@
 		<div class="hud-nav" v-if="isAdmin">
 			<div class="nav-item" v-for="n in navCards" :key="n.path" @click="$router.push(n.path)">
 				<div class="nav-icon-box" :style="{background: n.bg}">
-					<el-icon><component :is="n.icon" /></el-icon>
+					<i :class="'el-icon-' + n.icon"></i>
 				</div>
 				<div class="nav-info">
 					<div class="nav-title">{{n.label}}</div>
@@ -84,7 +84,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="empty-state" v-else><el-icon><Document /></el-icon><span>暂无公告</span></div>
+				<div class="empty-state" v-else><i class="el-icon-document"></i><span>暂无公告</span></div>
 			</div>
 
 			<div class="hud-panel panel-side">
@@ -100,7 +100,7 @@
 						<span class="todo-count" :style="{color: t.color, borderColor: t.color}">{{t.value}}</span>
 					</div>
 				</div>
-				<div class="empty-state" v-else><el-icon><CircleCheck /></el-icon><span>无待办事项</span></div>
+				<div class="empty-state" v-else><i class="el-icon-circle-check"></i><span>无待办事项</span></div>
 
 				<div class="panel-head" style="margin-top:18px">
 					<div class="panel-dot dot-green"></div>
@@ -121,17 +121,35 @@
 					<span>快速操作</span>
 				</div>
 				<div class="quick-actions">
-					<div class="qa-btn" @click="$router.push('/jinengxuqiu')"><el-icon><List /></el-icon>技能管理</div>
-					<div class="qa-btn" @click="$router.push('/forum')"><el-icon><ChatDotRound /></el-icon>社区管理</div>
-					<div class="qa-btn" @click="$router.push('/news')"><el-icon><Notebook /></el-icon>公告管理</div>
-					<div class="qa-btn" @click="$router.push('/syslog')"><el-icon><DocumentCopy /></el-icon>系统日志</div>
+					<div class="qa-btn" @click="$router.push('/jinengxuqiu')"><i class="el-icon-s-grid"></i>技能管理</div>
+					<div class="qa-btn" @click="$router.push('/forum')"><i class="el-icon-chat-dot-round"></i>社区管理</div>
+					<div class="qa-btn" @click="$router.push('/news')"><i class="el-icon-s-order"></i>公告管理</div>
+					<div class="qa-btn" @click="$router.push('/messages')"><i class="el-icon-chat-line-round"></i>留言反馈</div>
 				</div>
 			</div>
 		</div>
 
-		<el-dialog v-model="newsVisible" title="公告详情" width="60%" top="10vh" class="hud-dialog">
-			<div style="text-align:center;font-size:18px;font-weight:600;color:#e2e8f0;margin-bottom:16px">{{newsDetail.title}}</div>
-			<div class="ql-snow ql-editor" v-html="newsDetail.content" style="color:#cbd5e1"></div>
+		<el-dialog :visible.sync="newsVisible" :show-close="false" width="680px" top="8vh" class="news-detail-dialog" append-to-body>
+			<div class="nd-wrapper">
+				<div class="nd-header">
+					<div class="nd-header-left">
+						<i class="el-icon-document nd-header-icon"></i>
+						<span class="nd-header-label">公告详情</span>
+					</div>
+					<i class="el-icon-close nd-close" @click="newsVisible = false"></i>
+				</div>
+				<div class="nd-body">
+					<h2 class="nd-title">{{newsDetail.title}}</h2>
+					<div class="nd-meta">
+						<span class="nd-meta-item"><i class="el-icon-time"></i> {{newsDetail.addtime}}</span>
+					</div>
+					<div class="nd-divider"></div>
+					<div class="nd-content ql-snow ql-editor" v-html="newsDetail.content"></div>
+				</div>
+				<div class="nd-footer">
+					<el-button class="nd-btn" @click="newsVisible = false"><i class="el-icon-check"></i> 我知道了</el-button>
+				</div>
+			</div>
 		</el-dialog>
 	</div>
 </template>
@@ -139,10 +157,8 @@
 <script>
 import * as echarts from 'echarts'
 import base from '@/utils/base'
-import { ArrowRight, CircleCheck, ChatDotRound, Document, DocumentCopy, List, Notebook } from '@element-plus/icons-vue'
-
 export default {
-	components: { ArrowRight, CircleCheck, ChatDotRound, Document, DocumentCopy, List, Notebook },
+
 	data() {
 		return {
 			currentDate: '',
@@ -155,18 +171,17 @@ export default {
 			newsDetail: {},
 			newsVisible: false,
 			statList: [
-				{ label: '注册用户', value: '-', icon: 'UserFilled', bg: 'linear-gradient(135deg,#3b82f6,#60a5fa)', glow: 'rgba(59,130,246,0.15)', path: '/yonghu', trend: '+3', trendDir: 'up' },
-				{ label: '技能市场', value: '-', icon: 'List', bg: 'linear-gradient(135deg,#06b6d4,#22d3ee)', glow: 'rgba(6,182,212,0.15)', path: '/jinengxuqiu', trend: '+5', trendDir: 'up' },
-				{ label: '交换记录', value: '-', icon: 'Promotion', bg: 'linear-gradient(135deg,#10b981,#34d399)', glow: 'rgba(16,185,129,0.15)', path: '/jiaohuanjilu', trend: '+2', trendDir: 'up' },
-				{ label: '评价反馈', value: '-', icon: 'StarFilled', bg: 'linear-gradient(135deg,#f59e0b,#fbbf24)', glow: 'rgba(245,158,11,0.15)', path: '/pingjiafankui', trend: '+4', trendDir: 'up' },
-				{ label: '学习资料', value: '-', icon: 'Reading', bg: 'linear-gradient(135deg,#ec4899,#f472b6)', glow: 'rgba(236,72,153,0.15)', path: '/xuexiziliao', trend: '+1', trendDir: 'up' },
-				{ label: '社区帖子', value: '-', icon: 'ChatDotRound', bg: 'linear-gradient(135deg,#8b5cf6,#a78bfa)', glow: 'rgba(139,92,246,0.15)', path: '/forum', trend: '+7', trendDir: 'up' },
+				{ label: '注册用户', value: '-', icon: 'user-solid', bg: 'linear-gradient(135deg,#3b82f6,#60a5fa)', glow: 'rgba(59,130,246,0.15)', path: '/yonghu', trend: '+3', trendDir: 'up' },
+				{ label: '技能市场', value: '-', icon: 's-goods', bg: 'linear-gradient(135deg,#06b6d4,#22d3ee)', glow: 'rgba(6,182,212,0.15)', path: '/jinengxuqiu', trend: '+5', trendDir: 'up' },
+				{ label: '交换记录', value: '-', icon: 's-promotion', bg: 'linear-gradient(135deg,#10b981,#34d399)', glow: 'rgba(16,185,129,0.15)', path: '/jiaohuanjilu', trend: '+2', trendDir: 'up' },
+				{ label: '学习资料', value: '-', icon: 'notebook-2', bg: 'linear-gradient(135deg,#ec4899,#f472b6)', glow: 'rgba(236,72,153,0.15)', path: '/xuexiziliao', trend: '+1', trendDir: 'up' },
+				{ label: '社区帖子', value: '-', icon: 'chat-dot-round', bg: 'linear-gradient(135deg,#8b5cf6,#a78bfa)', glow: 'rgba(139,92,246,0.15)', path: '/forum', trend: '+7', trendDir: 'up' },
 			],
 			navCards: [
-				{ label: '数据统计', desc: '查看平台核心数据和图表分析', icon: 'DataAnalysis', path: '/statisticsDashboard', bg: 'linear-gradient(135deg,#7c3aed,#a78bfa)' },
-				{ label: '用户管理', desc: '管理注册用户、审核和权限', icon: 'UserFilled', path: '/userManagement', bg: 'linear-gradient(135deg,#3b82f6,#60a5fa)' },
-				{ label: '业务管理', desc: '技能市场、交换、评价等业务', icon: 'CircleCheck', path: '/businessManagement', bg: 'linear-gradient(135deg,#06b6d4,#22d3ee)' },
-				{ label: '系统配置', desc: '公告、分类、敏感词等配置', icon: 'Setting', path: '/systemConfig', bg: 'linear-gradient(135deg,#10b981,#34d399)' },
+				{ label: '数据统计', desc: '查看平台核心数据和图表分析', icon: 's-data', path: '/statisticsDashboard', bg: 'linear-gradient(135deg,#7c3aed,#a78bfa)' },
+				{ label: '用户管理', desc: '管理注册用户、审核和权限', icon: 'user-solid', path: '/userManagement', bg: 'linear-gradient(135deg,#3b82f6,#60a5fa)' },
+				{ label: '业务管理', desc: '技能市场、交换、评价等业务', icon: 's-order', path: '/businessManagement', bg: 'linear-gradient(135deg,#06b6d4,#22d3ee)' },
+				{ label: '系统配置', desc: '公告、分类、留言等配置', icon: 's-tools', path: '/systemConfig', bg: 'linear-gradient(135deg,#10b981,#34d399)' },
 			],
 			todoList: [],
 			sysMetrics: [
@@ -188,7 +203,7 @@ export default {
 		this.loadNews()
 		this.$nextTick(() => this.loadCharts())
 	},
-	beforeUnmount() {
+	beforeDestroy() {
 		if (this.timeTimer) clearInterval(this.timeTimer)
 		Object.values(this.charts).forEach(c => c && c.dispose())
 	},
@@ -223,41 +238,43 @@ export default {
 				if (res.data && res.data.code === 0) this.newsList = res.data.data.list
 			})
 		},
-		loadCounts() {
-			const apis = [
-				{ idx: 0, url: 'yonghu/count' },
-				{ idx: 1, url: 'jinengxuqiu/count' },
-				{ idx: 2, url: 'jiaohuanjilu/count' },
-				{ idx: 3, url: 'pingjiafankui/count' },
-				{ idx: 4, url: 'xuexiziliao/count' },
-				{ idx: 5, url: 'group/forum/typename' },
-			]
-			apis.forEach(item => {
-				if (item.idx === 5) {
-					this.$http({ url: item.url, method: 'get' }).then(({ data }) => {
-						if (data && data.code === 0) {
-							let total = data.data.reduce((sum, r) => sum + parseInt(r.total || 0), 0)
-							this.statList[item.idx].value = total
-						}
-					})
-				} else {
-					this.$http({ url: item.url, method: 'get' }).then(({ data }) => {
-						if (data && data.code === 0) {
-							this.statList[item.idx].value = data.data
-						}
-					})
+	loadCounts() {
+		const countApis = [
+			{ idx: 0, url: 'yonghu/count' },
+			{ idx: 2, url: 'jiaohuanjilu/count' },
+		]
+		countApis.forEach(item => {
+			this.$http({ url: item.url, method: 'get' }).then(({ data }) => {
+				if (data && data.code === 0) {
+					this.statList[item.idx].value = data.data
 				}
 			})
-		},
+		})
+		this.$http({ url: 'jinengxuqiu/page', method: 'get', params: { page: 1, limit: 1, sfsh: '是', leixing: '技能' } }).then(({ data }) => {
+			if (data && data.code === 0) {
+				this.statList[1].value = data.data.total
+			}
+		})
+		this.$http({ url: 'xuexiziliao/page', method: 'get', params: { page: 1, limit: 1 } }).then(({ data }) => {
+			if (data && data.code === 0) {
+				this.statList[3].value = data.data.total
+			}
+		})
+		this.$http({ url: 'forum/flist', method: 'get', params: { page: 1, limit: 1 } }).then(({ data }) => {
+			if (data && data.code === 0) {
+				this.statList[4].value = data.data.total
+			}
+		})
+	},
 		loadTodos() {
 			this.$http({ url: 'jinengxuqiu/page', method: 'get', params: { page: 1, limit: 1, leixing: '技能', sfsh: '待审核' } }).then(({ data }) => {
 				if (data && data.code === 0 && data.data.total > 0) {
-					this.todoList.push({ label: '待审核技能', value: data.data.total + ' 条', color: '#f59e0b', path: '/jinengxuqiu' })
+					this.todoList.push({ label: '待审核技能', value: data.data.total + ' 条', color: '#f59e0b', path: '/skillAudit' })
 				}
 			})
 			this.$http({ url: 'jinengxuqiu/page', method: 'get', params: { page: 1, limit: 1, leixing: '需求', sfsh: '待审核' } }).then(({ data }) => {
 				if (data && data.code === 0 && data.data.total > 0) {
-					this.todoList.push({ label: '待审核需求', value: data.data.total + ' 条', color: '#e879f9', path: '/jinengxuqiu' })
+					this.todoList.push({ label: '待审核需求', value: data.data.total + ' 条', color: '#e879f9', path: '/demandAudit' })
 				}
 			})
 			this.$http({ url: 'yonghu/page', method: 'get', params: { page: 1, limit: 1, sfsh: '待审核' } }).then(({ data }) => {
@@ -332,7 +349,16 @@ export default {
 			})
 		},
 		showNewsDetail(item) {
-			this.newsDetail = item
+			let cleaned = { ...item }
+			if (cleaned.content) {
+				cleaned.content = cleaned.content
+					.replace(/<p[^>]*>\s*(<br\s*\/?>)?\s*<\/p>/gi, '')
+					.replace(/<div[^>]*>\s*(<br\s*\/?>)?\s*<\/div>/gi, '')
+					.replace(/(<br\s*\/?>){2,}/gi, '')
+					.replace(/^\s*(<br\s*\/?>)\s*/gi, '')
+					.replace(/\s*(<br\s*\/?>)\s*$/gi, '')
+			}
+			this.newsDetail = cleaned
 			this.newsVisible = true
 		},
 	}
@@ -481,7 +507,7 @@ $radius: 14px;
 
 .hud-stats {
 	display: grid;
-	grid-template-columns: repeat(6, 1fr);
+	grid-template-columns: repeat(5, 1fr);
 	gap: 12px;
 }
 .stat-card {
@@ -520,7 +546,7 @@ $radius: 14px;
 	align-items: center;
 	justify-content: center;
 	flex-shrink: 0;
-	.el-icon { font-size: 20px; color: #fff; }
+	i[class^="el-icon"] { font-size: 20px; color: #fff; }
 }
 .stat-body {
 	flex: 1;
@@ -569,7 +595,7 @@ $radius: 14px;
 	align-items: center;
 	justify-content: center;
 	flex-shrink: 0;
-	.el-icon { font-size: 20px; color: #fff; }
+	i[class^="el-icon"] { font-size: 20px; color: #fff; }
 }
 .nav-info {
 	flex: 1;
@@ -802,5 +828,152 @@ $radius: 14px;
 	color: $text4;
 	font-size: 12px;
 	.el-icon { font-size: 26px; display: block; margin: 0 auto 6px; opacity: 0.3; }
+}
+</style>
+
+<style lang="scss">
+.news-detail-dialog {
+	.el-dialog {
+		background: #111827 !important;
+		border: 1.5px solid rgba(99,102,241,0.25) !important;
+		border-radius: 20px !important;
+		box-shadow: 0 25px 80px rgba(0,0,0,0.6), 0 0 40px rgba(99,102,241,0.08) !important;
+		overflow: hidden;
+	}
+	.el-dialog__header { display: none !important; }
+	.el-dialog__body { padding: 0 !important; }
+}
+
+.nd-wrapper {
+	display: flex;
+	flex-direction: column;
+	max-height: 80vh;
+}
+
+.nd-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 18px 28px;
+	background: linear-gradient(135deg, #1e1b4b, #312e81);
+	border-bottom: 2px solid rgba(99,102,241,0.25);
+
+	.nd-header-left {
+		display: flex; align-items: center; gap: 10px;
+	}
+	.nd-header-icon {
+		font-size: 20px; color: #a5b4fc;
+	}
+	.nd-header-label {
+		font-size: 17px; font-weight: 700; color: #ffffff; letter-spacing: 1px;
+	}
+	.nd-close {
+		font-size: 22px; color: rgba(255,255,255,0.45); cursor: pointer;
+		transition: all 0.2s; padding: 4px; border-radius: 6px;
+		&:hover { color: #fff; background: rgba(255,255,255,0.1); transform: rotate(90deg); }
+	}
+}
+
+.nd-body {
+	padding: 28px 32px;
+	overflow-y: auto;
+	flex: 1;
+	background: #111827;
+
+	&::-webkit-scrollbar { width: 6px; }
+	&::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.25); border-radius: 6px; }
+
+	.nd-title {
+		margin: 0 0 16px;
+		font-size: 22px;
+		font-weight: 700;
+		color: #f1f5f9;
+		line-height: 1.4;
+		text-align: center;
+	}
+
+	.nd-meta {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 20px;
+		margin-bottom: 20px;
+
+		.nd-meta-item {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			font-size: 13px;
+			color: #94a3b8;
+			i { font-size: 14px; color: #6366f1; }
+		}
+	}
+
+	.nd-divider {
+		height: 1px;
+		background: linear-gradient(90deg, transparent, rgba(99,102,241,0.3), transparent);
+		margin-bottom: 24px;
+	}
+
+	.nd-content.ql-editor {
+		font-size: 15px !important;
+		line-height: 1.7 !important;
+		color: #e2e8f0 !important;
+		padding: 0 !important;
+		overflow: visible !important;
+	}
+	.nd-content * {
+		color: #e2e8f0 !important;
+		background-color: transparent !important;
+		background: transparent !important;
+		margin-top: 0 !important;
+		margin-bottom: 4px !important;
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+		min-height: 0 !important;
+	}
+	.nd-content h1, .nd-content h2, .nd-content h3,
+	.nd-content h4, .nd-content h5, .nd-content h6 {
+		color: #fff !important; font-weight: 700 !important;
+		margin-bottom: 6px !important; margin-top: 10px !important;
+	}
+	.nd-content a { color: #818cf8 !important; text-decoration: underline !important; }
+	.nd-content strong, .nd-content b { color: #fff !important; }
+	.nd-content img { max-width: 100% !important; border-radius: 8px !important; margin: 8px 0 !important; }
+	.nd-content hr { border: none !important; height: 1px !important; background: rgba(99,102,241,0.2) !important; margin: 8px 0 !important; }
+	.nd-content blockquote {
+		border-left: 3px solid #6366f1 !important;
+		background: rgba(99,102,241,0.1) !important;
+		padding: 8px 14px !important;
+		border-radius: 0 8px 8px 0 !important;
+		margin: 6px 0 !important;
+	}
+	.nd-content ul, .nd-content ol { padding-left: 20px !important; }
+	.nd-content li { margin-bottom: 2px !important; }
+}
+
+.nd-footer {
+	padding: 16px 28px;
+	background: #0f172a;
+	border-top: 1.5px solid rgba(99,102,241,0.15);
+	display: flex;
+	justify-content: center;
+
+	.nd-btn {
+		background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+		border: none !important;
+		color: #fff !important;
+		font-size: 14px !important;
+		font-weight: 600 !important;
+		padding: 10px 36px !important;
+		border-radius: 12px !important;
+		letter-spacing: 1px;
+		transition: all 0.3s;
+		i { margin-right: 6px; }
+		&:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 24px rgba(99,102,241,0.4) !important;
+		}
+	}
 }
 </style>

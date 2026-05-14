@@ -231,9 +231,7 @@ public class ForumController {
     @RequestMapping("/add")
     public R add(@RequestBody ForumEntity forum, HttpServletRequest request){
     	forum.setUserid((Long)request.getSession().getAttribute("userId"));
-    	if(forum.getParentid() != null && forum.getParentid() != 0) {
-    	    forum.setSfsh("是");
-    	}
+    	forum.setSfsh("是");
         forumService.insert(forum);
         return R.ok().put("data",forum.getId());
     }

@@ -78,18 +78,18 @@
 			<el-form-item v-else-if="ruleForm.introduction" label="简介" prop="introduction"  class="textBox">
 				<span class="text">{{ruleForm.introduction}}</span>
 			</el-form-item>
-			<el-form-item v-if="type!='info'" class="editorBox" label="内容" prop="content" >
-				<editor 
-					style="min-width: 200px; max-width: 600px;"
-					v-model="ruleForm.content" 
-					class="editor"
-					myQuillEditor="content"
-					action="file/upload">
-				</editor>
-			</el-form-item>
-			<el-form-item v-else-if="ruleForm.content" label="内容" prop="content"  class="textBox">
-				<span class="text ql-snow ql-editor" v-html="ruleForm.content"></span>
-			</el-form-item>
+		<el-form-item v-if="type!='info'" class="textarea" label="内容" prop="content" >
+			<el-input
+				style="min-width: 200px; max-width: 600px;"
+				type="textarea"
+				:rows="8"
+				placeholder="内容"
+				v-model="ruleForm.content">
+			</el-input>
+		</el-form-item>
+		<el-form-item v-else-if="ruleForm.content" label="内容" prop="content"  class="textBox">
+			<span class="text">{{ruleForm.content}}</span>
+		</el-form-item>
 			<el-form-item class="btn">
 				<el-button class="btn3"  v-if="type!='info'" type="success" @click="onSubmit">
 					<span class="icon iconfont icon-queren15"></span>

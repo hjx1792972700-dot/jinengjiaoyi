@@ -35,17 +35,17 @@
 			<el-form-item label="评论内容" prop="content" class="textBox">
 				<span class="text ql-snow ql-editor" v-html="ruleForm.content"></span>
 			</el-form-item>
-			<el-form-item v-if="type!='info'"  label="回复内容" prop="reply" class="editorBox">
-				<editor 
-					v-model="ruleForm.reply" 
-					class="editor"
-					myQuillEditor="reply"
-					action="file/upload">
-				</editor>
-			</el-form-item>
-			<el-form-item v-else-if="ruleForm.reply" label="回复内容" prop="reply" class="textBox">
-				<span class="text ql-snow ql-editor" v-html="ruleForm.reply"></span>
-			</el-form-item>
+		<el-form-item v-if="type!='info'"  label="回复内容" prop="reply" class="textarea">
+			<el-input
+				type="textarea"
+				:rows="8"
+				placeholder="回复内容"
+				v-model="ruleForm.reply">
+			</el-input>
+		</el-form-item>
+		<el-form-item v-else-if="ruleForm.reply" label="回复内容" prop="reply" class="textBox">
+			<span class="text">{{ruleForm.reply}}</span>
+		</el-form-item>
 			<el-form-item class="btn">
 				<el-button class="btn3"  v-if="type!='info'" type="success" @click="onSubmit">
 					<span class="icon iconfont icon-queren15"></span>

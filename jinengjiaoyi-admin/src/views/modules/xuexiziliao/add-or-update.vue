@@ -1,154 +1,135 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <template>
-	<div class="modern-form-page">
+	<div class="zl-form-page">
 		<el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="0">
 
-			<!-- Section 1: Basic Info -->
-			<div class="form-section">
-				<div class="section-header">
-					<i class="el-icon-document"></i>
-					<span>基本信息</span>
+			<div class="zl-form-card">
+				<!-- 标题栏 -->
+				<div class="card-top-bar">
+					<div class="top-bar-left">
+						<i class="el-icon-document-add"></i>
+						<span>{{ruleForm.id ? '编辑学习资料' : '发布学习资料'}}</span>
+					</div>
+					<div class="top-bar-right" v-if="type!='info'">
+						<el-button class="btn-submit" @click="onSubmit"><i class="el-icon-check"></i> 保存发布</el-button>
+						<el-button class="btn-cancel" @click="back()"><i class="el-icon-close"></i> 取消</el-button>
+					</div>
+					<div class="top-bar-right" v-else>
+						<el-button class="btn-cancel" @click="back()"><i class="el-icon-back"></i> 返回</el-button>
+					</div>
 				</div>
-				<div class="section-body grid-2">
-					<el-form-item prop="ziliaobiaoti">
-						<label class="field-label">资料标题</label>
-						<el-input v-if="type!='info'" v-model="ruleForm.ziliaobiaoti" placeholder="请输入资料标题" clearable :readonly="ro.ziliaobiaoti"></el-input>
-						<div v-else class="field-readonly">{{ruleForm.ziliaobiaoti || '-'}}</div>
-					</el-form-item>
-					<el-form-item prop="ziliaoleixing">
-						<label class="field-label">技能分类</label>
-						<el-select v-if="type!='info'" :disabled="ro.ziliaoleixing" v-model="ruleForm.ziliaoleixing" placeholder="请选择技能分类" filterable style="width:100%">
-							<el-option v-for="(item,index) in ziliaoleixingOptions" :key="index" :label="item" :value="item"></el-option>
-						</el-select>
-						<div v-else class="field-readonly">{{ruleForm.ziliaoleixing || '-'}}</div>
-					</el-form-item>
-					<el-form-item prop="jiage">
-						<label class="field-label">资料价格 (元)</label>
-						<el-input-number v-if="type!='info'" v-model="ruleForm.jiage" :min="0" :precision="0" placeholder="0为免费" :disabled="ro.jiage" style="width:100%"></el-input-number>
-						<div v-else class="field-readonly">
-							<span v-if="ruleForm.jiage > 0" class="price-val">¥{{ruleForm.jiage}}</span>
-							<span v-else class="free-val">免费</span>
+
+				<div class="card-scroll-body">
+					<!-- 基本信息 -->
+					<div class="form-block">
+						<div class="block-label"><span class="bl-dot"></span>基本信息</div>
+						<div class="row-2">
+							<el-form-item prop="ziliaobiaoti" class="col-span-2">
+								<label class="f-label">资料标题</label>
+								<el-input v-if="type!='info'" v-model="ruleForm.ziliaobiaoti" placeholder="请输入资料标题" clearable :readonly="ro.ziliaobiaoti"></el-input>
+								<div v-else class="f-readonly">{{ruleForm.ziliaobiaoti || '-'}}</div>
+							</el-form-item>
 						</div>
-					</el-form-item>
-					<el-form-item prop="fabushijian">
-						<label class="field-label">发布时间</label>
-						<el-date-picker v-if="type!='info'" format="YYYY-MM-DD" value-format="YYYY-MM-DD" v-model="ruleForm.fabushijian" type="date" :readonly="ro.fabushijian" placeholder="选择发布日期" style="width:100%"></el-date-picker>
-						<div v-else class="field-readonly">{{ruleForm.fabushijian || '-'}}</div>
-					</el-form-item>
-				</div>
-			</div>
+						<div class="row-3">
+							<el-form-item prop="ziliaoleixing">
+								<label class="f-label">技能分类</label>
+								<el-select v-if="type!='info'" :disabled="ro.ziliaoleixing" v-model="ruleForm.ziliaoleixing" placeholder="请选择" filterable style="width:100%">
+									<el-option v-for="(item,index) in ziliaoleixingOptions" :key="index" :label="item" :value="item"></el-option>
+								</el-select>
+								<div v-else class="f-readonly">{{ruleForm.ziliaoleixing || '-'}}</div>
+							</el-form-item>
+							<el-form-item prop="jiage">
+								<label class="f-label">资料价格 (元)</label>
+								<el-input-number v-if="type!='info'" v-model="ruleForm.jiage" :min="0" :precision="0" :disabled="ro.jiage" style="width:100%"></el-input-number>
+								<div v-else class="f-readonly">
+									<span v-if="ruleForm.jiage > 0" style="color:#f59e0b;font-weight:700">¥{{ruleForm.jiage}}</span>
+									<span v-else style="color:#10b981;font-weight:600">免费</span>
+								</div>
+							</el-form-item>
+							<el-form-item prop="fabushijian">
+								<label class="f-label">发布时间</label>
+								<el-date-picker v-if="type!='info'" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="ruleForm.fabushijian" type="date" :readonly="ro.fabushijian" placeholder="选择日期" style="width:100%"></el-date-picker>
+								<div v-else class="f-readonly">{{ruleForm.fabushijian || '-'}}</div>
+							</el-form-item>
+						</div>
+					</div>
 
-			<!-- Section 2: Media -->
-			<div class="form-section">
-				<div class="section-header">
-					<i class="el-icon-picture"></i>
-					<span>媒体资源</span>
-				</div>
-				<div class="section-body grid-3">
-					<div class="media-card">
-						<div class="media-card-title"><i class="el-icon-camera"></i> 封面图片</div>
-						<el-form-item prop="ziliaofengmian">
-							<file-upload v-if="type!='info' && !ro.ziliaofengmian"
-								tip="点击上传封面"
-								action="file/upload"
-								:limit="3"
-								:disabled="ro.ziliaofengmian"
-								:multiple="true"
-								:fileUrls="ruleForm.ziliaofengmian?ruleForm.ziliaofengmian:''"
-								@change="ziliaofengmianUploadChange"
-							></file-upload>
-							<div v-else-if="ruleForm.ziliaofengmian" class="preview-imgs">
-								<img v-if="ruleForm.ziliaofengmian.substring(0,4)=='http'" :src="ruleForm.ziliaofengmian.split(',')[0]" @click="imgPreView(ruleForm.ziliaofengmian.split(',')[0])">
-								<img v-else v-for="(item,index) in ruleForm.ziliaofengmian.split(',')" :key="index" :src="$base.url+item" @click="imgPreView($base.url+item)">
+					<!-- 媒体文件 -->
+					<div class="form-block">
+						<div class="block-label"><span class="bl-dot dot-purple"></span>媒体资源</div>
+						<div class="media-row">
+							<div class="media-cell">
+								<div class="mc-head"><i class="el-icon-picture-outline"></i> 封面图片</div>
+								<el-form-item prop="ziliaofengmian">
+									<file-upload v-if="type!='info' && !ro.ziliaofengmian"
+										tip="点击上传封面"
+										action="file/upload"
+										:limit="3"
+										:disabled="ro.ziliaofengmian"
+										:multiple="true"
+										:fileUrls="ruleForm.ziliaofengmian?ruleForm.ziliaofengmian:''"
+										@change="ziliaofengmianUploadChange"
+									></file-upload>
+									<div v-else-if="ruleForm.ziliaofengmian" class="thumb-list">
+										<img v-if="ruleForm.ziliaofengmian.substring(0,4)=='http'" :src="ruleForm.ziliaofengmian.split(',')[0]" @click="imgPreView(ruleForm.ziliaofengmian.split(',')[0])">
+										<img v-else v-for="(item,index) in ruleForm.ziliaofengmian.split(',')" :key="index" :src="$base.url+item" @click="imgPreView($base.url+item)">
+									</div>
+									<span v-else class="mc-empty">暂无</span>
+								</el-form-item>
 							</div>
-							<div v-else class="media-empty">暂无封面</div>
-						</el-form-item>
+							<div class="media-cell">
+								<div class="mc-head"><i class="el-icon-video-camera"></i> 视频资源</div>
+								<el-form-item prop="ziliaoshipin">
+									<file-upload v-if="type!='info' && !ro.ziliaoshipin"
+										tip="点击上传视频"
+										action="file/upload"
+										:limit="1"
+										:type="2"
+										:multiple="true"
+										:disabled="ro.ziliaoshipin"
+										:fileUrls="ruleForm.ziliaoshipin?ruleForm.ziliaoshipin:''"
+										@change="ziliaoshipinUploadChange"
+									></file-upload>
+									<el-button v-else-if="ruleForm.ziliaoshipin" size="mini" class="mc-link" @click="download($base.url+ruleForm.ziliaoshipin)"><i class="el-icon-video-play"></i> 预览</el-button>
+									<span v-else class="mc-empty">暂无</span>
+								</el-form-item>
+							</div>
+							<div class="media-cell">
+								<div class="mc-head"><i class="el-icon-folder-opened"></i> 附件文件 <span class="mc-req">必填</span></div>
+								<el-form-item prop="ziliaofujian">
+									<file-upload v-if="type!='info' && !ro.ziliaofujian"
+										tip="点击上传附件"
+										action="file/upload"
+										:limit="1"
+										:type="2"
+										:multiple="true"
+										:disabled="ro.ziliaofujian"
+										:fileUrls="ruleForm.ziliaofujian?ruleForm.ziliaofujian:''"
+										@change="ziliaofujianUploadChange"
+									></file-upload>
+									<el-button v-else-if="ruleForm.ziliaofujian" size="mini" class="mc-link" @click="download($base.url+ruleForm.ziliaofujian)"><i class="el-icon-download"></i> 下载</el-button>
+									<span v-else class="mc-empty">暂无</span>
+								</el-form-item>
+							</div>
+						</div>
 					</div>
-					<div class="media-card">
-						<div class="media-card-title"><i class="el-icon-video-camera"></i> 视频资源</div>
-						<el-form-item prop="ziliaoshipin">
-							<file-upload v-if="type!='info' && !ro.ziliaoshipin"
-								tip="点击上传视频"
-								action="file/upload"
-								:limit="1"
-								:type="2"
-								:multiple="true"
-								:disabled="ro.ziliaoshipin"
-								:fileUrls="ruleForm.ziliaoshipin?ruleForm.ziliaoshipin:''"
-								@change="ziliaoshipinUploadChange"
-							></file-upload>
-							<el-button v-else-if="ruleForm.ziliaoshipin" class="media-action-btn" @click="download($base.url+ruleForm.ziliaoshipin)"><i class="el-icon-video-play"></i> 预览视频</el-button>
-							<div v-else class="media-empty">暂无视频</div>
-						</el-form-item>
-					</div>
-					<div class="media-card">
-						<div class="media-card-title"><i class="el-icon-folder"></i> 附件文件</div>
-						<el-form-item prop="ziliaofujian">
-							<file-upload v-if="type!='info' && !ro.ziliaofujian"
-								tip="点击上传附件"
-								action="file/upload"
-								:limit="1"
-								:type="2"
-								:multiple="true"
-								:disabled="ro.ziliaofujian"
-								:fileUrls="ruleForm.ziliaofujian?ruleForm.ziliaofujian:''"
-								@change="ziliaofujianUploadChange"
-							></file-upload>
-							<el-button v-else-if="ruleForm.ziliaofujian" class="media-action-btn" @click="download($base.url+ruleForm.ziliaofujian)"><i class="el-icon-download"></i> 下载附件</el-button>
-							<div v-else class="media-empty">暂无附件</div>
+
+					<!-- 资料详情 -->
+					<div class="form-block last">
+						<div class="block-label"><span class="bl-dot dot-green"></span>资料详情</div>
+						<el-form-item prop="ziliaoxiangqing">
+							<el-input v-if="type!='info'" type="textarea" v-model="ruleForm.ziliaoxiangqing" :rows="5" placeholder="请输入资料详细描述..." :readonly="ro.ziliaoxiangqing" resize="vertical"></el-input>
+							<div v-else-if="ruleForm.ziliaoxiangqing" class="detail-html" v-html="ruleForm.ziliaoxiangqing"></div>
+							<span v-else class="mc-empty">暂无详情</span>
 						</el-form-item>
 					</div>
 				</div>
 			</div>
 
-			<!-- Section 3: Content -->
-			<div class="form-section">
-				<div class="section-header">
-					<i class="el-icon-edit"></i>
-					<span>资料详情</span>
-				</div>
-				<div class="section-body">
-					<el-form-item prop="ziliaoxiangqing" class="full-width">
-						<el-input v-if="type!='info'" type="textarea" v-model="ruleForm.ziliaoxiangqing" :rows="4" placeholder="请输入资料详细描述..." :readonly="ro.ziliaoxiangqing" resize="vertical"></el-input>
-						<div v-else-if="ruleForm.ziliaoxiangqing" class="detail-preview" v-html="ruleForm.ziliaoxiangqing"></div>
-						<div v-else class="media-empty">暂无详情</div>
-					</el-form-item>
-				</div>
-			</div>
-
-			<!-- Actions -->
-			<div class="form-actions">
-				<el-button v-if="type!='info'" class="action-submit" @click="onSubmit"><i class="el-icon-check"></i> 保存发布</el-button>
-				<el-button v-if="type!='info'" class="action-cancel" @click="back()"><i class="el-icon-close"></i> 取消</el-button>
-				<el-button v-if="type=='info'" class="action-cancel" @click="back()"><i class="el-icon-back"></i> 返回列表</el-button>
-			</div>
 		</el-form>
 	</div>
 </template>
 <script>
-	import { 
+	import {
 		isIntNumer,
 	} from "@/utils/validate";
 	export default {
@@ -165,8 +146,6 @@
 			return {
 				id: '',
 				type: '',
-			
-			
 				ro:{
 					ziliaobiaoti : false,
 					ziliaoleixing : false,
@@ -181,7 +160,6 @@
 					discussnum : false,
 					storeupnum : false,
 				},
-			
 				ruleForm: {
 					ziliaobiaoti: '',
 					ziliaoleixing: '',
@@ -197,35 +175,20 @@
 					storeupnum: Number('0'),
 				},
 				ziliaoleixingOptions: [],
-
 				rules: {
-					ziliaobiaoti: [
-					],
-					ziliaoleixing: [
-					],
-					ziliaofengmian: [
-					],
-					ziliaoshipin: [
-						{ required: true, message: '资料视频不能为空', trigger: 'blur' },
-					],
+					ziliaobiaoti: [],
+					ziliaoleixing: [],
+					ziliaofengmian: [],
+					ziliaoshipin: [],
 					ziliaofujian: [
 						{ required: true, message: '资料附件不能为空', trigger: 'blur' },
 					],
-					ziliaoxiangqing: [
-					],
-					fabushijian: [
-					],
-					clicktime: [
-					],
-					clicknum: [
-						{ validator: validateIntNumber, trigger: 'blur' },
-					],
-					discussnum: [
-						{ validator: validateIntNumber, trigger: 'blur' },
-					],
-					storeupnum: [
-						{ validator: validateIntNumber, trigger: 'blur' },
-					],
+					ziliaoxiangqing: [],
+					fabushijian: [],
+					clicktime: [],
+					clicknum: [{ validator: validateIntNumber, trigger: 'blur' }],
+					discussnum: [{ validator: validateIntNumber, trigger: 'blur' }],
+					storeupnum: [{ validator: validateIntNumber, trigger: 'blur' }],
 				},
 			};
 		},
@@ -237,9 +200,6 @@
 			sessionTable() {
 				return this.$storage.get('sessionTable')
 			},
-
-
-
 		},
 		components: {},
 		created() {
@@ -249,12 +209,10 @@
 			imgPreView(url){
 				this.$parent.imgPreView(url)
 			},
-			// 下载
 			download(file){
 				window.open(`${file}`)
 			},
-			// 初始化
-			init(id,type ) {
+			init(id,type) {
 				if (id) {
 					this.id = id;
 					this.type = type;
@@ -270,65 +228,19 @@
 				}else if(this.type=='cross'){
 					var obj = this.$storage.getObj('crossObj');
 					for (var o in obj){
-						if(o=='ziliaobiaoti'){
-							this.ruleForm.ziliaobiaoti = obj[o];
-							this.ro.ziliaobiaoti = true;
-							continue;
-						}
-						if(o=='ziliaoleixing'){
-							this.ruleForm.ziliaoleixing = obj[o];
-							this.ro.ziliaoleixing = true;
-							continue;
-						}
-						if(o=='ziliaofengmian'){
-							this.ruleForm.ziliaofengmian = obj[o];
-							this.ro.ziliaofengmian = true;
-							continue;
-						}
-						if(o=='ziliaoshipin'){
-							this.ruleForm.ziliaoshipin = obj[o];
-							this.ro.ziliaoshipin = true;
-							continue;
-						}
-						if(o=='ziliaofujian'){
-							this.ruleForm.ziliaofujian = obj[o];
-							this.ro.ziliaofujian = true;
-							continue;
-						}
-						if(o=='ziliaoxiangqing'){
-							this.ruleForm.ziliaoxiangqing = obj[o];
-							this.ro.ziliaoxiangqing = true;
-							continue;
-						}
-						if(o=='fabushijian'){
-							this.ruleForm.fabushijian = obj[o];
-							this.ro.fabushijian = true;
-							continue;
-						}
-						if(o=='clicktime'){
-							this.ruleForm.clicktime = obj[o];
-							this.ro.clicktime = true;
-							continue;
-						}
-						if(o=='clicknum'){
-							this.ruleForm.clicknum = obj[o];
-							this.ro.clicknum = true;
-							continue;
-						}
-						if(o=='discussnum'){
-							this.ruleForm.discussnum = obj[o];
-							this.ro.discussnum = true;
-							continue;
-						}
-						if(o=='storeupnum'){
-							this.ruleForm.storeupnum = obj[o];
-							this.ro.storeupnum = true;
-							continue;
-						}
+						if(o=='ziliaobiaoti'){ this.ruleForm.ziliaobiaoti = obj[o]; this.ro.ziliaobiaoti = true; continue; }
+						if(o=='ziliaoleixing'){ this.ruleForm.ziliaoleixing = obj[o]; this.ro.ziliaoleixing = true; continue; }
+						if(o=='ziliaofengmian'){ this.ruleForm.ziliaofengmian = obj[o]; this.ro.ziliaofengmian = true; continue; }
+						if(o=='ziliaoshipin'){ this.ruleForm.ziliaoshipin = obj[o]; this.ro.ziliaoshipin = true; continue; }
+						if(o=='ziliaofujian'){ this.ruleForm.ziliaofujian = obj[o]; this.ro.ziliaofujian = true; continue; }
+						if(o=='ziliaoxiangqing'){ this.ruleForm.ziliaoxiangqing = obj[o]; this.ro.ziliaoxiangqing = true; continue; }
+						if(o=='fabushijian'){ this.ruleForm.fabushijian = obj[o]; this.ro.fabushijian = true; continue; }
+						if(o=='clicktime'){ this.ruleForm.clicktime = obj[o]; this.ro.clicktime = true; continue; }
+						if(o=='clicknum'){ this.ruleForm.clicknum = obj[o]; this.ro.clicknum = true; continue; }
+						if(o=='discussnum'){ this.ruleForm.discussnum = obj[o]; this.ro.discussnum = true; continue; }
+						if(o=='storeupnum'){ this.ruleForm.storeupnum = obj[o]; this.ro.storeupnum = true; continue; }
 					}
 				}
-
-				// 获取用户信息
 				this.$http({
 					url: `${this.sessionTable}/session`,
 					method: "get"
@@ -349,10 +261,7 @@
 						this.$message.error(data.msg);
 					}
 				});
-			
 			},
-			// 多级联动参数
-
 			async info(id) {
 				await this.$http({
 					url: `xuexiziliao/info/${id}`,
@@ -360,16 +269,13 @@
 				}).then(({ data }) => {
 					if (data && data.code === 0) {
 						this.ruleForm = data.data;
-						//解决前台上传图片后台不显示的问题
-						let reg=new RegExp('../../../upload','g')//g代表全部
+						let reg=new RegExp('../../../upload','g')
 						this.ruleForm.ziliaoxiangqing = this.ruleForm.ziliaoxiangqing.replace(reg,'../../../upload');
 					} else {
 						this.$message.error(data.msg);
 					}
 				});
 			},
-
-			// 提交
 			async onSubmit() {
 					if(this.ruleForm.ziliaofengmian!=null) {
 						this.ruleForm.ziliaofengmian = this.ruleForm.ziliaofengmian.split(',').map(u => u.replace(/^\/+/, '')).join(',');
@@ -430,11 +336,9 @@
 						}
 					});
 			},
-			// 获取uuid
 			getUUID () {
 				return new Date().getTime();
 			},
-			// 返回
 			back() {
 				this.parent.showFlag = true;
 				this.parent.addOrUpdateFlag = false;
@@ -452,394 +356,222 @@
 		}
 	};
 </script>
+
 <style lang="scss" scoped>
-$accent: #0ea5e9;
-$accent2: #7c3aed;
-$bg-page: #0b1120;
-$bg-card: rgba(15,23,42,0.85);
-$bg-input: rgba(255,255,255,0.06);
-$border: rgba(100,160,220,0.12);
-$border-focus: #0ea5e9;
-$text: #e2e8f0;
-$text-dim: #94a3b8;
-$radius: 8px;
+$cyan: #06b6d4;
+$blue: #3b82f6;
+$purple: #8b5cf6;
+$green: #10b981;
+$amber: #f59e0b;
+$rose: #f43f5e;
+$card: #1e293b;
+$input-bg: rgba(255,255,255,0.04);
+$border: rgba(255,255,255,0.06);
+$text: #f1f5f9;
+$text2: #94a3b8;
+$text3: #64748b;
 
-.modern-form-page {
-	padding: 20px 24px 32px;
+.zl-form-page {
 	width: 100%;
-	background: $bg-page;
-}
-
-.form-section {
-	background: $bg-card;
-	border: 1px solid $border;
-	border-radius: 14px;
-	margin-bottom: 16px;
-	overflow: hidden;
-	backdrop-filter: blur(12px);
-	box-shadow: 0 2px 16px rgba(0,0,0,0.2);
-}
-
-	.section-header {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	padding: 12px 20px;
-	border-bottom: 1px solid $border;
-	background: rgba(14,165,233,0.04);
-	.el-icon {
-		font-size: 16px;
-		color: $accent;
-	}
-	span {
-		font-size: 14px;
-		font-weight: 600;
-		color: $text;
-		letter-spacing: 0.5px;
-	}
-}
-
-.section-body {
-	padding: 16px 20px;
-}
-
-.grid-2 {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 14px 28px;
-}
-
-.grid-3 {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 14px;
-}
-
-.field-label {
-	display: block;
-	font-size: 13px;
-	font-weight: 500;
-	color: $text-dim;
-	margin-bottom: 8px;
-	letter-spacing: 0.3px;
-}
-
-.field-readonly {
-	padding: 10px 14px;
-	font-size: 14px;
-	color: $text;
-	background: rgba(255,255,255,0.03);
-	border-radius: $radius;
-	border: 1px solid transparent;
-	min-height: 42px;
-	display: flex;
-	align-items: center;
-}
-
-.price-val {
-	color: #f59e0b;
-	font-weight: 600;
-	font-size: 18px;
-}
-
-.free-val {
-	color: #22c55e;
-	font-weight: 500;
-}
-
-.modern-form-page ::v-deep .el-form-item {
-	margin-bottom: 0;
-}
-.modern-form-page ::v-deep .el-form-item__label {
-	display: none;
-}
-.modern-form-page ::v-deep .el-form-item__content {
-	margin-left: 0 !important;
-}
-
-.modern-form-page .el-input ::v-deep .el-input__inner,
-.modern-form-page .el-input-number ::v-deep .el-input__inner {
-	border: 1px solid $border;
-	border-radius: $radius;
-	padding: 0 14px;
-	outline: none;
-	color: $text;
-	background: $bg-input;
-	width: 100%;
-	font-size: 14px;
-	height: 42px;
-	transition: border-color 0.25s, box-shadow 0.25s;
-	&:focus {
-		border-color: $border-focus;
-		box-shadow: 0 0 0 3px rgba(14,165,233,0.1);
-	}
-	&::placeholder { color: rgba(148,163,184,0.6); }
-}
-.modern-form-page .el-input-number {
-	width: 100%;
-	text-align: left;
-	::v-deep .el-input__inner { text-align: left; }
-	::v-deep .el-input-number__decrease,
-	::v-deep .el-input-number__increase { display: none; }
-}
-
-.modern-form-page .el-select ::v-deep .el-input__inner {
-	border: 1px solid $border;
-	border-radius: $radius;
-	padding: 0 14px;
-	color: $text;
-	background: $bg-input;
-	font-size: 14px;
-	height: 42px;
-	transition: border-color 0.25s;
-	&:focus { border-color: $border-focus; }
-}
-
-.modern-form-page .el-date-editor {
-	width: 100% !important;
-	::v-deep .el-input__inner {
-		border: 1px solid $border;
-		border-radius: $radius;
-		padding: 0 30px;
-		color: $text;
-		background: $bg-input;
-		font-size: 14px;
-		height: 42px;
-		transition: border-color 0.25s;
-		&:focus { border-color: $border-focus; }
-	}
-	::v-deep .el-input__prefix i { color: $accent; }
-}
-
-.media-card {
-	background: rgba(255,255,255,0.02);
-	border: 1px solid $border;
-	border-radius: 10px;
-	padding: 14px;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
-	min-height: 110px;
-	transition: border-color 0.3s;
-	&:hover { border-color: rgba(14,165,233,0.25); }
 }
 
-.media-card-title {
-	font-size: 13px;
-	font-weight: 600;
-	color: $text-dim;
-	margin-bottom: 12px;
-	.el-icon {
-		margin-right: 6px;
-		color: $accent;
-		vertical-align: middle;
-	}
-}
-
-.media-empty {
-	color: rgba(148,163,184,0.5);
-	font-size: 13px;
-	text-align: center;
-	padding: 24px 0;
-}
-
-.media-action-btn {
-	border: 1px solid rgba(14,165,233,0.25) !important;
-	border-radius: 8px !important;
-	color: $accent !important;
-	background: rgba(14,165,233,0.06) !important;
-	font-size: 13px !important;
-	padding: 10px 20px !important;
-	cursor: pointer;
-	transition: all 0.25s;
-	&:hover {
-		background: rgba(14,165,233,0.12) !important;
-		border-color: $accent !important;
-	}
-}
-
-.preview-imgs {
+.zl-form-card {
 	display: flex;
-	gap: 8px;
-	flex-wrap: wrap;
-	img {
-		width: 80px;
-		height: 80px;
-		object-fit: cover;
-		border-radius: 8px;
-		border: 1px solid $border;
-		cursor: pointer;
-		transition: transform 0.2s;
-		&:hover { transform: scale(1.05); }
-	}
-}
-
-.modern-form-page ::v-deep .el-upload--picture-card {
-	background: transparent;
-	border: 0;
-	border-radius: 0;
-	width: auto;
-	height: auto;
-	line-height: initial;
-}
-.modern-form-page ::v-deep .el-upload .el-icon-plus {
-	border: 1px dashed rgba(14,165,233,0.25);
-	border-radius: 8px;
-	color: $accent;
-	font-size: 24px;
-	width: 72px;
-	height: 72px;
-	line-height: 72px;
-	text-align: center;
-	background: rgba(14,165,233,0.03);
-	transition: all 0.25s;
-	&:hover {
-		border-color: $accent;
-		background: rgba(14,165,233,0.08);
-	}
-}
-.modern-form-page ::v-deep .el-upload-list .el-upload-list__item {
+	flex-direction: column;
+	height: 100%;
+	background: $card;
 	border: 1px solid $border;
-	border-radius: 8px;
-	width: 72px;
-	height: 72px;
+	border-radius: 14px;
+	overflow: hidden;
 }
-.modern-form-page ::v-deep .el-upload__tip {
-	color: $text-dim;
-	font-size: 12px;
-	padding-top: 4px;
-}
-.modern-form-page ::v-deep .el-upload-dragger {
-	color: $text-dim;
+
+/* ===== 顶部操作栏：固定在卡片顶部 ===== */
+.card-top-bar {
 	display: flex;
-	flex-wrap: wrap;
 	align-items: center;
-	justify-content: center;
-	font-size: 14px;
-	border: 1px dashed rgba(14,165,233,0.2);
-	border-radius: $radius;
-	background: rgba(14,165,233,0.02);
-	width: 100%;
-	height: 90px;
-	transition: all 0.25s;
-	&:hover {
-		border-color: $accent;
-		background: rgba(14,165,233,0.05);
-	}
+	justify-content: space-between;
+	padding: 14px 22px;
+	background: linear-gradient(135deg, rgba(6,182,212,0.06), rgba(59,130,246,0.04));
+	border-bottom: 1px solid $border;
+	flex-shrink: 0;
 }
-.modern-form-page ::v-deep .el-upload-dragger .el-icon-upload {
-	margin: 0;
-	color: $accent;
-	width: 100%;
-	font-size: 36px;
-	opacity: 0.5;
+.top-bar-left {
+	display: flex; align-items: center; gap: 10px;
+	font-size: 15px; font-weight: 700; color: $text;
+	i { font-size: 18px; color: $cyan; }
 }
-.modern-form-page ::v-deep .el-upload-dragger .el-upload__text {
-	color: $text-dim;
-	text-align: center;
-	width: 100%;
-	font-size: 12px;
-	line-height: 1;
-	em {
-		font-style: normal;
-		color: $accent;
-	}
+.top-bar-right { display: flex; gap: 8px; }
+
+.btn-submit {
+	border: none !important; padding: 0 22px !important; height: 34px !important;
+	font-size: 13px !important; font-weight: 600; color: #fff !important;
+	border-radius: 8px !important;
+	background: linear-gradient(135deg, $cyan, $blue) !important;
+	box-shadow: 0 2px 8px rgba(6,182,212,0.25);
+	transition: all .25s;
+	i { margin-right: 4px; }
+	&:hover { box-shadow: 0 4px 14px rgba(6,182,212,0.35); transform: translateY(-1px); }
+}
+.btn-cancel {
+	border: 1px solid $border !important; padding: 0 18px !important; height: 34px !important;
+	font-size: 13px !important; font-weight: 600; color: $text2 !important;
+	border-radius: 8px !important; background: transparent !important;
+	transition: all .25s;
+	i { margin-right: 4px; }
+	&:hover { border-color: rgba(6,182,212,0.25) !important; color: $text !important; }
 }
 
-.full-width {
-	width: 100%;
+/* ===== 可滚动表单区域 ===== */
+.card-scroll-body {
+	flex: 1;
+	overflow-y: auto;
+	padding: 18px 22px 22px;
+	&::-webkit-scrollbar { width: 5px; }
+	&::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
 }
 
-.modern-form-page .el-textarea ::v-deep .el-textarea__inner {
-	border: 1px solid $border;
-	border-radius: $radius;
-	padding: 14px 16px;
-	color: $text;
-	background: $bg-input;
-	width: 100%;
-	font-size: 14px;
-	line-height: 1.7;
-	font-family: inherit;
-	resize: vertical;
-	min-height: 100px;
-	transition: border-color 0.25s, box-shadow 0.25s;
-	&:focus {
-		border-color: $border-focus;
-		box-shadow: 0 0 0 3px rgba(14,165,233,0.1);
-	}
-	&::placeholder { color: rgba(148,163,184,0.5); }
+/* ===== 表单块 ===== */
+.form-block {
+	margin-bottom: 20px;
+	&.last { margin-bottom: 0; }
+}
+.block-label {
+	display: flex; align-items: center; gap: 8px;
+	font-size: 13px; font-weight: 700; color: $text; margin-bottom: 14px;
+}
+.bl-dot {
+	width: 6px; height: 6px; border-radius: 2px; background: $cyan;
+	&.dot-purple { background: $purple; }
+	&.dot-green { background: $green; }
 }
 
-.detail-preview {
-	padding: 16px 20px;
-	color: $text;
-	background: rgba(255,255,255,0.03);
-	border: 1px solid $border;
-	border-radius: $radius;
-	font-size: 14px;
-	line-height: 1.8;
-	width: 100%;
-	min-height: 100px;
-	word-break: break-word;
+/* ===== 栅格 ===== */
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.col-span-2 { grid-column: span 2; }
+
+.f-label {
+	display: block; font-size: 12px; font-weight: 600; color: $text3; margin-bottom: 6px;
+}
+.f-readonly {
+	padding: 8px 12px; font-size: 13px; color: $text;
+	background: $input-bg; border-radius: 8px; border: 1px solid $border;
+	min-height: 36px; display: flex; align-items: center;
 }
 
-.form-actions {
-	display: flex;
-	justify-content: center;
-	gap: 16px;
-	padding: 16px 0 8px;
-	position: sticky;
-	bottom: 0;
-	background: $bg-page;
-	z-index: 10;
-	border-top: 1px solid $border;
-	margin: 0 -24px;
-	padding-left: 24px;
-	padding-right: 24px;
+/* ===== 媒体三列 ===== */
+.media-row {
+	display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;
 }
-
-.action-submit {
-	border: none !important;
-	cursor: pointer;
-	padding: 0 40px !important;
-	color: #fff !important;
-	font-weight: 600;
-	font-size: 15px !important;
-	border-radius: 24px !important;
-	background: linear-gradient(135deg, $accent, $accent2) !important;
-	min-width: 160px;
-	height: 46px !important;
-	box-shadow: 0 2px 12px rgba(14,165,233,0.25);
-	transition: all 0.3s;
-	.el-icon { margin-right: 6px; vertical-align: middle; }
-	&:hover {
-		box-shadow: 0 6px 20px rgba(14,165,233,0.35);
-		transform: translateY(-2px);
-	}
+.media-cell {
+	background: rgba(255,255,255,0.015); border: 1px solid $border;
+	border-radius: 10px; padding: 12px; min-height: 90px;
+	transition: border-color .2s;
+	&:hover { border-color: rgba(6,182,212,0.15); }
 }
-
-.action-cancel {
-	border: 1px solid $border !important;
-	cursor: pointer;
-	padding: 0 40px !important;
-	color: $text-dim !important;
-	font-weight: 600;
-	font-size: 15px !important;
-	border-radius: 24px !important;
-	background: transparent !important;
-	min-width: 160px;
-	height: 46px !important;
-	transition: all 0.3s;
-	.el-icon { margin-right: 6px; vertical-align: middle; }
-	&:hover {
-		border-color: $accent !important;
-		color: $text !important;
-		background: rgba(14,165,233,0.04) !important;
+.mc-head {
+	font-size: 11px; font-weight: 700; color: $text2; margin-bottom: 8px;
+	letter-spacing: 0.3px;
+	i { color: $cyan; margin-right: 4px; font-size: 13px; }
+}
+.mc-req {
+	font-size: 10px; color: $rose; font-weight: 600;
+	background: rgba(244,63,94,0.08); padding: 1px 6px;
+	border-radius: 8px; margin-left: 4px; border: 1px solid rgba(244,63,94,0.12);
+}
+.mc-empty { font-size: 12px; color: $text3; }
+.mc-link {
+	border: 1px solid rgba(6,182,212,0.2) !important; border-radius: 6px !important;
+	color: $cyan !important; background: rgba(6,182,212,0.04) !important;
+	font-size: 12px !important; transition: all .2s;
+	i { margin-right: 3px; }
+	&:hover { background: rgba(6,182,212,0.1) !important; }
+}
+.thumb-list {
+	display: flex; gap: 6px; flex-wrap: wrap;
+	img {
+		width: 54px; height: 54px; object-fit: cover; border-radius: 6px;
+		border: 1px solid $border; cursor: pointer; transition: transform .2s;
+		&:hover { transform: scale(1.06); }
 	}
 }
 
-@media (max-width: 900px) {
-	.grid-2 { grid-template-columns: 1fr; }
-	.grid-3 { grid-template-columns: 1fr; }
-	.modern-form-page { padding: 16px; }
+/* ===== 详情 ===== */
+.detail-html {
+	padding: 12px 14px; color: $text; background: $input-bg;
+	border: 1px solid $border; border-radius: 8px;
+	font-size: 13px; line-height: 1.8; min-height: 60px; word-break: break-word;
+}
+
+/* ===== Element UI 覆盖 ===== */
+.zl-form-page ::v-deep .el-form-item { margin-bottom: 0; }
+.zl-form-page ::v-deep .el-form-item__label { display: none; }
+.zl-form-page ::v-deep .el-form-item__content { margin-left: 0 !important; }
+
+.zl-form-page .el-input ::v-deep .el-input__inner,
+.zl-form-page .el-input-number ::v-deep .el-input__inner {
+	border: 1px solid $border; border-radius: 8px; padding: 0 12px;
+	color: $text; background: $input-bg; font-size: 13px; height: 36px;
+	transition: border-color .2s, box-shadow .2s;
+	&:focus { border-color: $cyan; box-shadow: 0 0 0 2px rgba(6,182,212,0.08); }
+	&::placeholder { color: rgba(148,163,184,0.4); }
+}
+.zl-form-page .el-input-number {
+	width: 100%;
+	::v-deep .el-input__inner { text-align: left; }
+	::v-deep .el-input-number__decrease, ::v-deep .el-input-number__increase { display: none; }
+}
+.zl-form-page .el-select ::v-deep .el-input__inner {
+	border: 1px solid $border; border-radius: 8px; padding: 0 12px;
+	color: $text; background: $input-bg; font-size: 13px; height: 36px;
+	&:focus { border-color: $cyan; }
+}
+.zl-form-page .el-date-editor {
+	width: 100% !important;
+	::v-deep .el-input__inner {
+		border: 1px solid $border; border-radius: 8px; padding: 0 12px 0 30px;
+		color: $text; background: $input-bg; font-size: 13px; height: 36px;
+		&:focus { border-color: $cyan; }
+	}
+	::v-deep .el-input__prefix i { color: $cyan; }
+}
+.zl-form-page .el-textarea ::v-deep .el-textarea__inner {
+	border: 1px solid $border; border-radius: 8px; padding: 10px 12px;
+	color: $text; background: $input-bg; font-size: 13px; line-height: 1.7;
+	font-family: inherit; resize: vertical;
+	transition: border-color .2s, box-shadow .2s;
+	&:focus { border-color: $cyan; box-shadow: 0 0 0 2px rgba(6,182,212,0.08); }
+	&::placeholder { color: rgba(148,163,184,0.4); }
+}
+.zl-form-page ::v-deep .el-form-item.is-error .el-input__inner,
+.zl-form-page ::v-deep .el-form-item.is-error .el-textarea__inner {
+	border-color: $rose !important;
+}
+.zl-form-page ::v-deep .el-form-item__error { font-size: 11px; padding-top: 3px; }
+
+.zl-form-page ::v-deep .el-upload--picture-card { background: transparent; border: 0; border-radius: 0; width: auto; height: auto; line-height: initial; }
+.zl-form-page ::v-deep .el-upload .el-icon-plus {
+	border: 1px dashed rgba(6,182,212,0.25); border-radius: 8px; color: $cyan;
+	font-size: 18px; width: 54px; height: 54px; line-height: 54px; text-align: center;
+	background: rgba(6,182,212,0.03); transition: all .2s;
+	&:hover { border-color: $cyan; background: rgba(6,182,212,0.08); }
+}
+.zl-form-page ::v-deep .el-upload-list .el-upload-list__item { border: 1px solid $border; border-radius: 6px; width: 54px; height: 54px; }
+.zl-form-page ::v-deep .el-upload__tip { color: $text3; font-size: 11px; padding-top: 2px; }
+.zl-form-page ::v-deep .el-upload-dragger {
+	color: $text2; display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+	border: 1px dashed rgba(6,182,212,0.18); border-radius: 8px; background: transparent;
+	width: 100%; height: 56px; transition: all .2s;
+	&:hover { border-color: $cyan; background: rgba(6,182,212,0.04); }
+}
+.zl-form-page ::v-deep .el-upload-dragger .el-icon-upload { margin: 0; color: $cyan; width: 100%; font-size: 22px; opacity: 0.5; }
+.zl-form-page ::v-deep .el-upload-dragger .el-upload__text { color: $text3; text-align: center; width: 100%; font-size: 11px; line-height: 1; em { font-style: normal; color: $cyan; } }
+
+@media (max-width: 800px) {
+	.row-3 { grid-template-columns: 1fr; }
+	.media-row { grid-template-columns: 1fr; }
 }
 </style>

@@ -17,5 +17,8 @@
     <include file="db/changelog/2026-04-29-fix-pingjiafankui.xml"/>
     <include file="db/changelog/2026-04-29-ziliaogoumai.xml"/>
     <include file="db/changelog/2026-05-13-more-xuexiziliao.xml"/>
+    <include file="db/changelog/2026-05-14-ziliaogoumai-data.xml"/>
+    <include file="db/changelog/2026-05-14-audit-status-variety.xml"/>
+    <include file="db/changelog/2026-05-14-cleanup-normalize.xml"/>
 
 </databaseChangeLog>

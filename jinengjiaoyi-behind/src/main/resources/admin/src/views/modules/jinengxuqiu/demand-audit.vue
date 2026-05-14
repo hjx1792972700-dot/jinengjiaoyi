@@ -6,12 +6,21 @@
 				<span class="field-label">需求标题</span>
 				<el-input v-model="searchForm.xuqiubiaoti" placeholder="请输入需求标题" @keydown.enter="search()" clearable size="small"></el-input>
 			</div>
+			<div class="search-field">
+				<span class="field-label">审核状态</span>
+				<el-select v-model="searchForm.sfsh" placeholder="全部" clearable size="small" @change="search()">
+					<el-option label="全部" value=""></el-option>
+					<el-option label="待审核" value="待审核"></el-option>
+					<el-option label="已通过" value="是"></el-option>
+					<el-option label="已拒绝" value="否"></el-option>
+				</el-select>
+			</div>
 			<div class="search-actions">
 				<el-button class="btn-primary" size="small" @click="search()">
 					<template #icon><Search /></template>
 					查询
 				</el-button>
-				<el-button class="btn-plain" size="small" @click="searchForm.xuqiubiaoti='';search()">
+				<el-button class="btn-plain" size="small" @click="searchForm.xuqiubiaoti='';searchForm.sfsh='';search()">
 					<template #icon><Refresh /></template>
 					重置
 				</el-button>
@@ -157,7 +166,7 @@ export default {
 		return {
 			searchForm: {
 				xuqiubiaoti: '',
-				sfsh: '待审核',
+				sfsh: '',
 			},
 			dataList: [],
 			pageIndex: 1,
@@ -195,8 +204,7 @@ export default {
 			let params = {
 				page: this.pageIndex,
 				limit: this.pageSize,
-				sort: 'id',
-				order: 'desc',
+				auditSort: 'true',
 				leixing: '需求',
 			};
 			if (this.searchForm.xuqiubiaoti) params['xuqiubiaoti'] = '%' + this.searchForm.xuqiubiaoti + '%';

@@ -17,62 +17,61 @@
 	<div class="msg-form-page">
 		<el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="0">
 
-			<!-- Section 1: User & Images -->
-			<div class="msg-section">
-				<div class="msg-section-header"><i class="el-icon-user"></i><span>留言信息</span></div>
-				<div class="msg-section-body">
-					<div class="msg-grid-2">
-						<el-form-item prop="username">
-							<label class="msg-label">用户名</label>
-							<div class="msg-readonly">{{ruleForm.username || '-'}}</div>
-						</el-form-item>
-						<el-form-item prop="cpicture">
-							<label class="msg-label">留言图片</label>
-							<div v-if="type=='msg' || type=='info'">
-								<div v-if="ruleForm.cpicture" class="msg-imgs">
-									<img v-if="ruleForm.cpicture.substring(0,4)=='http'" :src="ruleForm.cpicture.split(',')[0]" @click="imgPreView(ruleForm.cpicture.split(',')[0])">
-									<img v-else v-for="(item,index) in ruleForm.cpicture.split(',')" :key="index" :src="$base.url+item" @click="imgPreView($base.url+item)">
-								</div>
-								<div v-else class="msg-empty">无图片</div>
-							</div>
-							<file-upload v-else tip="点击上传留言图片" action="file/upload" :limit="3" :multiple="true" :disabled="ro.cpicture" :fileUrls="ruleForm.cpicture?ruleForm.cpicture:''" @change="cpictureUploadChange"></file-upload>
+			<!-- 留言卡片 -->
+			<div class="msg-card msg-user-card">
+				<div class="card-header">
+					<div class="user-avatar">{{(ruleForm.username||'?').substring(0,1)}}</div>
+					<div class="user-info">
+						<div class="user-name">{{ruleForm.username || '未知用户'}}</div>
+						<div class="user-label">留言用户</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="msg-bubble">
+						<div v-if="type=='msg' || type=='info'" v-html="ruleForm.content"></div>
+						<el-input v-else type="textarea" v-model="ruleForm.content" :rows="3" placeholder="请输入留言内容..." resize="vertical"></el-input>
+					</div>
+					<div class="msg-images" v-if="type=='msg' || type=='info'">
+						<template v-if="ruleForm.cpicture">
+							<img v-if="ruleForm.cpicture.substring(0,4)=='http'" :src="ruleForm.cpicture.split(',')[0]" @click="imgPreView(ruleForm.cpicture.split(',')[0])">
+							<img v-else v-for="(item,index) in ruleForm.cpicture.split(',')" :key="index" :src="$base.url+item" @click="imgPreView($base.url+item)">
+						</template>
+					</div>
+					<div class="msg-images" v-else>
+						<file-upload tip="点击上传留言图片" action="file/upload" :limit="3" :multiple="true" :disabled="ro.cpicture" :fileUrls="ruleForm.cpicture?ruleForm.cpicture:''" @change="cpictureUploadChange"></file-upload>
+					</div>
+				</div>
+			</div>
+
+			<!-- 回复卡片 -->
+			<div class="msg-card msg-reply-card">
+				<div class="card-header reply-header">
+					<div class="reply-icon"><i class="el-icon-chat-dot-round"></i></div>
+					<div class="reply-title">管理员回复</div>
+				</div>
+				<div class="card-body">
+					<div class="reply-input-area">
+						<el-form-item prop="reply" style="margin-bottom:0;">
+							<el-input v-if="type!='info'" type="textarea" v-model="ruleForm.reply" :rows="4" placeholder="请输入回复内容..." resize="vertical"></el-input>
+							<div v-else-if="ruleForm.reply" class="reply-bubble" v-html="ruleForm.reply"></div>
+							<div v-else class="reply-empty">暂无回复</div>
 						</el-form-item>
 					</div>
-					<el-form-item prop="content">
-						<label class="msg-label">留言内容</label>
-						<div v-if="type=='msg' || type=='info'" class="msg-content-box" v-html="ruleForm.content"></div>
-						<el-input v-else type="textarea" v-model="ruleForm.content" :rows="3" placeholder="请输入留言内容..." resize="vertical"></el-input>
-					</el-form-item>
+					<div class="reply-upload" v-if="type!='info'">
+						<label class="upload-label"><i class="el-icon-picture-outline"></i> 回复图片（可选）</label>
+						<file-upload tip="点击上传" action="file/upload" :limit="3" :disabled="ro.rpicture" :multiple="true" :fileUrls="ruleForm.rpicture?ruleForm.rpicture:''" @change="rpictureUploadChange"></file-upload>
+					</div>
+					<div class="msg-images" v-else-if="ruleForm.rpicture">
+						<img v-if="ruleForm.rpicture.substring(0,4)=='http'" :src="ruleForm.rpicture.split(',')[0]" @click="imgPreView(ruleForm.rpicture.split(',')[0])">
+						<img v-else v-for="(item,index) in ruleForm.rpicture.split(',')" :key="index" :src="$base.url+item" @click="imgPreView($base.url+item)">
+					</div>
 				</div>
 			</div>
 
-			<!-- Section 2: Reply -->
-			<div class="msg-section">
-				<div class="msg-section-header"><i class="el-icon-chat-dot-round"></i><span>回复管理</span></div>
-				<div class="msg-section-body">
-					<el-form-item prop="rpicture">
-						<label class="msg-label">回复图片</label>
-						<file-upload v-if="type!='info' && !ro.rpicture" tip="点击上传回复图片" action="file/upload" :limit="3" :disabled="ro.rpicture" :multiple="true" :fileUrls="ruleForm.rpicture?ruleForm.rpicture:''" @change="rpictureUploadChange"></file-upload>
-						<div v-else-if="ruleForm.rpicture" class="msg-imgs">
-							<img v-if="ruleForm.rpicture.substring(0,4)=='http'" :src="ruleForm.rpicture.split(',')[0]" @click="imgPreView(ruleForm.rpicture.split(',')[0])">
-							<img v-else v-for="(item,index) in ruleForm.rpicture.split(',')" :key="index" :src="$base.url+item" @click="imgPreView($base.url+item)">
-						</div>
-						<div v-else class="msg-empty">无图片</div>
-					</el-form-item>
-					<el-form-item prop="reply">
-						<label class="msg-label">回复内容</label>
-						<el-input v-if="type!='info'" type="textarea" v-model="ruleForm.reply" :rows="3" placeholder="请输入回复内容..." resize="vertical"></el-input>
-						<div v-else-if="ruleForm.reply" class="msg-content-box" v-html="ruleForm.reply"></div>
-						<div v-else class="msg-empty">暂无回复</div>
-					</el-form-item>
-				</div>
-			</div>
-
-			<!-- Actions -->
+			<!-- 操作栏 -->
 			<div class="msg-actions">
 				<el-button v-if="type!='info'" class="msg-btn-submit" @click="onSubmit"><i class="el-icon-check"></i> 提交回复</el-button>
-				<el-button v-if="type!='info'" class="msg-btn-cancel" @click="back()"><i class="el-icon-close"></i> 取消</el-button>
-				<el-button v-if="type=='info'" class="msg-btn-cancel" @click="back()"><i class="el-icon-back"></i> 返回列表</el-button>
+				<el-button class="msg-btn-cancel" @click="back()"><i class="el-icon-arrow-left"></i> 返回</el-button>
 			</div>
 		</el-form>
 	</div>
@@ -308,241 +307,143 @@
 <style lang="scss" scoped>
 $accent: #0ea5e9;
 $accent2: #7c3aed;
-$bg-page: #0b1120;
-$bg-card: rgba(15,23,42,0.85);
-$bg-input: rgba(255,255,255,0.06);
-$border: rgba(100,160,220,0.12);
-$border-focus: #0ea5e9;
-$text: #e2e8f0;
+$green: #34d399;
+$bg-page: transparent;
+$bg-card: #1e293b;
+$bg-input: rgba(255,255,255,0.04);
+$border: rgba(14,165,233,0.12);
+$text: #f1f5f9;
 $text-dim: #94a3b8;
-$radius: 8px;
+$radius: 12px;
 
 .msg-form-page {
-	padding: 20px 24px 32px;
-	width: 100%;
-	background: $bg-page;
+	padding: 0;
+	max-width: 720px;
+	margin: 0 auto;
 }
 
-.msg-section {
+.msg-card {
 	background: $bg-card;
 	border: 1px solid $border;
-	border-radius: 14px;
+	border-radius: $radius;
 	margin-bottom: 16px;
 	overflow: hidden;
-	box-shadow: 0 2px 16px rgba(0,0,0,0.2);
 }
 
-.msg-section-header {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	padding: 12px 20px;
-	border-bottom: 1px solid $border;
-	background: rgba(14,165,233,0.04);
-	i { font-size: 16px; color: $accent; }
-	span { font-size: 14px; font-weight: 600; color: $text; letter-spacing: 0.5px; }
+.msg-user-card {
+	.card-header {
+		display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+		border-bottom: 1px solid rgba(255,255,255,0.04);
+	}
+	.user-avatar {
+		width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, $accent, $accent2);
+		display: flex; align-items: center; justify-content: center;
+		font-size: 18px; font-weight: 700; color: #fff; flex-shrink: 0;
+	}
+	.user-info { display: flex; flex-direction: column; }
+	.user-name { font-size: 15px; font-weight: 700; color: $text; }
+	.user-label { font-size: 12px; color: $text-dim; margin-top: 2px; }
 }
 
-.msg-section-body {
-	padding: 16px 20px;
+.card-body { padding: 16px 20px; }
+
+.msg-bubble {
+	background: rgba(14,165,233,0.06); border: 1px solid rgba(14,165,233,0.1);
+	border-radius: 4px 12px 12px 12px; padding: 14px 18px;
+	font-size: 14px; color: $text; line-height: 1.8; word-break: break-word;
+	position: relative;
 }
 
-.msg-grid-2 {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 14px 28px;
-}
-
-.msg-label {
-	display: block;
-	font-size: 13px;
-	font-weight: 500;
-	color: $text-dim;
-	margin-bottom: 8px;
-}
-
-.msg-readonly {
-	padding: 10px 14px;
-	font-size: 14px;
-	color: $text;
-	background: rgba(255,255,255,0.03);
-	border-radius: $radius;
-	border: 1px solid transparent;
-	min-height: 40px;
-	display: flex;
-	align-items: center;
-}
-
-.msg-content-box {
-	padding: 12px 16px;
-	color: $text;
-	background: rgba(255,255,255,0.03);
-	border: 1px solid $border;
-	border-radius: $radius;
-	font-size: 14px;
-	line-height: 1.7;
-	width: 100%;
-	min-height: 60px;
-	word-break: break-word;
-}
-
-.msg-imgs {
-	display: flex;
-	gap: 8px;
-	flex-wrap: wrap;
+.msg-images {
+	display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;
 	img {
-		width: 80px;
-		height: 80px;
-		object-fit: cover;
-		border-radius: 8px;
-		border: 1px solid $border;
-		cursor: pointer;
-		transition: transform 0.2s;
-		&:hover { transform: scale(1.05); }
+		width: 72px; height: 72px; object-fit: cover; border-radius: 8px;
+		border: 1px solid $border; cursor: pointer; transition: all .2s;
+		&:hover { transform: scale(1.08); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
 	}
 }
 
-.msg-empty {
-	color: rgba(148,163,184,0.5);
-	font-size: 13px;
-	padding: 8px 0;
+.msg-reply-card {
+	border-color: rgba(52,211,153,0.15);
+	.reply-header {
+		display: flex; align-items: center; gap: 10px; padding: 14px 20px;
+		border-bottom: 1px solid rgba(255,255,255,0.04);
+		background: rgba(52,211,153,0.03);
+	}
+	.reply-icon {
+		width: 32px; height: 32px; border-radius: 8px;
+		background: linear-gradient(135deg, rgba(52,211,153,0.12), rgba(52,211,153,0.06));
+		display: flex; align-items: center; justify-content: center;
+		i { font-size: 16px; color: $green; }
+	}
+	.reply-title { font-size: 14px; font-weight: 700; color: $text; }
 }
 
-.msg-form-page ::v-deep .el-form-item {
-	margin-bottom: 14px;
+.reply-input-area { margin-bottom: 12px; }
+
+.reply-bubble {
+	background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.12);
+	border-radius: 12px 4px 12px 12px; padding: 14px 18px;
+	font-size: 14px; color: $text; line-height: 1.8; word-break: break-word;
 }
-.msg-form-page ::v-deep .el-form-item__label {
-	display: none;
+
+.reply-empty { color: rgba(148,163,184,0.4); font-size: 13px; padding: 10px 0; font-style: italic; }
+
+.reply-upload {
+	.upload-label { display: flex; align-items: center; gap: 4px; font-size: 12px; color: $text-dim; margin-bottom: 8px; font-weight: 500; }
 }
-.msg-form-page ::v-deep .el-form-item__content {
-	margin-left: 0 !important;
-}
+
+.msg-form-page ::v-deep .el-form-item { margin-bottom: 0; }
+.msg-form-page ::v-deep .el-form-item__label { display: none; }
+.msg-form-page ::v-deep .el-form-item__content { margin-left: 0 !important; }
 
 .msg-form-page .el-textarea ::v-deep .el-textarea__inner {
-	border: 1px solid $border;
-	border-radius: $radius;
-	padding: 12px 16px;
-	color: $text;
-	background: $bg-input;
-	width: 100%;
-	font-size: 14px;
-	line-height: 1.7;
-	font-family: inherit;
-	resize: vertical;
-	min-height: 80px;
-	transition: border-color 0.25s, box-shadow 0.25s;
-	&:focus {
-		border-color: $border-focus;
-		box-shadow: 0 0 0 3px rgba(14,165,233,0.1);
-	}
-	&::placeholder { color: rgba(148,163,184,0.5); }
+	border: 1px solid $border; border-radius: 10px; padding: 14px 16px;
+	color: $text; background: $bg-input; width: 100%;
+	font-size: 14px; line-height: 1.7; font-family: inherit; resize: vertical; min-height: 100px;
+	transition: border-color .25s, box-shadow .25s;
+	&:focus { border-color: $green; box-shadow: 0 0 0 3px rgba(52,211,153,0.08); }
+	&::placeholder { color: rgba(148,163,184,0.4); }
 }
 
-.msg-form-page ::v-deep .el-upload--picture-card {
-	background: transparent;
-	border: 0;
-	border-radius: 0;
-	width: auto;
-	height: auto;
-	line-height: initial;
-}
+.msg-form-page ::v-deep .el-upload--picture-card { background: transparent; border: 0; border-radius: 0; width: auto; height: auto; line-height: initial; }
 .msg-form-page ::v-deep .el-upload .el-icon-plus {
-	border: 1px dashed rgba(14,165,233,0.25);
-	border-radius: 8px;
-	color: $accent;
-	font-size: 24px;
-	width: 72px;
-	height: 72px;
-	line-height: 72px;
-	text-align: center;
-	background: rgba(14,165,233,0.03);
-	transition: all 0.25s;
-	&:hover { border-color: $accent; background: rgba(14,165,233,0.08); }
+	border: 1px dashed rgba(52,211,153,0.3); border-radius: 8px; color: $green;
+	font-size: 20px; width: 56px; height: 56px; line-height: 56px; text-align: center;
+	background: rgba(52,211,153,0.03); transition: all .25s;
+	&:hover { border-color: $green; background: rgba(52,211,153,0.08); }
 }
-.msg-form-page ::v-deep .el-upload-list .el-upload-list__item {
-	border: 1px solid $border;
-	border-radius: 8px;
-	width: 72px;
-	height: 72px;
-}
-.msg-form-page ::v-deep .el-upload__tip {
-	color: $text-dim;
-	font-size: 12px;
-	padding-top: 4px;
-}
+.msg-form-page ::v-deep .el-upload-list .el-upload-list__item { border: 1px solid $border; border-radius: 8px; width: 56px; height: 56px; }
+.msg-form-page ::v-deep .el-upload__tip { color: $text-dim; font-size: 11px; padding-top: 2px; }
 .msg-form-page ::v-deep .el-upload-dragger {
-	color: $text-dim;
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: center;
-	border: 1px dashed rgba(14,165,233,0.2);
-	border-radius: $radius;
-	background: rgba(14,165,233,0.02);
-	width: 100%;
-	height: 80px;
-	transition: all 0.25s;
-	&:hover { border-color: $accent; background: rgba(14,165,233,0.05); }
+	color: $text-dim; display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+	border: 1px dashed rgba(52,211,153,0.2); border-radius: 8px; background: rgba(52,211,153,0.02);
+	width: 100%; height: 64px; transition: all .25s;
+	&:hover { border-color: $green; background: rgba(52,211,153,0.05); }
 }
-.msg-form-page ::v-deep .el-upload-dragger .el-icon-upload {
-	margin: 0;
-	color: $accent;
-	width: 100%;
-	font-size: 32px;
-	opacity: 0.5;
-}
-.msg-form-page ::v-deep .el-upload-dragger .el-upload__text {
-	color: $text-dim;
-	text-align: center;
-	width: 100%;
-	font-size: 12px;
-	line-height: 1;
-	em { font-style: normal; color: $accent; }
-}
+.msg-form-page ::v-deep .el-upload-dragger .el-icon-upload { margin: 0; color: $green; width: 100%; font-size: 28px; opacity: 0.5; }
+.msg-form-page ::v-deep .el-upload-dragger .el-upload__text { color: $text-dim; text-align: center; width: 100%; font-size: 11px; line-height: 1; em { font-style: normal; color: $green; } }
 
 .msg-actions {
-	display: flex;
-	justify-content: center;
-	gap: 16px;
-	padding: 12px 0 8px;
-	position: sticky;
-	bottom: 0;
-	background: $bg-page;
-	z-index: 10;
-	border-top: 1px solid $border;
-	margin: 0 -24px;
-	padding-left: 24px;
-	padding-right: 24px;
+	display: flex; justify-content: center; gap: 12px; padding: 16px 0 0;
 }
 
 .msg-btn-submit {
-	border: none !important;
-	padding: 0 40px !important;
-	color: #fff !important;
-	font-weight: 600;
-	font-size: 15px !important;
-	border-radius: 24px !important;
+	border: none !important; padding: 0 36px !important; color: #fff !important;
+	font-weight: 600; font-size: 14px !important; border-radius: 22px !important;
 	background: linear-gradient(135deg, $accent, $accent2) !important;
-	min-width: 140px;
-	height: 44px !important;
-	box-shadow: 0 2px 12px rgba(14,165,233,0.25);
-	transition: all 0.3s;
-	i { margin-right: 6px; }
-	&:hover { box-shadow: 0 6px 20px rgba(14,165,233,0.35); transform: translateY(-2px); }
+	min-width: 130px; height: 40px !important;
+	box-shadow: 0 2px 12px rgba(14,165,233,0.2); transition: all .3s;
+	i { margin-right: 5px; }
+	&:hover { box-shadow: 0 6px 20px rgba(14,165,233,0.3); transform: translateY(-1px); }
 }
 
 .msg-btn-cancel {
-	border: 1px solid $border !important;
-	padding: 0 40px !important;
-	color: $text-dim !important;
-	font-weight: 600;
-	font-size: 15px !important;
-	border-radius: 24px !important;
-	background: transparent !important;
-	min-width: 140px;
-	height: 44px !important;
-	transition: all 0.3s;
-	i { margin-right: 6px; }
-	&:hover { border-color: $accent !important; color: $text !important; background: rgba(14,165,233,0.04) !important; }
+	border: 1px solid $border !important; padding: 0 36px !important;
+	color: $text-dim !important; font-weight: 600; font-size: 14px !important;
+	border-radius: 22px !important; background: transparent !important;
+	min-width: 100px; height: 40px !important; transition: all .3s;
+	i { margin-right: 5px; }
+	&:hover { border-color: $accent !important; color: $text !important; }
 }
 </style>

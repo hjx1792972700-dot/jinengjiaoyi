@@ -88,7 +88,7 @@
 					<el-input v-model="ruleForm.shoujihao" placeholder="手机号" readonly></el-input>
 				</el-form-item>
 				<el-form-item class="select" v-if="type!='info'" label="VIP会员" prop="vip">
-				<el-select v-model="ruleForm.vip" placeholder="请选择">
+				<el-select v-model="ruleForm.vip" placeholder="请选择" @change="onVipChange">
 					<el-option label="是" value="是"></el-option>
 					<el-option label="否" value="否"></el-option>
 				</el-select>
@@ -96,17 +96,17 @@
 			<el-form-item v-else class="input" label="VIP会员" prop="vip">
 				<el-input v-model="ruleForm.vip" placeholder="VIP会员" readonly></el-input>
 			</el-form-item>
-			<el-form-item class="date" v-if="type!='info'" label="VIP到期时间" prop="vipExpire">
+			<el-form-item class="date" v-if="type!='info' && ruleForm.vip=='是'" label="VIP到期时间" prop="vipExpire">
 				<el-date-picker
-					format="YYYY 年 MM 月 DD 日"
-					value-format="YYYY-MM-DD"
+					format="yyyy 年 MM 月 dd 日"
+					value-format="yyyy-MM-dd HH:mm:ss"
 					v-model="ruleForm.vipExpire"
 					type="date"
 					placeholder="VIP到期时间"
 				></el-date-picker>
 			</el-form-item>
-			<el-form-item v-else class="input" label="VIP到期时间" prop="vipExpire">
-				<el-input v-model="ruleForm.vipExpire" placeholder="VIP到期时间" readonly></el-input>
+			<el-form-item v-else-if="type=='info' && ruleForm.vip=='是'" class="input" label="VIP到期时间" prop="vipExpire">
+				<el-input :value="formatDate(ruleForm.vipExpire)" placeholder="VIP到期时间" readonly></el-input>
 			</el-form-item>
 			<el-form-item class="upload" v-if="type!='info' && !ro.touxiang" label="头像" prop="touxiang" >
 					<file-upload
@@ -198,6 +198,8 @@
 					xinyuzhishu: 80,
 					shoujihao: '',
 					touxiang: '',
+					vip: '否',
+					vipExpire: '',
 					sfsh: '待审核',
 					shhf: '',
 				},
@@ -349,12 +351,18 @@
 					method: "get"
 				}).then(({ data }) => {
 					if (data && data.code === 0) {
-						this.ruleForm = data.data;
-						if (this.ruleForm.xinyuzhishu != null) {
-							let v = parseInt(this.ruleForm.xinyuzhishu)
-							this.ruleForm.xinyuzhishu = isNaN(v) ? 80 : v
+						var d = data.data;
+						if (d.xinyuzhishu != null) {
+							let v = parseInt(d.xinyuzhishu)
+							d.xinyuzhishu = isNaN(v) ? 80 : v
 						}
-						let reg=new RegExp('../../../upload','g')
+						if (d.vipExpire && d.vipExpire.length === 10) {
+							d.vipExpire = d.vipExpire + ' 00:00:00';
+						}
+						if (!d.vip) {
+							d.vip = '否';
+						}
+						this.ruleForm = Object.assign({}, this.ruleForm, d);
 					} else {
 						this.$message.error(data.msg);
 					}
@@ -365,6 +373,9 @@
 			async onSubmit() {
 				if(this.ruleForm.touxiang!=null) {
 					this.ruleForm.touxiang = this.ruleForm.touxiang.split(',').map(u => u.replace(/^\/+/, '')).join(',');
+				}
+				if(this.ruleForm.vip === '否' || !this.ruleForm.vipExpire) {
+					this.ruleForm.vipExpire = null;
 				}
 					var objcross = this.$storage.getObj('crossObj');
 					if(!this.ruleForm.id) {
@@ -425,6 +436,15 @@
 				this.parent.showFlag = true;
 				this.parent.addOrUpdateFlag = false;
 				this.parent.yonghuCrossAddOrUpdateFlag = false;
+			},
+			onVipChange(val) {
+				if (val === '否') {
+					this.ruleForm.vipExpire = '';
+				}
+			},
+			formatDate(dateStr) {
+				if (!dateStr) return '';
+				return dateStr.substring(0, 10);
 			},
 			touxiangUploadChange(fileUrls) {
 				this.ruleForm.touxiang = fileUrls;

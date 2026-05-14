@@ -156,18 +156,18 @@
 			<el-form-item v-else-if="ruleForm.xuqiumiaoshu" label="需求描述" prop="xuqiumiaoshu"  class="textBox">
 				<span class="text">{{ruleForm.xuqiumiaoshu}}</span>
 			</el-form-item>
-			<el-form-item v-if="type!='info'" class="editorBox" label="需求详情" prop="xuqiuxiangqing" >
-				<editor 
-					style="min-width: 200px; max-width: 600px;"
-					v-model="ruleForm.xuqiuxiangqing" 
-					class="editor"
-					myQuillEditor="xuqiuxiangqing"
-					action="file/upload">
-				</editor>
-			</el-form-item>
-			<el-form-item v-else-if="ruleForm.xuqiuxiangqing" label="需求详情" prop="xuqiuxiangqing"  class="textBox">
-				<span class="text ql-snow ql-editor" v-html="ruleForm.xuqiuxiangqing"></span>
-			</el-form-item>
+		<el-form-item v-if="type!='info'" class="textarea" label="需求详情" prop="xuqiuxiangqing" >
+			<el-input
+				style="min-width: 200px; max-width: 600px;"
+				type="textarea"
+				:rows="8"
+				placeholder="需求详情"
+				v-model="ruleForm.xuqiuxiangqing">
+			</el-input>
+		</el-form-item>
+		<el-form-item v-else-if="ruleForm.xuqiuxiangqing" label="需求详情" prop="xuqiuxiangqing"  class="textBox">
+			<span class="text">{{ruleForm.xuqiuxiangqing}}</span>
+		</el-form-item>
 			<el-form-item class="btn">
 				<el-button class="btn3"  v-if="type!='info'" type="success" @click="onSubmit">
 					<span class="icon iconfont icon-queren15"></span>

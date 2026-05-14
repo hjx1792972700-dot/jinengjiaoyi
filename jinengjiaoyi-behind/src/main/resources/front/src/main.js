@@ -18,7 +18,6 @@ import {
 import App from './App.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
 import FileUpload from '@/components/FileUpload.vue'
-import Editor from '@/components/Editor.vue'
 
 const app = createApp(App)
 
@@ -41,6 +40,5 @@ app.use(ElementPlus)
 
 app.component('Breadcrumb', Breadcrumb)
 app.component('file-upload', FileUpload)
-app.component('editor', Editor)
 
 app.mount('#app')

@@ -3,25 +3,10 @@
 		<!-- 顶部概览 + 操作区 -->
 		<div class="top-bar">
 			<div class="stat-chips">
-				<div class="chip" :class="{active: filterStatus==='all'}" @click="filterStatus='all'; getList()">
+				<div class="chip active">
 					<i class="el-icon-grid"></i>
-					<span class="chip-label">全部</span>
+					<span class="chip-label">全部帖子</span>
 					<span class="chip-num">{{stats.total}}</span>
-				</div>
-				<div class="chip" :class="{active: filterStatus==='待审核'}" @click="filterStatus='待审核'; getList()">
-					<i class="el-icon-time"></i>
-					<span class="chip-label">待审核</span>
-					<span class="chip-num">{{stats.pending}}</span>
-				</div>
-				<div class="chip" :class="{active: filterStatus==='是'}" @click="filterStatus='是'; getList()">
-					<i class="el-icon-circle-check"></i>
-					<span class="chip-label">已通过</span>
-					<span class="chip-num">{{stats.approved}}</span>
-				</div>
-				<div class="chip" :class="{active: filterStatus==='否'}" @click="filterStatus='否'; getList()">
-					<i class="el-icon-circle-close"></i>
-					<span class="chip-label">未通过</span>
-					<span class="chip-num">{{stats.rejected}}</span>
 				</div>
 			</div>
 			<button class="publish-btn" type="button" @click="publishPost">
@@ -56,9 +41,6 @@
 				<div class="post-body">
 					<div class="post-top">
 						<h3 class="post-title">{{item.title || '未命名帖子'}}</h3>
-						<span class="status-tag" :class="item.sfsh==='是' ? 'st-pass' : (item.sfsh==='否' ? 'st-fail' : 'st-wait')">
-							{{item.sfsh==='是' ? '已通过' : (item.sfsh==='否' ? '未通过' : '待审核')}}
-						</span>
 					</div>
 					<p class="post-excerpt" v-if="item.content">{{stripHtml(item.content)}}</p>
 					<div class="post-meta">
@@ -74,7 +56,7 @@
 						</div>
 						<div class="post-actions" @click.stop>
 							<button class="act-btn act-view" type="button" @click="toDetail(item)"><i class="el-icon-view"></i>查看</button>
-							<button class="act-btn act-edit" type="button" v-if="item.sfsh!=='是'" @click="handleEdit(item)"><i class="el-icon-edit"></i>修改</button>
+							<button class="act-btn act-edit" type="button" @click="handleEdit(item)"><i class="el-icon-edit"></i>修改</button>
 							<button class="act-btn act-del" type="button" @click="handleDelete(item)"><i class="el-icon-delete"></i>删除</button>
 						</div>
 					</div>
@@ -110,23 +92,14 @@ export default {
 		getList() {
 			this.loading = true;
 			let params = { page: this.page, limit: this.pageSize, parentid: 0, sort: 'addtime', order: 'desc' };
-			if (this.filterStatus !== 'all') params.sfsh = this.filterStatus;
 			this.$http.get('forum/page', { params }).then(res => {
 				this.loading = false;
 				if (res.data.code == 0) {
 					this.tableData = res.data.data.list;
 					this.total = Number(res.data.data.total);
+					this.stats.total = this.total;
 				}
 			}).catch(() => { this.loading = false; });
-			this.$http.get('forum/page', { params: { page: 1, limit: 999, parentid: 0 } }).then(res => {
-				if (res.data.code == 0) {
-					let ls = res.data.data.list || [];
-					this.stats.total = ls.length;
-					this.stats.pending = ls.filter(i => i.sfsh === '待审核' || !i.sfsh).length;
-					this.stats.approved = ls.filter(i => i.sfsh === '是').length;
-					this.stats.rejected = ls.filter(i => i.sfsh === '否').length;
-				}
-			});
 		},
 		pageChange(v) { this.page = v; this.getList(); },
 		publishPost() {
@@ -258,14 +231,6 @@ $glass-border: rgba(255,255,255,0.06);
 	line-height: 1.4; transition: color 0.25s;
 	overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.status-tag {
-	font-size: 11px; padding: 3px 10px; border-radius: 10px; flex-shrink: 0;
-	font-weight: 500; letter-spacing: 0.3px;
-	&.st-pass { background: rgba($green, 0.1); color: $green; }
-	&.st-wait { background: rgba($amber, 0.1); color: $amber; }
-	&.st-fail { background: rgba($red, 0.1); color: $red; }
-}
-
 .post-excerpt {
 	font-size: 13px; color: $text3; line-height: 1.6; margin: 0 0 10px;
 	overflow: hidden; text-overflow: ellipsis;

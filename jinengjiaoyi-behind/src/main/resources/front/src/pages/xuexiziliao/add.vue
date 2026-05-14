@@ -97,14 +97,14 @@
 					placeholder="发布时间">
 				</el-date-picker> 
 			</el-form-item>
-			<el-form-item class="add-item" label="资料详情" prop="ziliaoxiangqing">
-				<editor 
-					v-model="ruleForm.ziliaoxiangqing" 
-					class="editor" 
-					myQuillEditor="ziliaoxiangqing"
-					action="file/upload">
-				</editor>
-			</el-form-item>
+		<el-form-item class="add-item" label="资料详情" prop="ziliaoxiangqing">
+			<el-input
+				type="textarea"
+				:rows="8"
+				v-model="ruleForm.ziliaoxiangqing"
+				placeholder="资料详情">
+			</el-input>
+		</el-form-item>
 
 			<el-form-item class="add-btn-item">
 				<el-button class="submitBtn"  type="primary" @click="onSubmit(null)">
@@ -164,7 +164,6 @@
 					ziliaofengmian: [
 					],
 					ziliaoshipin: [
-						{ required: true, message: '资料视频不能为空', trigger: 'blur' },
 					],
 					ziliaofujian: [
 						{ required: true, message: '资料附件不能为空', trigger: 'blur' },

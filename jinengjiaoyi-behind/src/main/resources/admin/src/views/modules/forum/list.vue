@@ -10,8 +10,8 @@
 					<el-input v-model="searchForm.title" placeholder="帖子标题" @keydown.enter="search()" clearable size="small"></el-input>
 				</div>
 				<div class="search-actions">
-					<el-button class="btn-primary" size="small" :icon="Search" @click="search()">查询</el-button>
-					<el-button class="btn-plain" size="small" :icon="Refresh" @click="searchForm.title='';search()">重置</el-button>
+					<el-button class="btn-primary" size="small" icon="el-icon-search" @click="search()">查询</el-button>
+					<el-button class="btn-plain" size="small" icon="el-icon-refresh" @click="searchForm.title='';search()">重置</el-button>
 				</div>
 			</div>
 			<div class="admin-actions" v-if="forumChild">
@@ -22,7 +22,7 @@
 
 			<div class="admin-actions" v-if="!forumChild">
 				<div class="action-left">
-					<el-button class="btn-primary" size="small" :icon="Plus" v-if="isAuth('forum','新增')" @click="addOrUpdateHandler()">新增</el-button>
+					<el-button class="btn-primary" size="small" icon="el-icon-plus" v-if="isAuth('forum','新增')" @click="addOrUpdateHandler()">新增</el-button>
 				</div>
 			</div>
 
@@ -32,7 +32,7 @@
 					:data="dataList"
 					v-loading="dataListLoading"
 					style="width:100%">
-				<el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
+				<el-table-column type="index" :index="indexMethod" label="序号" width="55" align="center"></el-table-column>
 			<el-table-column v-if="!forumChild" :resizable='true' prop="cover" width="80" label="封面">
 					<template #default="scope">
 						<div v-if="scope.row.cover">
@@ -81,9 +81,10 @@
 				</template>
 			</el-table-column>
 					
-				<el-table-column width="80" label="操作" align="center">
+				<el-table-column width="130" label="操作" align="center">
 					<template #default="scope">
-						<el-button size="small" v-if="!forumChild" type="danger" plain @click="deleteHandler(scope.row.id)">删除</el-button>
+						<el-button size="mini" v-if="!forumChild" type="success" plain @click="viewDetail(scope.row)">查看</el-button>
+						<el-button size="mini" v-if="!forumChild" type="danger" plain @click="deleteHandler(scope.row.id)">删除</el-button>
 					</template>
 				</el-table-column>
 				</el-table>
@@ -104,12 +105,58 @@
 				></el-pagination>
 			</div>
 		</template>
+		<!-- 帖子详情页 -->
+		<template v-if="detailFlag">
+			<div class="forum-detail-page">
+				<div class="detail-top-bar">
+					<el-button class="back-btn" size="small" @click="closeDetail">
+						<i class="el-icon-arrow-left"></i> 返回列表
+					</el-button>
+					<div class="top-bar-right">
+						<span class="type-badge" v-if="detailData.typename">{{detailData.typename}}</span>
+						<span class="anon-badge" v-if="detailData.isanon==1">匿名发布</span>
+					</div>
+				</div>
+
+				<div class="detail-hero">
+					<div class="hero-cover" v-if="detailData.cover">
+						<img v-if="detailData.cover.substring(0,4)=='http'" :src="detailData.cover.split(',')[0]" />
+						<img v-else :src="$base.url + detailData.cover.split(',')[0]" />
+					</div>
+					<div class="hero-info">
+						<h1 class="hero-title">{{detailData.title}}</h1>
+						<div class="hero-meta">
+							<div class="author-row">
+								<div class="author-avatar">{{(detailData.isanon==1 ? '匿' : (detailData.username||'?').substring(0,1))}}</div>
+								<div class="author-info">
+									<div class="author-name">{{detailData.isanon==1 ? '匿名用户' : detailData.username}}</div>
+									<div class="author-time">{{detailData.addtime || '--'}}</div>
+								</div>
+							</div>
+						</div>
+						<div class="hero-stats">
+							<div class="stat-item stat-like"><i class="el-icon-thumb"></i><span>{{detailData.thumbsupnum||0}}</span><label>点赞</label></div>
+							<div class="stat-item stat-dislike"><i class="el-icon-bottom"></i><span>{{detailData.crazilynum||0}}</span><label>踩</label></div>
+							<div class="stat-item stat-star"><i class="el-icon-star-on"></i><span>{{detailData.storeupnum||0}}</span><label>收藏</label></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="detail-content-card" v-if="detailData.content">
+					<div class="content-header">
+						<div class="content-icon"><i class="el-icon-document"></i></div>
+						<span>帖子正文</span>
+					</div>
+					<div class="content-body ql-snow ql-editor" v-html="detailData.content"></div>
+				</div>
+			</div>
+		</template>
 		<!-- 添加/修改页面  将父组件的search方法传递给子组件-->
 		<add-or-update v-if="addOrUpdateFlag" :parent="this" ref="addOrUpdate"></add-or-update>
 
 
 		
-		<el-dialog :title="batchIds.length > 1 ? '批量审核' : '审核'" v-model="sfshBatchVisiable" width="480px" :close-on-click-modal="false">
+		<el-dialog :title="batchIds.length > 1 ? '批量审核' : '审核'" :visible.sync="sfshBatchVisiable" width="480px" :close-on-click-modal="false">
 			<el-form ref="shBatchForm" :model="shBatchForm" :rules="shRules" label-width="80px">
 				<el-form-item label="审核状态" prop="sfsh">
 					<el-select v-model="shBatchForm.sfsh" placeholder="审核状态">
@@ -132,7 +179,7 @@
 
 
 
-		<el-dialog title="预览图" v-model="previewVisible" width="480px" :close-on-click-modal="false">
+		<el-dialog title="预览图" :visible.sync="previewVisible" width="480px" :close-on-click-modal="false">
 			<img :src="previewImg" alt="" style="width: 100%;">
 		</el-dialog>
 	</div>
@@ -143,7 +190,6 @@
 	import chinaJson from "@/components/echarts/china.json";
 	import axios from 'axios';
 	import AddOrUpdate from "./add-or-update.vue";
-	import { Plus, Search, Refresh } from '@element-plus/icons-vue';
 	export default {
 		data() {
 			return {
@@ -159,11 +205,13 @@
 				parentid: 0,
 				dataList: [],
 				pageIndex: 1,
-				pageSize: 15,
+				pageSize: 7,
 				totalPage: 0,
 				dataListLoading: false,
 				dataListSelections: [],
 				showFlag: true,
+				detailFlag: false,
+				detailData: {},
 				sfshVisiable: false,
 				shForm: {},
 				sfshBatchVisiable: false,
@@ -202,11 +250,7 @@
 			},
 		},
 		components: {
-			AddOrUpdate,
-			Plus,
-			Search,
-			Refresh,
-		},
+			AddOrUpdate},
 		methods: {
 			htmlfilter(val) {
 				return String(val == null ? '' : val).replace(/<[^>]*>/g, '').replace(/undefined/g, '');
@@ -236,6 +280,9 @@
 						this.$message.error(data.msg);
 					}
 				});
+			},
+			indexMethod(index) {
+				return (this.pageIndex - 1) * this.pageSize + index + 1;
 			},
 			search(id,flag) {
 				if(id!='' && id!=undefined) {
@@ -382,6 +429,19 @@
 					}
 				})
 			},
+			viewDetail(row) {
+				this.$http({ url: `forum/info/${row.id}`, method: 'get' }).then(({ data }) => {
+					if (data && data.code === 0) {
+						this.detailData = data.data;
+						this.showFlag = false;
+						this.detailFlag = true;
+					}
+				});
+			},
+			closeDetail() {
+				this.detailFlag = false;
+				this.showFlag = true;
+			},
 			// 删除
 			async deleteHandler(id ) {
 				var ids = id? [Number(id)]: this.dataListSelections.map(item => {
@@ -437,4 +497,60 @@
 }
 .clear-float { clear: both; }
 .noList { color: #64748b; width: 100%; text-align: center; padding: 60px 0; }
+
+$primary: #38bdf8;
+$accent: #6d5cfc;
+$green: #34d399;
+$border: rgba(14,165,233,0.15);
+$card-bg: #1e293b;
+$bg: #0f172a;
+
+.forum-detail-page {
+	display: flex; flex-direction: column; gap: 16px;
+}
+.detail-top-bar {
+	display: flex; justify-content: space-between; align-items: center;
+	.back-btn { border-radius: 20px; border: 1px solid $border; color: #cbd5e1; font-size: 12px; padding: 6px 16px; background: transparent; transition: all .2s; &:hover { color: $primary; border-color: $primary; background: rgba(56,189,248,0.05); } }
+	.top-bar-right { display: flex; gap: 8px; align-items: center; }
+	.type-badge { padding: 4px 14px; border-radius: 14px; font-size: 12px; font-weight: 600; background: linear-gradient(135deg, rgba(0,180,216,0.12), rgba(109,92,252,0.1)); color: #7dd3fc; border: 1px solid rgba(0,180,216,0.25); }
+	.anon-badge { padding: 4px 12px; border-radius: 14px; font-size: 11px; font-weight: 600; background: rgba(148,163,184,0.1); color: #94a3b8; border: 1px solid rgba(148,163,184,0.2); }
+}
+.detail-hero {
+	display: flex; gap: 20px; background: $card-bg; border-radius: 14px; border: 1px solid $border; overflow: hidden;
+	.hero-cover {
+		width: 280px; min-height: 200px; flex-shrink: 0; overflow: hidden; position: relative;
+		img { width: 100%; height: 100%; object-fit: cover; display: block; }
+		&::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 70%, rgba(30,41,59,0.6)); }
+	}
+	.hero-info { flex: 1; padding: 24px 24px 24px 0; display: flex; flex-direction: column; justify-content: center; }
+}
+.hero-title { font-size: 22px; font-weight: 800; color: #f1f5f9; margin: 0 0 16px 0; line-height: 1.4; }
+.hero-meta {
+	margin-bottom: 20px;
+	.author-row { display: flex; align-items: center; gap: 12px; }
+	.author-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, $primary, $accent); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0; }
+	.author-info { display: flex; flex-direction: column; }
+	.author-name { font-size: 14px; font-weight: 600; color: #e2e8f0; }
+	.author-time { font-size: 12px; color: #64748b; margin-top: 2px; }
+}
+.hero-stats {
+	display: flex; gap: 20px;
+	.stat-item { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 10px; background: $bg; border: 1px solid $border;
+		i { font-size: 16px; } span { font-size: 16px; font-weight: 700; color: #f1f5f9; } label { font-size: 11px; color: #64748b; }
+		&.stat-like { i { color: $primary; } }
+		&.stat-dislike { i { color: #f87171; } }
+		&.stat-star { i { color: #fbbf24; } }
+	}
+}
+.detail-content-card {
+	background: $card-bg; border-radius: 14px; border: 1px solid $border; overflow: hidden;
+	.content-header { display: flex; align-items: center; gap: 10px; padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.04);
+		.content-icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(109,92,252,0.08)); display: flex; align-items: center; justify-content: center; i { font-size: 16px; color: $primary; } }
+		span { font-size: 15px; font-weight: 700; color: #e2e8f0; }
+	}
+	.content-body { padding: 24px; font-size: 14px; color: #cbd5e1; line-height: 2; min-height: 100px;
+		img { max-width: 100%; border-radius: 8px; margin: 10px 0; }
+		p { margin: 0 0 12px 0; }
+	}
+}
 </style>

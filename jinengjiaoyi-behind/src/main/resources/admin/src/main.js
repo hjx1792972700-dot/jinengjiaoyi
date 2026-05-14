@@ -22,7 +22,6 @@ import {
 } from '@/utils/utils'
 import storage from '@/utils/storage'
 import FileUpload from '@/components/common/FileUpload.vue'
-import Editor from '@/components/common/Editor.vue'
 import api from '@/utils/api'
 import * as validate from '@/utils/validate.js'
 
@@ -52,7 +51,6 @@ app.use(store)
 
 app.component('bread-crumbs', BreadCrumbs)
 app.component('file-upload', FileUpload)
-app.component('editor', Editor)
 
 app.mixin({
 	mounted() {

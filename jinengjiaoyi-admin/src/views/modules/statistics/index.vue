@@ -5,7 +5,7 @@
 		</div>
 
 		<div class="summary-cards">
-			<div class="summary-card card-blue" v-if="isAuth('yonghu','首页总数')">
+			<div class="summary-card card-blue" v-if="isAuth('yonghu','首页总数')" @click="$router.push('/yonghu')">
 				<div class="card-glow"></div>
 				<div class="card-icon"><i class="el-icon-user-solid"></i></div>
 				<div class="card-info">
@@ -15,7 +15,7 @@
 				</div>
 				<div class="card-deco"><i class="el-icon-user-solid"></i></div>
 			</div>
-			<div class="summary-card card-purple" v-if="isAuth('jinengfenlei','首页总数')">
+			<div class="summary-card card-purple" v-if="isAuth('jinengfenlei','首页总数')" @click="$router.push('/jinengfenlei')">
 				<div class="card-glow"></div>
 				<div class="card-icon"><i class="el-icon-menu"></i></div>
 				<div class="card-info">
@@ -25,7 +25,7 @@
 				</div>
 				<div class="card-deco"><i class="el-icon-menu"></i></div>
 			</div>
-			<div class="summary-card card-cyan" v-if="isAuth('jinengxuqiu','首页总数')">
+			<div class="summary-card card-cyan" v-if="isAuth('jinengxuqiu','首页总数')" @click="$router.push('/jinengxuqiu')">
 				<div class="card-glow"></div>
 				<div class="card-icon"><i class="el-icon-s-goods"></i></div>
 				<div class="card-info">
@@ -35,7 +35,7 @@
 				</div>
 				<div class="card-deco"><i class="el-icon-s-goods"></i></div>
 			</div>
-			<div class="summary-card card-green" v-if="isAuth('jiaohuanjilu','首页总数')">
+			<div class="summary-card card-green" v-if="isAuth('jiaohuanjilu','首页总数')" @click="$router.push('/jiaohuanjilu')">
 				<div class="card-glow"></div>
 				<div class="card-icon"><i class="el-icon-s-promotion"></i></div>
 				<div class="card-info">
@@ -45,7 +45,7 @@
 				</div>
 				<div class="card-deco"><i class="el-icon-s-promotion"></i></div>
 			</div>
-			<div class="summary-card card-pink" v-if="isAuth('xuexiziliao','首页总数')">
+			<div class="summary-card card-pink" v-if="isAuth('xuexiziliao','首页总数')" @click="$router.push('/xuexiziliao')">
 				<div class="card-glow"></div>
 				<div class="card-icon"><i class="el-icon-notebook-2"></i></div>
 				<div class="card-info">
@@ -110,7 +110,6 @@ export default {
 			const apis = [
 				{ key: 'yonghu', url: 'yonghu/count' },
 				{ key: 'fenlei', url: 'jinengfenlei/count' },
-				{ key: 'xuqiu', url: 'jinengxuqiu/count' },
 				{ key: 'jiaohuan', url: 'jiaohuanjilu/count' },
 				{ key: 'ziliao', url: 'xuexiziliao/count' },
 			]
@@ -118,6 +117,9 @@ export default {
 				this.$http({ url: item.url, method: 'get' }).then(({ data }) => {
 					if (data && data.code == 0) this.counts[item.key] = data.data
 				})
+			})
+			this.$http({ url: 'jinengxuqiu/page', method: 'get', params: { page: 1, limit: 1, sfsh: '是', leixing: '技能' } }).then(({ data }) => {
+				if (data && data.code === 0) this.counts.xuqiu = data.data.total
 			})
 		},
 		loadAllCharts() {
@@ -271,7 +273,7 @@ $radius: 12px;
 		align-items: center;
 		gap: 16px;
 		transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-		cursor: default;
+		cursor: pointer;
 		border: 1px solid transparent;
 
 		&:hover {

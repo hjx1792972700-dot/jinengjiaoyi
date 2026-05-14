@@ -98,12 +98,7 @@
 				</el-date-picker> 
 			</el-form-item>
 			<el-form-item class="add-item" label="资料详情" prop="ziliaoxiangqing">
-				<editor 
-					v-model="ruleForm.ziliaoxiangqing" 
-					class="editor" 
-					myQuillEditor="ziliaoxiangqing"
-					action="file/upload">
-				</editor>
+				<el-input type="textarea" v-model="ruleForm.ziliaoxiangqing" placeholder="详细描述资料内容" :rows="6" maxlength="2000" show-word-limit resize="vertical"></el-input>
 			</el-form-item>
 
 			<el-form-item class="add-btn-item">
@@ -164,7 +159,6 @@
 					ziliaofengmian: [
 					],
 					ziliaoshipin: [
-						{ required: true, message: '资料视频不能为空', trigger: 'blur' },
 					],
 					ziliaofujian: [
 						{ required: true, message: '资料附件不能为空', trigger: 'blur' },
@@ -611,18 +605,11 @@
 					border-style: solid;
 					height: auto;
 				}
-				.editor ::v-deep .ql-toolbar {
-					border: 1px solid #eee;
-					background: none;
-					border-width: 1px 1px 0;
-				}
-				.editor ::v-deep .ql-container {
-					border: 1px solid #eee;
-					background: none;
-					min-height: 180px;
-				}
-				.editor ::v-deep .ql-container .ql-blank::before {
-					color: #999;
+				::v-deep .el-textarea__inner {
+					min-height: 120px;
+					border-radius: 8px;
+					font-size: 13px;
+					line-height: 1.7;
 				}
 				.upload-img {
 					object-fit: cover;

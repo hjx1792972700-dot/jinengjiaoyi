@@ -53,9 +53,8 @@
 					<div v-for="(item,index) in dataList" :key="index" class="list-item" @click.stop="toDetail(item)" >
 						<div class="card-inner">
 							<div class="imgbox">
-								<img v-if="item.gongjitupian && item.gongjitupian.substr(0,4)=='http'&&item.gongjitupian.split(',w').length>1" :src="item.gongjitupian" class="image" />
-								<img v-else-if="item.gongjitupian && item.gongjitupian.substr(0,4)=='http'" :src="item.gongjitupian.split(',')[0]" class="image" />
-								<img v-else :src="baseUrl + (item.gongjitupian?item.gongjitupian.split(',')[0]:'')" class="image" />
+								<img v-if="item.gongjitupian && item.gongjitupian.substr(0,4)=='http'" :src="item.gongjitupian.split(',')[0]" class="image" />
+								<img v-else-if="item.gongjitupian" :src="baseUrl + item.gongjitupian.split(',')[0]" class="image" />
 								<div class="card-badge">
 									<i class="el-icon-refresh"></i> 记录
 								</div>
@@ -551,6 +550,7 @@ $shadow: 0 4px 20px rgba(0,0,0,0.3);
 			height: 200px;
 			overflow: hidden;
 			position: relative;
+			background: #0f172a;
 			img {
 				width: 100%;
 				height: 100%;
@@ -558,6 +558,7 @@ $shadow: 0 4px 20px rgba(0,0,0,0.3);
 				display: block;
 				transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 			}
+		
 			&::after {
 				content: '';
 				position: absolute;

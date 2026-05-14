@@ -2,96 +2,68 @@
 	<div class="main-content" style="min-height:100%;width:100%;padding:0;background:none;">
 		<template v-if="showFlag && !statType">
 			<!-- Search & Filter -->
-			<div class="admin-search">
-				<div class="search-field">
-					<span class="field-label">需求标题</span>
-					<el-input v-model="searchForm.xuqiubiaoti" placeholder="请输入标题搜索" @keydown.enter="search()" clearable size="small"></el-input>
-				</div>
-				<div class="search-actions">
-					<el-button class="btn-primary" size="small" @click="search()">
-						<template #icon><Search /></template>
-						查询
-					</el-button>
-					<el-button class="btn-plain" size="small" @click="searchForm={};search()">
-						<template #icon><Refresh /></template>
-						重置
-					</el-button>
-				</div>
-			</div>
-
-			<!-- Action Bar -->
-			<div class="admin-actions">
-				<div class="action-left">
-					<el-button class="btn-primary" size="small" v-if="isAuth('jinengxuqiu','新增')" @click="addOrUpdateHandler()">
-						<template #icon><Plus /></template>
-						新增
-					</el-button>
-				</div>
-			</div>
-
-			<!-- Table -->
-			<div class="admin-table-wrap">
-				<el-table
-					v-if="isAuth('jinengxuqiu','查看')"
-					:data="dataList"
-					v-loading="dataListLoading"
-					:border="false"
-					:stripe="false"
-					style="width:100%"
-					@selection-change="selectionChangeHandler">
-				<el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
-			<el-table-column prop="fengmian" width="70" label="封面" align="center">
-				<template #default="scope">
-					<div v-if="scope.row.fengmian">
-						<img v-if="scope.row.fengmian.substring(0,4)=='http'" :src="scope.row.fengmian.split(',')[0]" width="48" height="48" style="object-fit:cover;border-radius:6px;cursor:pointer" @click="imgPreView(scope.row.fengmian.split(',')[0])" @error="(e)=>{e.target.style.display='none'}">
-						<img v-else :src="$base.url+scope.row.fengmian.split(',')[0]" width="48" height="48" style="object-fit:cover;border-radius:6px;cursor:pointer" @click="imgPreView($base.url+scope.row.fengmian.split(',')[0])" @error="(e)=>{e.target.style.display='none'}">
+			<div class="skill-toolbar">
+				<div class="toolbar-left">
+					<div class="search-box">
+						<i class="el-icon-search search-icon"></i>
+						<el-input v-model="searchForm.xuqiubiaoti" placeholder="搜索技能标题..." @keydown.enter="search()" clearable size="small" class="search-input"></el-input>
 					</div>
-					<div v-else style="color:#64748b;font-size:12px;">无封面</div>
-				</template>
-			</el-table-column>
-				<el-table-column prop="xuqiubiaoti" label="需求标题" min-width="140" show-overflow-tooltip>
-					<template #default="scope">{{scope.row.xuqiubiaoti}}</template>
-				</el-table-column>
-			
-				<el-table-column prop="jinengfenlei" label="技能分类" min-width="90">
-					<template #default="scope">{{scope.row.jinengfenlei}}</template>
-				</el-table-column>
-				<el-table-column prop="xuqiufeiyong" label="费用" min-width="80" align="right">
-					<template #default="scope">
-						<span v-if="scope.row.xuqiufeiyong" style="color:#f87171;font-weight:600;">¥{{scope.row.xuqiufeiyong}}</span>
-						<span v-else style="color:#64748b;">面议</span>
-					</template>
-				</el-table-column>
-			<el-table-column prop="yonghuxingming" label="用户" min-width="110">
-				<template #default="scope">
-					<div>{{scope.row.yonghuxingming}}</div>
-				</template>
-			</el-table-column>
-				<el-table-column prop="fabushijian" label="发布时间" min-width="110">
-					<template #default="scope">{{scope.row.fabushijian}}</template>
-				</el-table-column>
-				<el-table-column label="热度" min-width="90" align="center">
-				<template #default="scope">
-					<div class="heat-row"><i class="el-icon-view"></i> {{scope.row.clicknum||0}}</div>
-					<div class="heat-row"><i class="el-icon-star-on"></i> {{scope.row.storeupnum||0}}</div>
-				</template>
-			</el-table-column>
-			<el-table-column prop="sfsh" label="审核" min-width="90" align="center">
-				<template #default="scope">
-					<span class="audit-badge audit-fail" v-if="scope.row.sfsh=='否'">未通过</span>
-					<span class="audit-badge audit-pending" v-if="scope.row.sfsh=='待审核'">待审核</span>
-					<span class="audit-badge audit-pass" v-if="scope.row.sfsh=='是'">已通过</span>
-				</template>
-			</el-table-column>
-				<el-table-column width="220" label="操作" fixed="right" align="center">
-						<template #default="scope">
-							<el-button size="mini" v-if="isAuth('jinengxuqiu','申请')" type="info" plain @click="jiaohuanshenqingCrossAddOrUpdateHandler(scope.row,'cross','是','','xuqiuzhuangtai','已交换')">申请</el-button>
-							<el-button size="mini" v-if="isAuth('jinengxuqiu','修改') && scope.row.sfsh=='待审核'" type="warning" plain @click="addOrUpdateHandler(scope.row.id)">修改</el-button>
-							<el-button size="mini" v-if="isAuth('jinengxuqiu','私聊')" type="info" plain @click="chatClick(scope.row)">咨询</el-button>
-							<el-button size="mini" v-if="isAuth('jinengxuqiu','删除')" type="danger" plain @click="deleteHandler(scope.row.id)">删除</el-button>
+					<el-button class="toolbar-btn btn-search" size="small" @click="search()">查询</el-button>
+					<el-button class="toolbar-btn btn-reset" size="small" @click="searchForm={};search()">重置</el-button>
+				</div>
+				<div class="toolbar-right">
+					<el-button class="toolbar-btn btn-add" size="small" v-if="isAuth('jinengxuqiu','新增')" @click="addOrUpdateHandler()">
+						<i class="el-icon-plus"></i> 发布技能
+					</el-button>
+				</div>
+			</div>
+
+			<!-- Skill Card List -->
+			<div class="skill-list" v-if="isAuth('jinengxuqiu','查看')" v-loading="dataListLoading">
+				<div class="skill-card" v-for="(item, idx) in dataList" :key="item.id" @click="viewDetail(item)">
+					<div class="card-index">{{indexMethod(idx)}}</div>
+					<div class="card-cover">
+						<template v-if="item.fengmian">
+							<img v-if="item.fengmian.substring(0,4)=='http'" :src="item.fengmian.split(',')[0]" @click.stop="imgPreView(item.fengmian.split(',')[0])" @error="(e)=>{e.target.style.display='none'}">
+							<img v-else :src="$base.url+item.fengmian.split(',')[0]" @click.stop="imgPreView($base.url+item.fengmian.split(',')[0])" @error="(e)=>{e.target.style.display='none'}">
 						</template>
-					</el-table-column>
-				</el-table>
+						<div v-else class="no-cover"><i class="el-icon-picture-outline"></i></div>
+					</div>
+					<div class="card-body">
+						<div class="card-title">{{item.xuqiubiaoti}}</div>
+						<div class="card-meta">
+							<span class="meta-cat"><i class="el-icon-collection-tag"></i> {{item.jinengfenlei}}</span>
+							<span class="meta-user"><i class="el-icon-user"></i> {{item.yonghuxingming}}</span>
+							<span class="meta-time"><i class="el-icon-time"></i> {{item.fabushijian}}</span>
+						</div>
+					</div>
+					<div class="card-price">
+						<span v-if="item.xuqiufeiyong" class="price-value">¥{{item.xuqiufeiyong}}</span>
+						<span v-else class="price-free">面议</span>
+					</div>
+					<div class="card-stats">
+						<div class="stat-item"><i class="el-icon-view"></i> {{item.clicknum||0}}</div>
+						<div class="stat-item"><i class="el-icon-star-on"></i> {{item.storeupnum||0}}</div>
+					</div>
+					<div class="card-actions" @click.stop>
+						<el-tooltip content="查看详情" placement="top">
+							<button class="action-btn action-view" @click="viewDetail(item)"><i class="el-icon-view"></i></button>
+						</el-tooltip>
+						<el-tooltip content="申请交换" placement="top" v-if="isAuth('jinengxuqiu','申请')">
+							<button class="action-btn action-apply" @click="jiaohuanshenqingCrossAddOrUpdateHandler(item,'cross','是','','xuqiuzhuangtai','已交换')"><i class="el-icon-s-promotion"></i></button>
+						</el-tooltip>
+						<el-tooltip content="在线咨询" placement="top" v-if="isAuth('jinengxuqiu','私聊')">
+							<button class="action-btn action-chat" @click="chatClick(item)"><i class="el-icon-chat-dot-round"></i></button>
+						</el-tooltip>
+						<el-tooltip content="删除" placement="top">
+							<button class="action-btn action-del" @click="deleteWithCheck(item)"><i class="el-icon-delete"></i></button>
+						</el-tooltip>
+					</div>
+				</div>
+				<div v-if="!dataList.length && !dataListLoading" class="empty-state">
+					<i class="el-icon-box"></i>
+					<p>暂无技能数据</p>
+				</div>
 			</div>
 
 			<!-- Pagination -->
@@ -113,6 +85,58 @@
 
 		<add-or-update v-if="addOrUpdateFlag" :parent="this" ref="addOrUpdate"></add-or-update>
 		<jiaohuanshenqing-cross-add-or-update v-if="jiaohuanshenqingCrossAddOrUpdateFlag" :parent="this" ref="jiaohuanshenqingCrossaddOrUpdate"></jiaohuanshenqing-cross-add-or-update>
+
+		<!-- 技能详情卡片 -->
+		<template v-if="detailFlag">
+			<div class="skill-detail-page">
+				<div class="detail-header">
+					<el-button type="text" class="back-btn" @click="closeDetail">
+						<i class="el-icon-arrow-left"></i> 返回技能市场
+					</el-button>
+				</div>
+				<div class="detail-card">
+					<div class="detail-top">
+						<div class="detail-cover" v-if="detailData.fengmian">
+							<img v-if="detailData.fengmian.substring(0,4)=='http'" :src="detailData.fengmian.split(',')[0]" />
+							<img v-else :src="$base.url + detailData.fengmian.split(',')[0]" />
+						</div>
+						<div class="detail-cover detail-cover-empty" v-else>
+							<i class="el-icon-picture-outline"></i>
+						</div>
+						<div class="detail-info">
+							<h2 class="detail-title">{{detailData.xuqiubiaoti}}</h2>
+							<div class="detail-meta">
+								<span class="meta-tag">{{detailData.jinengfenlei}}</span>
+								<span class="meta-price" v-if="detailData.xuqiufeiyong">¥{{detailData.xuqiufeiyong}}</span>
+								<span class="meta-price meta-free" v-else>面议</span>
+							</div>
+							<div class="detail-stats">
+								<span><i class="el-icon-view"></i> {{detailData.clicknum||0}} 浏览</span>
+								<span><i class="el-icon-star-on"></i> {{detailData.storeupnum||0}} 收藏</span>
+								<span><i class="el-icon-time"></i> {{detailData.fabushijian}}</span>
+							</div>
+							<div class="detail-user">
+								<span class="user-label">发布者：</span>
+								<span class="user-name">{{detailData.yonghuxingming}}</span>
+								<span class="user-phone" v-if="detailData.shoujihao">（{{detailData.shoujihao}}）</span>
+							</div>
+							<div class="detail-extra">
+								<span>编号：{{detailData.xuqiubianhao}}</span>
+								<span v-if="detailData.xinyuzhishu">信誉指数：{{detailData.xinyuzhishu}}</span>
+							</div>
+						</div>
+					</div>
+					<div class="detail-section" v-if="detailData.xuqiumiaoshu">
+						<h3>技能描述</h3>
+						<p>{{detailData.xuqiumiaoshu}}</p>
+					</div>
+					<div class="detail-section" v-if="detailData.xuqiuxiangqing">
+						<h3>详细介绍</h3>
+						<p>{{detailData.xuqiuxiangqing}}</p>
+					</div>
+				</div>
+			</div>
+		</template>
 
 		<el-dialog :title="this.batchIds.length>1?'批量审核':'审核'" :visible.sync="sfshBatchVisiable" width="480px" :close-on-click-modal="false">
 			<el-form ref="shBatchForm" :model="shBatchForm" :rules="shRules" label-width="80px">
@@ -243,7 +267,7 @@
 				sfshOptions: [],
 				dataList: [],
 				pageIndex: 1,
-				pageSize: 15,
+				pageSize: 7,
 				totalPage: 0,
 				dataListLoading: false,
 				dataListSelections: [],
@@ -272,6 +296,8 @@
 				chartVisiable1: false,
 				chartVisiable2: false,
 				addOrUpdateFlag:false,
+				detailFlag: false,
+				detailData: {},
 				jiaohuanshenqingCrossAddOrUpdateFlag: false,
 				layouts: ["total","prev","pager","next","jumper"],
 				chatVisible: false,
@@ -992,10 +1018,13 @@
 					})
 				})
 			},
-			init () {
-				this.sfshOptions = "是,否,待审核".split(',');
-			},
-			search() {
+		init () {
+			this.sfshOptions = "是,否,待审核".split(',');
+		},
+		indexMethod(index) {
+			return (this.pageIndex - 1) * this.pageSize + index + 1;
+		},
+		search() {
 				this.pageIndex = 1;
 				this.getDataList();
 			},
@@ -1003,22 +1032,20 @@
 			// 获取数据列表
 			getDataList() {
 				this.dataListLoading = true;
-				let params = {
-					page: this.pageIndex,
-					limit: this.pageSize,
-					sort: 'id',
-					order: 'desc',
-					leixing: '技能',
-				}
-				if(this.searchForm.xuqiubiaoti!='' && this.searchForm.xuqiubiaoti!=undefined){
-					params['xuqiubiaoti'] = '%' + this.searchForm.xuqiubiaoti + '%'
-				}
-				if(this.searchForm.yonghuxingming!='' && this.searchForm.yonghuxingming!=undefined){
-					params['yonghuxingming'] = '%' + this.searchForm.yonghuxingming + '%'
-				}
-				if(this.searchForm.sfsh!='' && this.searchForm.sfsh!=undefined){
-					params['sfsh'] = this.searchForm.sfsh
-				}
+			let params = {
+				page: this.pageIndex,
+				limit: this.pageSize,
+				sort: 'id',
+				order: 'desc',
+				leixing: '技能',
+				sfsh: '是',
+			}
+			if(this.searchForm.xuqiubiaoti!='' && this.searchForm.xuqiubiaoti!=undefined){
+				params['xuqiubiaoti'] = '%' + this.searchForm.xuqiubiaoti + '%'
+			}
+			if(this.searchForm.yonghuxingming!='' && this.searchForm.yonghuxingming!=undefined){
+				params['yonghuxingming'] = '%' + this.searchForm.yonghuxingming + '%'
+			}
 				let user = JSON.parse(this.$storage.getObj('userForm'))
 				this.$http({
 					url: "jinengxuqiu/page",
@@ -1112,6 +1139,33 @@
 					}
 				})
 			},
+			// 查看详情
+			viewDetail(row) {
+				this.detailData = row;
+				this.showFlag = false;
+				this.detailFlag = true;
+			},
+			closeDetail() {
+				this.detailFlag = false;
+				this.showFlag = true;
+			},
+			// 删除（带交换检查）
+			async deleteWithCheck(row) {
+				try {
+					const { data } = await this.$http({
+						url: 'jiaohuanshenqing/page',
+						method: 'get',
+						params: { page: 1, limit: 1, xuqiubianhao: row.xuqiubianhao }
+					});
+					if (data && data.code === 0 && data.data.list && data.data.list.length > 0) {
+						this.$message.error('该技能已参与技能交换，无法删除');
+						return;
+					}
+					this.deleteHandler(row.id);
+				} catch(e) {
+					this.deleteHandler(row.id);
+				}
+			},
 			// 删除
 			async deleteHandler(id ) {
 				var ids = id? [Number(id)]: this.dataListSelections.map(item => {
@@ -1166,53 +1220,254 @@
 	};
 </script>
 <style lang="scss" scoped>
-.type-badge {
-	display: inline-block;
-	padding: 2px 10px;
-	border-radius: 10px;
-	font-size: 12px;
-	font-weight: 600;
-	letter-spacing: 1px;
-}
-.type-skill {
-	background: rgba(34,197,94,0.15);
-	color: #4ade80;
-	border: 1px solid rgba(34,197,94,0.3);
-}
-.type-demand {
-	background: rgba(59,130,246,0.15);
-	color: #60a5fa;
-	border: 1px solid rgba(59,130,246,0.3);
+$accent: #00b4d8;
+$surface: #1e293b;
+$bg: #0f172a;
+$text: #e2e8f0;
+$text2: #94a3b8;
+$border: rgba(255,255,255,0.06);
+
+.skill-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 16px;
+	background: $surface;
+	border-radius: 12px;
+	border: 1px solid $border;
+	margin-bottom: 16px;
+	.toolbar-left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+	.toolbar-right {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+	.search-box {
+		position: relative;
+		display: flex;
+		align-items: center;
+		.search-icon {
+			position: absolute;
+			left: 10px;
+			z-index: 1;
+			color: #64748b;
+			font-size: 14px;
+		}
+		.search-input {
+			width: 240px;
+			:deep(.el-input__inner) {
+				padding-left: 32px;
+				background: rgba(255,255,255,0.04);
+				border: 1px solid $border;
+				color: $text;
+				border-radius: 8px;
+				&:focus {
+					border-color: $accent;
+					box-shadow: 0 0 0 2px rgba(0,180,216,0.15);
+				}
+			}
+		}
+	}
+	.toolbar-btn {
+		border-radius: 8px;
+		font-size: 13px;
+		font-weight: 500;
+		padding: 8px 16px;
+		border: none;
+		transition: all 0.25s;
+	}
+	.btn-search {
+		background: $accent;
+		color: #fff;
+		&:hover { background: lighten(#00b4d8, 8%); box-shadow: 0 2px 8px rgba(0,180,216,0.3); }
+	}
+	.btn-reset {
+		background: rgba(255,255,255,0.06);
+		color: $text2;
+		&:hover { background: rgba(255,255,255,0.1); color: $text; }
+	}
+	.btn-add {
+		background: linear-gradient(135deg, #10b981, #34d399);
+		color: #fff;
+		&:hover { box-shadow: 0 2px 12px rgba(16,185,129,0.35); transform: translateY(-1px); }
+	}
 }
 
-.audit-badge {
-	display: inline-block;
-	padding: 2px 10px;
-	border-radius: 10px;
-	font-size: 12px;
-	font-weight: 600;
-}
-.audit-pass {
-	background: rgba(34,197,94,0.15);
-	color: #4ade80;
-	border: 1px solid rgba(34,197,94,0.3);
-}
-.audit-pending {
-	background: rgba(245,158,11,0.15);
-	color: #fbbf24;
-	border: 1px solid rgba(245,158,11,0.3);
-}
-.audit-fail {
-	background: rgba(239,68,68,0.15);
-	color: #f87171;
-	border: 1px solid rgba(239,68,68,0.3);
+.skill-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-bottom: 16px;
 }
 
-.heat-row {
-	font-size: 12px;
-	line-height: 1.8;
-	color: #94a3b8;
-	.el-icon { margin-right: 2px; vertical-align: middle; color: #64748b; }
+.skill-card {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 14px 18px;
+	background: $surface;
+	border-radius: 12px;
+	border: 1px solid $border;
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	position: relative;
+
+	&:hover {
+		border-color: rgba(0,180,216,0.25);
+		background: linear-gradient(135deg, rgba(0,180,216,0.04), rgba(139,92,246,0.03));
+		transform: translateX(4px);
+		box-shadow: 0 4px 20px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,180,216,0.1);
+		.card-actions { opacity: 1; transform: translateX(0); }
+		.card-cover img { transform: scale(1.08); }
+		.card-index { background: $accent; color: #fff; }
+	}
+
+	.card-index {
+		flex-shrink: 0;
+		width: 28px;
+		height: 28px;
+		border-radius: 8px;
+		background: rgba(255,255,255,0.06);
+		color: #64748b;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 12px;
+		font-weight: 700;
+		transition: all 0.25s;
+	}
+
+	.card-cover {
+		flex-shrink: 0;
+		width: 56px;
+		height: 56px;
+		border-radius: 10px;
+		overflow: hidden;
+		background: $bg;
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			transition: transform 0.35s;
+		}
+		.no-cover {
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			i { font-size: 22px; color: #334155; }
+		}
+	}
+
+	.card-body {
+		flex: 1;
+		min-width: 0;
+		.card-title {
+			font-size: 14px;
+			font-weight: 600;
+			color: $text;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			margin-bottom: 4px;
+		}
+		.card-meta {
+			display: flex;
+			gap: 14px;
+			font-size: 12px;
+			color: #64748b;
+			span { display: flex; align-items: center; gap: 3px; white-space: nowrap; }
+			i { font-size: 12px; }
+			.meta-cat { color: $accent; }
+		}
+	}
+
+	.card-price {
+		flex-shrink: 0;
+		text-align: right;
+		min-width: 70px;
+		.price-value {
+			font-size: 16px;
+			font-weight: 700;
+			color: #f87171;
+			letter-spacing: -0.5px;
+		}
+		.price-free {
+			font-size: 13px;
+			color: #64748b;
+		}
+	}
+
+	.card-stats {
+		flex-shrink: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		min-width: 60px;
+		.stat-item {
+			font-size: 12px;
+			color: #64748b;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			i { font-size: 13px; }
+		}
+	}
+
+	.card-actions {
+		flex-shrink: 0;
+		display: flex;
+		gap: 6px;
+		opacity: 0;
+		transform: translateX(8px);
+		transition: all 0.3s;
+		.action-btn {
+			width: 32px;
+			height: 32px;
+			border-radius: 8px;
+			border: none;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 14px;
+			transition: all 0.2s;
+			&:active { transform: scale(0.92); }
+		}
+		.action-view {
+			background: rgba(0,180,216,0.12);
+			color: $accent;
+			&:hover { background: rgba(0,180,216,0.25); box-shadow: 0 2px 8px rgba(0,180,216,0.2); }
+		}
+		.action-apply {
+			background: rgba(16,185,129,0.12);
+			color: #34d399;
+			&:hover { background: rgba(16,185,129,0.25); box-shadow: 0 2px 8px rgba(16,185,129,0.2); }
+		}
+		.action-chat {
+			background: rgba(139,92,246,0.12);
+			color: #a78bfa;
+			&:hover { background: rgba(139,92,246,0.25); box-shadow: 0 2px 8px rgba(139,92,246,0.2); }
+		}
+		.action-del {
+			background: rgba(239,68,68,0.12);
+			color: #f87171;
+			&:hover { background: rgba(239,68,68,0.25); box-shadow: 0 2px 8px rgba(239,68,68,0.2); }
+		}
+	}
+}
+
+.empty-state {
+	text-align: center;
+	padding: 60px 0;
+	color: #64748b;
+	i { font-size: 48px; display: block; margin-bottom: 12px; color: #334155; }
+	p { font-size: 14px; margin: 0; }
 }
 
 .chat-content {
@@ -1247,6 +1502,127 @@
 		width: calc(50% - 20px);
 		margin: 10px;
 		height: 400px;
+	}
+}
+
+.skill-detail-page {
+	padding: 0;
+	.detail-header {
+		margin-bottom: 16px;
+		.back-btn {
+			color: #94a3b8;
+			font-size: 14px;
+			padding: 0;
+			&:hover { color: #00b4d8; }
+			i { margin-right: 4px; }
+		}
+	}
+	.detail-card {
+		background: #1e293b;
+		border-radius: 12px;
+		border: 1px solid rgba(255,255,255,0.06);
+		overflow: hidden;
+	}
+	.detail-top {
+		display: flex;
+		gap: 24px;
+		padding: 24px;
+		border-bottom: 1px solid rgba(255,255,255,0.06);
+	}
+	.detail-cover {
+		flex-shrink: 0;
+		width: 200px;
+		height: 150px;
+		border-radius: 8px;
+		overflow: hidden;
+		background: #0f172a;
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+	.detail-cover-empty {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		i { font-size: 48px; color: #334155; }
+	}
+	.detail-info {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+	.detail-title {
+		font-size: 20px;
+		font-weight: 700;
+		color: #f1f5f9;
+		margin: 0;
+	}
+	.detail-meta {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		.meta-tag {
+			background: rgba(0,180,216,0.15);
+			color: #00b4d8;
+			padding: 3px 12px;
+			border-radius: 12px;
+			font-size: 12px;
+			font-weight: 600;
+			border: 1px solid rgba(0,180,216,0.3);
+		}
+		.meta-price {
+			font-size: 18px;
+			font-weight: 700;
+			color: #f87171;
+		}
+		.meta-free {
+			color: #94a3b8;
+			font-size: 14px;
+			font-weight: 400;
+		}
+	}
+	.detail-stats {
+		display: flex;
+		gap: 16px;
+		color: #64748b;
+		font-size: 13px;
+		i { margin-right: 4px; }
+	}
+	.detail-user {
+		font-size: 14px;
+		color: #cbd5e1;
+		.user-label { color: #64748b; }
+		.user-name { font-weight: 600; color: #e2e8f0; }
+		.user-phone { color: #64748b; font-size: 12px; }
+	}
+	.detail-extra {
+		display: flex;
+		gap: 20px;
+		font-size: 12px;
+		color: #64748b;
+	}
+	.detail-section {
+		padding: 20px 24px;
+		border-bottom: 1px solid rgba(255,255,255,0.04);
+		&:last-child { border-bottom: none; }
+		h3 {
+			font-size: 15px;
+			font-weight: 600;
+			color: #e2e8f0;
+			margin: 0 0 10px 0;
+			padding-left: 10px;
+			border-left: 3px solid #00b4d8;
+		}
+		p {
+			font-size: 14px;
+			color: #94a3b8;
+			line-height: 1.8;
+			margin: 0;
+			white-space: pre-wrap;
+		}
 	}
 }
 </style>

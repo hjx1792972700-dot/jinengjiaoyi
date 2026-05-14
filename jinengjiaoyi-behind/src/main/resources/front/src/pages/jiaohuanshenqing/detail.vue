@@ -24,7 +24,7 @@
 			<div class="flow-card applicant-card">
 				<div class="card-label"><el-icon><Promotion /></el-icon> 申请人</div>
 				<div class="card-avatar">
-					<el-icon><Avatar /></el-icon>
+					<span class="avatar-text">{{(detail.gongjirenxingming || '?').substring(0,1)}}</span>
 				</div>
 				<div class="card-name">{{detail.gongjirenxingming || '--'}}</div>
 				<div class="card-tags">
@@ -50,7 +50,7 @@
 			<div class="flow-card owner-card">
 				<div class="card-label"><el-icon><Goods /></el-icon> 技能发布者</div>
 				<div class="card-avatar owner">
-					<el-icon><UserFilled /></el-icon>
+					<span class="avatar-text">{{(detail.yonghuxingming || '?').substring(0,1)}}</span>
 				</div>
 				<div class="card-name">{{detail.yonghuxingming || '--'}}</div>
 				<div class="card-tags">
@@ -83,8 +83,13 @@
 					<div class="exchange-side">
 						<div class="exchange-side-label">{{detail.gongjirenxingming}} 提供</div>
 						<div class="exchange-side-skill">
-							<div class="exchange-skill-cover placeholder"><el-icon class="placeholder-opportunity-icon"><TrendCharts /></el-icon></div>
+							<div class="exchange-skill-cover" v-if="selectedSkillBanner.length">
+								<img v-if="selectedSkillBanner[0] && selectedSkillBanner[0].substr(0,4)=='http'" :src="selectedSkillBanner[0]" />
+								<img v-else :src="baseUrl + selectedSkillBanner[0]" />
+							</div>
+							<div class="exchange-skill-cover placeholder" v-else><el-icon><Box /></el-icon></div>
 							<div class="exchange-skill-name">{{detail.xuanzejinengbiaoti}}</div>
+							<div class="exchange-skill-cat" v-if="selectedSkillCategory">{{selectedSkillCategory}}</div>
 						</div>
 					</div>
 				</div>
@@ -160,6 +165,8 @@
 				breadcrumbItem: [{ name: '交换申请' }],
 				title: '',
 				detailBanner: [],
+				selectedSkillBanner: [],
+				selectedSkillCategory: '',
 				currentImg: 0,
 				userid: Number(localStorage.getItem('frontUserid')),
 				id: 0,
@@ -194,8 +201,26 @@
 						this.detail = res.data.data;
 						this.currentImg = 0;
 						this.title = this.detail.xuqiubiaoti;
-						if(this.detail.fengmian) {
-							this.detailBanner = this.detail.fengmian.split(",w").length>1?[this.detail.fengmian]:this.detail.fengmian.split(',');
+					if(this.detail.fengmian) {
+						this.detailBanner = this.detail.fengmian.split(",w").length>1?[this.detail.fengmian]:this.detail.fengmian.split(',');
+					}
+					if(this.detail.xuanzejinengid) {
+						this.loadSelectedSkillCover(this.detail.xuanzejinengid);
+					}
+					this.$forceUpdate();
+					}
+				});
+			},
+			loadSelectedSkillCover(skillId) {
+				this.$http.get('jinengxuqiu/detail/' + skillId, {}).then(res => {
+					if (res.data.code == 0 && res.data.data) {
+						let data = res.data.data;
+						if (data.fengmian) {
+							let fm = data.fengmian;
+							this.selectedSkillBanner = fm.split(",w").length > 1 ? [fm] : fm.split(',');
+						}
+						if (data.jinengfenlei) {
+							this.selectedSkillCategory = data.jinengfenlei;
 						}
 						this.$forceUpdate();
 					}
@@ -275,15 +300,15 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-$primary: #0ea5e9;
-$purple: #38bdf8;
+$primary: #38bdf8;
+$purple: #7dd3fc;
 $green: #34d399;
-$gold: #f59e0b;
+$gold: #fbbf24;
 $red: #fb7185;
-$text-dark: #e2e8f0;
-$text-sub: #94a3b8;
-$text-dim: #64748b;
-$border: rgba(14,165,233,0.12);
+$text-dark: #f1f5f9;
+$text-sub: #cbd5e1;
+$text-dim: #94a3b8;
+$border: rgba(14,165,233,0.15);
 $bg: #0c1222;
 $white: #0f172a;
 $radius: 14px;
@@ -292,10 +317,11 @@ $radius: 14px;
 	max-width: 900px;
 	margin: 0 auto;
 	padding: 16px 20px;
-	height: calc(100vh - 60px);
+	min-height: calc(100vh - 60px);
 	display: flex;
 	flex-direction: column;
-	overflow: hidden;
+	background: $bg;
+	border-radius: 12px;
 }
 
 .page-header {
@@ -375,24 +401,28 @@ $radius: 14px;
 	align-items: center;
 	justify-content: center;
 	margin: 16px 0 10px;
-	background: linear-gradient(135deg, rgba(14,165,233,0.1), rgba(14,165,233,0.2));
-	.el-icon { font-size: 28px; color: $primary; }
+	background: linear-gradient(135deg, #0ea5e9, #6d5cfc);
+	.avatar-text {
+		font-size: 24px;
+		font-weight: 700;
+		color: #ffffff;
+		line-height: 1;
+	}
 	&.owner {
-		background: linear-gradient(135deg, rgba(167,139,250,0.1), rgba(167,139,250,0.2));
-		.el-icon { color: $purple; }
+		background: linear-gradient(135deg, #7c3aed, #38bdf8);
 	}
 }
 
 .card-name {
 	font-size: 16px;
 	font-weight: 700;
-	color: $text-dark;
+	color: #ffffff;
 	margin-bottom: 2px;
 }
 
 .card-account {
 	font-size: 12px;
-	color: $text-dim;
+	color: $text-sub;
 	margin-bottom: 10px;
 }
 
@@ -402,16 +432,16 @@ $radius: 14px;
 	gap: 6px;
 	justify-content: center;
 	.mini-tag {
-		font-size: 11px;
-		color: $text-sub;
+		font-size: 12px;
+		color: #e2e8f0;
 		background: $bg;
-		padding: 3px 8px;
+		padding: 4px 10px;
 		border-radius: 4px;
-		border: 1px solid rgba(14,165,233,0.08);
+		border: 1px solid rgba(14,165,233,0.12);
 		display: inline-flex;
 		align-items: center;
 		gap: 3px;
-		.el-icon { font-size: 11px; color: $text-dim; }
+		.el-icon { font-size: 11px; color: $text-sub; }
 	}
 }
 
@@ -433,8 +463,8 @@ $radius: 14px;
 	border-radius: 10px;
 	text-align: center;
 	.skill-item-label {
-		font-size: 10px;
-		color: $text-dim;
+		font-size: 11px;
+		color: $text-sub;
 		font-weight: 600;
 		letter-spacing: 0.5px;
 		margin-bottom: 4px;
@@ -447,14 +477,14 @@ $radius: 14px;
 		white-space: nowrap;
 	}
 	&.left-skill {
-		background: rgba(14,165,233,0.06);
-		border: 1px solid rgba(14,165,233,0.15);
-		.skill-item-name { color: $primary; }
+		background: rgba(14,165,233,0.08);
+		border: 1px solid rgba(14,165,233,0.2);
+		.skill-item-name { color: #7dd3fc; }
 	}
 	&.right-skill {
-		background: rgba(167,139,250,0.06);
-		border: 1px solid rgba(167,139,250,0.15);
-		.skill-item-name { color: #38bdf8; }
+		background: rgba(167,139,250,0.08);
+		border: 1px solid rgba(167,139,250,0.2);
+		.skill-item-name { color: #c4b5fd; }
 	}
 }
 
@@ -489,9 +519,9 @@ $radius: 14px;
 	box-shadow: 0 2px 12px rgba(14,165,233,0.06);
 }
 .exchange-detail-title {
-	font-size: 14px;
+	font-size: 15px;
 	font-weight: 700;
-	color: #0ea5e9;
+	color: #38bdf8;
 	margin-bottom: 14px;
 	display: flex;
 	align-items: center;
@@ -509,8 +539,8 @@ $radius: 14px;
 	text-align: center;
 }
 .exchange-side-label {
-	font-size: 12px;
-	color: $text-sub;
+	font-size: 13px;
+	color: #e2e8f0;
 	margin-bottom: 8px;
 	font-weight: 600;
 }
@@ -540,9 +570,9 @@ $radius: 14px;
 	}
 }
 .exchange-skill-name {
-	font-size: 13px;
+	font-size: 14px;
 	font-weight: 600;
-	color: $text-dark;
+	color: #ffffff;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -550,7 +580,7 @@ $radius: 14px;
 }
 .exchange-skill-cat {
 	font-size: 11px;
-	color: $text-dim;
+	color: $text-sub;
 }
 .exchange-arrow {
 	flex-shrink: 0;
@@ -565,9 +595,9 @@ $radius: 14px;
 }
 
 .confirm-action-card {
-	background: linear-gradient(135deg, rgba(14,165,233,0.06), rgba(167,139,250,0.04));
+	background: linear-gradient(135deg, rgba(14,165,233,0.15), rgba(167,139,250,0.1));
 	border-radius: $radius;
-	border: 1px solid rgba(14,165,233,0.18);
+	border: 1px solid rgba(14,165,233,0.25);
 	padding: 14px 16px;
 }
 .confirm-hint {
@@ -575,11 +605,11 @@ $radius: 14px;
 	align-items: flex-start;
 	gap: 8px;
 	margin-bottom: 12px;
-	font-size: 13px;
-	color: $text-dark;
+	font-size: 14px;
+	color: #f1f5f9;
 	line-height: 1.5;
-	.el-icon { font-size: 16px; color: #0ea5e9; flex-shrink: 0; margin-top: 2px; }
-	strong { color: #0ea5e9; }
+	.el-icon { font-size: 16px; color: #38bdf8; flex-shrink: 0; margin-top: 2px; }
+	strong { color: #38bdf8; }
 }
 .confirm-buttons {
 	display: flex;
@@ -619,9 +649,9 @@ $radius: 14px;
 
 .decline-hint {
 	margin-bottom: 12px;
-	p { font-size: 14px; color: $text-dark; line-height: 1.5; margin: 0 0 4px; }
-	.decline-sub { font-size: 12px; color: $text-sub; }
-	strong { color: $primary; }
+	p { font-size: 14px; color: #f1f5f9; line-height: 1.5; margin: 0 0 4px; }
+	.decline-sub { font-size: 13px; color: #cbd5e1; }
+	strong { color: #38bdf8; }
 }
 
 .remark-card {
@@ -649,8 +679,8 @@ $radius: 14px;
 		}
 	}
 	.remark-body { flex: 1; min-width: 0; }
-	.remark-title { font-size: 12px; color: $text-dim; margin-bottom: 2px; font-weight: 600; }
-	.remark-text { font-size: 13px; color: $text-dark; line-height: 1.6; }
+	.remark-title { font-size: 12px; color: $text-sub; margin-bottom: 2px; font-weight: 600; }
+	.remark-text { font-size: 14px; color: #f1f5f9; line-height: 1.6; }
 }
 
 .bottom-row {
@@ -662,8 +692,8 @@ $radius: 14px;
 }
 
 .time-info {
-	font-size: 12px;
-	color: $text-dim;
+	font-size: 13px;
+	color: $text-sub;
 	display: flex;
 	align-items: center;
 	gap: 4px;

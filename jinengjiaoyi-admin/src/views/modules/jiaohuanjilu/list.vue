@@ -28,7 +28,7 @@
 					:data="dataList"
 					v-loading="dataListLoading"
 					style="width:100%">
-		<el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
+		<el-table-column type="index" :index="indexMethod" label="序号" width="55" align="center"></el-table-column>
 		<el-table-column :resizable='true' prop="yonghuxingming"
 			label="申请人" min-width="100">
 			<template #default="scope">
@@ -59,15 +59,9 @@
 						{{scope.row.jiaohuanshijian}}
 					</template>
 				</el-table-column>
-				<el-table-column :resizable='true' label="学习资料" min-width="100" align="center">
+				<el-table-column width="130" label="操作" align="center">
 					<template #default="scope">
-						<el-button v-if="scope.row.gongjishipin" type="text" size="mini" @click="preClick(scope.row.gongjishipin)">视频</el-button>
-						<el-button v-if="scope.row.gongjifujian" type="text" size="mini" @click="download(scope.row.gongjifujian)">附件</el-button>
-						<span v-if="!scope.row.gongjishipin && !scope.row.gongjifujian" style="color:#64748b;font-size:12px;">无</span>
-					</template>
-				</el-table-column>
-				<el-table-column width="80" label="操作" align="center">
-					<template #default="scope">
+						<el-button size="mini" type="success" plain @click="viewDetail(scope.row)">查看</el-button>
 						<el-button size="mini" v-if="isAuth('jiaohuanjilu','删除')" type="danger" plain @click="deleteHandler(scope.row.id)">删除</el-button>
 					</template>
 				</el-table-column>
@@ -88,10 +82,69 @@
 				></el-pagination>
 			</div>
 		</template>
+		<!-- 详情页 -->
+		<template v-if="detailFlag">
+			<div class="record-detail-page">
+				<div class="page-header">
+					<span class="status-badge done"><i class="el-icon-circle-check"></i> 已交换</span>
+					<el-button class="back-btn" size="small" @click="closeDetail">
+						<i class="el-icon-arrow-left"></i> 返回
+					</el-button>
+				</div>
+				<div class="exchange-flow">
+					<div class="flow-card applicant-card">
+						<div class="card-label"><i class="el-icon-promotion"></i> 申请人</div>
+						<div class="card-avatar"><span class="avatar-text">{{(detailData.gongjirenxingming||'?').substring(0,1)}}</span></div>
+						<div class="card-name">{{detailData.gongjirenxingming || '--'}}</div>
+						<div class="card-tags"><span class="mini-tag" v-if="detailData.lianxifangshi"><i class="el-icon-phone"></i> {{detailData.lianxifangshi}}</span></div>
+						<div class="provided-skill" v-if="detailData.shenqingrentigong">
+							<div class="provided-label">提供技能</div>
+							<div class="provided-value">{{detailData.shenqingrentigong}}</div>
+						</div>
+					</div>
+					<div class="flow-center">
+						<div class="skill-item left-skill">
+							<div class="skill-item-label">申请人提供</div>
+							<div class="skill-item-name">{{detailData.shenqingrentigong || '--'}}</div>
+						</div>
+						<div class="exchange-badge"><i class="el-icon-sort"></i><span>技能交换</span></div>
+						<div class="skill-item right-skill">
+							<div class="skill-item-label">发布者提供</div>
+							<div class="skill-item-name">{{detailData.fabuzhetigong || detailData.biaoti || '--'}}</div>
+						</div>
+					</div>
+					<div class="flow-card owner-card">
+						<div class="card-label"><i class="el-icon-goods"></i> 发布者</div>
+						<div class="card-avatar owner"><span class="avatar-text">{{(detailData.yonghuxingming||'?').substring(0,1)}}</span></div>
+						<div class="card-name">{{detailData.yonghuxingming || '--'}}</div>
+						<div class="card-tags"><span class="mini-tag" v-if="detailData.shoujihao"><i class="el-icon-phone"></i> {{detailData.shoujihao}}</span></div>
+						<div class="provided-skill" v-if="detailData.fabuzhetigong">
+							<div class="provided-label">提供技能</div>
+							<div class="provided-value">{{detailData.fabuzhetigong}}</div>
+						</div>
+					</div>
+				</div>
+				<div class="detail-bottom">
+					<div class="remark-card" v-if="detailData.gongjineirong">
+						<div class="remark-icon"><i class="el-icon-document"></i></div>
+						<div class="remark-body">
+							<div class="remark-title">供给内容</div>
+							<div class="remark-text">{{detailData.gongjineirong}}</div>
+						</div>
+					</div>
+					<div class="media-row" v-if="detailData.gongjishipin || detailData.gongjifujian">
+						<video v-if="detailData.gongjishipin" :src="$base.url + detailData.gongjishipin" controls style="max-width:100%;max-height:240px;border-radius:8px;"></video>
+						<el-button v-if="detailData.gongjifujian" size="small" type="primary" plain @click="download(detailData.gongjifujian)"><i class="el-icon-download"></i> 下载附件</el-button>
+					</div>
+					<div class="time-info">
+						<i class="el-icon-time"></i> 交换时间：{{detailData.jiaohuanshijian || '--'}}
+					</div>
+				</div>
+			</div>
+		</template>
 		<!-- 添加/修改页面  将父组件的search方法传递给子组件-->
 		<add-or-update v-if="addOrUpdateFlag" :parent="this" ref="addOrUpdate"></add-or-update>
 
-		<pingjiafankui-cross-add-or-update v-if="pingjiafankuiCrossAddOrUpdateFlag" :parent="this" ref="pingjiafankuiCrossaddOrUpdate"></pingjiafankui-cross-add-or-update>
 
 
 
@@ -114,7 +167,7 @@
 	import chinaJson from "@/components/echarts/china.json";
 	import axios from 'axios';
 	import AddOrUpdate from "./add-or-update.vue";
-	import pingjiafankuiCrossAddOrUpdate from "../pingjiafankui/add-or-update.vue";
+
 	export default {
 		data() {
 			return {
@@ -126,11 +179,13 @@
 				form:{},
 				dataList: [],
 				pageIndex: 1,
-				pageSize: 15,
+				pageSize: 7,
 				totalPage: 0,
 				dataListLoading: false,
 				dataListSelections: [],
 				showFlag: true,
+				detailFlag: false,
+				detailData: {},
 				line: {"backgroundColor":"transparent","yAxis":{"axisLabel":{"borderType":"solid","rotate":0,"padding":0,"shadowOffsetX":0,"margin":15,"backgroundColor":"transparent","borderColor":"#000","shadowOffsetY":0,"color":"#333","shadowBlur":0,"show":true,"inside":false,"ellipsis":"...","overflow":"none","borderRadius":0,"borderWidth":0,"width":"","fontSize":12,"lineHeight":24,"shadowColor":"transparent","fontWeight":"normal","height":""},"axisTick":{"show":true,"length":5,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"inside":false},"splitLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#666","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":true},"minInterval":1,"axisLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":true},"splitArea":{"show":false,"areaStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"rgba(25,25,25,0.3)","opacity":1,"shadowBlur":10,"shadowColor":"rgba(0,0,0,.5)"}}},"xAxis":{"axisLabel":{"borderType":"solid","rotate":30,"padding":0,"shadowOffsetX":0,"margin":10,"backgroundColor":"transparent","borderColor":"#000","shadowOffsetY":0,"color":"#333","shadowBlur":0,"show":true,"inside":false,"ellipsis":"...","overflow":"truncate","borderRadius":0,"borderWidth":0,"width":120,"interval":0,"fontSize":12,"lineHeight":24,"shadowColor":"transparent","fontWeight":"normal","height":""},"axisTick":{"show":true,"length":5,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"inside":false},"splitLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":false},"axisLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":true},"splitArea":{"show":false,"areaStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"rgba(25,25,25,.3)","opacity":1,"shadowBlur":10,"shadowColor":"rgba(0,0,0,.5)"}}},"color":["#FBAE7D","#875F41","#FBC88C","#4FB7F1","#2CD89E","#89e6d8","#4495ac","#9a60b4","#ea7ccc"],"legend":{"padding":0,"itemGap":10,"shadowOffsetX":0,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"orient":"horizontal","shadowBlur":0,"bottom":"auto","itemHeight":14,"show":true,"icon":"roundRect","itemStyle":{"borderType":"solid","shadowOffsetX":0,"borderColor":"inherit","shadowOffsetY":0,"color":"inherit","shadowBlur":0,"borderWidth":0,"opacity":1,"shadowColor":"transparent"},"right":"auto","top":"auto","borderRadius":0,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"inherit","shadowBlur":0,"width":"auto","type":"inherit","opacity":1,"shadowColor":"transparent"},"left":"right","borderWidth":0,"width":"80%","itemWidth":20,"textStyle":{"textBorderWidth":0,"color":"inherit","textShadowColor":"transparent","ellipsis":"...","overflow":"none","fontSize":12,"lineHeight":24,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":500,"textBorderColor":"transparent","textShadowBlur":0},"shadowColor":"rgba(0,0,0,.3)","height":"auto"},"series":{"animationDuration":6000,"symbol":"image://http://codegen.caihongy.cn/20210106/4cacdcd9b8fd43529362329e06dbd938.jpg","label":{"color":"#725BFF","show":false,"position":"top"},"symbolSize":[15,15],"symbolOffset":[0,1],"animation":true},"tooltip":{"backgroundColor":"#123","textStyle":{"color":"#fff"}},"title":{"borderType":"solid","padding":0,"shadowOffsetX":0,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"shadowBlur":0,"bottom":"auto","show":true,"right":"auto","top":"auto","borderRadius":0,"left":"left","borderWidth":0,"textStyle":{"textBorderWidth":0,"color":"#333","textShadowColor":"transparent","fontSize":14,"lineHeight":24,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":600,"textBorderColor":"#666","textShadowBlur":0},"shadowColor":"transparent"}},
 				bar: {"backgroundColor":"transparent","yAxis":{"axisLabel":{"borderType":"solid","rotate":0,"padding":0,"shadowOffsetX":0,"margin":12,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"color":"#333","shadowBlur":0,"show":true,"inside":false,"ellipsis":"...","overflow":"none","borderRadius":0,"borderWidth":0,"width":"","fontSize":12,"lineHeight":24,"shadowColor":"transparent","fontWeight":"normal","height":""},"axisTick":{"show":true,"length":5,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"inside":false},"splitLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#666","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":true},"minInterval":1,"axisLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":true},"splitArea":{"show":false,"areaStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"rgba(25,25,25,0.3)","opacity":1,"shadowBlur":10,"shadowColor":"rgba(0,0,0,.5)"}}},"xAxis":{"axisLabel":{"borderType":"solid","rotate":30,"padding":0,"shadowOffsetX":0,"margin":10,"backgroundColor":"transparent","borderColor":"#000","shadowOffsetY":0,"color":"#333","shadowBlur":0,"show":true,"inside":false,"ellipsis":"...","overflow":"truncate","borderRadius":0,"borderWidth":0,"width":120,"interval":0,"fontSize":12,"lineHeight":24,"shadowColor":"transparent","fontWeight":"normal","height":""},"axisTick":{"show":true,"length":5,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"inside":false},"splitLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":false},"minInterval":1,"axisLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":true},"splitArea":{"show":false,"areaStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"rgba(25,25,25,.3)","opacity":1,"shadowBlur":10,"shadowColor":"rgba(0,0,0,.5)"}}},"color":["#FBAE7D","#00E6A7","#FBAE7D","#845C3F","#AEB476","#559781","#B2F9F0","#2B83AD","#FFAA00","#000000"],"legend":{"padding":0,"itemGap":10,"shadowOffsetX":0,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"orient":"horizontal","shadowBlur":0,"bottom":"auto","itemHeight":14,"show":true,"icon":"roundRect","itemStyle":{"borderType":"solid","shadowOffsetX":0,"borderColor":"inherit","shadowOffsetY":0,"color":"inherit","shadowBlur":0,"borderWidth":0,"opacity":1,"shadowColor":"transparent"},"right":"auto","top":"auto","borderRadius":0,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"inherit","shadowBlur":0,"width":"auto","type":"inherit","opacity":1,"shadowColor":"transparent"},"left":"right","borderWidth":0,"width":"80%","itemWidth":20,"textStyle":{"textBorderWidth":0,"color":"inherit","textShadowColor":"transparent","ellipsis":"...","overflow":"none","fontSize":12,"lineHeight":12,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":500,"textBorderColor":"transparent","textShadowBlur":0},"shadowColor":"rgba(0,0,0,.3)","height":"auto"},"grid":{"right":"20","top":"60","left":"20","bottom":"20","containLabel":true},"series":{"barWidth":"13px","itemStyle":{"borderType":"solid","shadowOffsetX":0,"borderColor":"#f2f8d4","shadowOffsetY":0,"color":{"x":0,"y":0,"y2":1,"x2":0,"global":false,"colorStops":[{"offset":0,"color":"#FBAE7D"},{"offset":1,"color":"#875F41"}],"type":"linear"},"shadowBlur":0,"borderWidth":0,"barBorderRadius":[10,10,0,0],"opacity":1,"shadowColor":"#000"},"colorBy":"data","label":{"formatter":"","show":true,"position":"top"},"barCategoryGap":"30%"},"tooltip":{"backgroundColor":"#123","textStyle":{"color":"#fff"}},"title":{"borderType":"solid","padding":0,"shadowOffsetX":0,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"subtext":"","shadowBlur":0,"bottom":"auto","show":true,"right":"auto","subtextStyle":{"padding":[5,0,0,0],"borderColor":"red","color":"red","borderWidth":10},"top":"auto","borderRadius":0,"left":"left","borderWidth":0,"textStyle":{"textBorderWidth":0,"color":"#333","textShadowColor":"transparent","fontSize":14,"lineHeight":24,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":600,"textBorderColor":"#666","textShadowBlur":0},"shadowColor":"transparent"},"base":{"animate":false,"interval":2000}},
 				pie: {"tooltip":{"backgroundColor":"#123","textStyle":{"color":"#fff"}},"backgroundColor":"transparent","color":["#FBAE7D","#845C3F","#AEB476","#559781","#B2F9F0","#2B83AD","#9ADBC4","#FFAA00","#000000"],"title":{"borderType":"solid","padding":[5,0,0,0],"shadowOffsetX":0,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"shadowBlur":0,"bottom":"auto","show":true,"right":"auto","top":"auto","borderRadius":0,"left":"left","borderWidth":0,"textStyle":{"textBorderWidth":0,"color":"#333","textShadowColor":"transparent","fontSize":14,"lineHeight":14,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":600,"textBorderColor":"#666","textShadowBlur":0},"shadowColor":"transparent"},"legend":{"padding":[5,0,0,0],"itemGap":10,"shadowOffsetX":0,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"orient":"horizontal","shadowBlur":0,"bottom":"auto","itemHeight":2,"show":true,"icon":"roundRect","itemStyle":{"borderType":"solid","shadowOffsetX":0,"borderColor":"inherit","shadowOffsetY":0,"color":"inherit","shadowBlur":0,"borderWidth":0,"opacity":1,"shadowColor":"transparent"},"right":0,"top":"auto","borderRadius":0,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"inherit","shadowBlur":0,"width":"auto","type":"inherit","opacity":1,"shadowColor":"transparent"},"left":"right","borderWidth":0,"width":"80%","itemWidth":2,"textStyle":{"textBorderWidth":0,"color":"inherit","textShadowColor":"transparent","ellipsis":"...","overflow":"none","fontSize":12,"lineHeight":12,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":500,"textBorderColor":"transparent","textShadowBlur":0},"shadowColor":"rgba(0,0,0,.3)","height":"auto"},"series":{"itemStyle":{"borderType":"solid","shadowOffsetX":0,"borderColor":"#666","shadowOffsetY":0,"color":"","shadowBlur":0,"borderWidth":0,"opacity":1,"shadowColor":"#FBAE7D"},"label":{"borderType":"solid","rotate":0,"padding":0,"textBorderWidth":0,"backgroundColor":"transparent","borderColor":"#666","color":"inherit","show":true,"textShadowColor":"transparent","distanceToLabelLine":5,"ellipsis":"...","overflow":"none","borderRadius":0,"borderWidth":0,"fontSize":12,"lineHeight":18,"textShadowOffsetX":0,"position":"outside","textShadowOffsetY":0,"textBorderType":"solid","textBorderColor":"#666","textShadowBlur":0},"labelLine":{"show":true,"length":10,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"#FBAE7D","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"#FBAE7D"},"length2":14,"smooth":false}}},
@@ -140,7 +195,6 @@
 				radar: {"backgroundColor":"transparent","radar":{"shape":"circle"},"color":["#FBAE7D","#845C3F","#AEB476","#559781","#B2F9F0","#2B83AD","#5BBAEC","#a68a28","#EE142F","#FFE9E9"],"legend":{"padding":5,"itemGap":5,"shadowOffsetX":0,"backgroundColor":"transparent","borderColor":"#ccc","shadowOffsetY":0,"orient":"vertical","shadowBlur":0,"bottom":"auto","itemHeight":4,"show":true,"icon":"roundRect","itemStyle":{"borderType":"solid","shadowOffsetX":0,"borderColor":"inherit","shadowOffsetY":0,"color":"inherit","shadowBlur":0,"borderWidth":0,"opacity":1,"shadowColor":"transparent"},"right":"auto","top":"auto","borderRadius":0,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"inherit","shadowBlur":0,"width":"auto","type":"inherit","opacity":1,"shadowColor":"transparent"},"left":"right","borderWidth":0,"width":"auto","itemWidth":4,"textStyle":{"textBorderWidth":0,"color":"inherit","textShadowColor":"transparent","ellipsis":"...","overflow":"none","fontSize":12,"lineHeight":24,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":500,"textBorderColor":"transparent","textShadowBlur":0},"shadowColor":"rgba(0,0,0,.3)","height":"auto"},"series":{},"tooltip":{"backgroundColor":"#123","textStyle":{"color":"#333"}},"title":{"top":"top","left":"left","textStyle":{"textBorderWidth":0,"color":"#333","textShadowColor":"transparent","fontSize":14,"lineHeight":14,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":600,"textBorderColor":"#666","textShadowBlur":0}}},
 				chartVisiable1: false,
 				addOrUpdateFlag:false,
-				pingjiafankuiCrossAddOrUpdateFlag: false,
 				layouts: ["total","prev","pager","next","jumper"],
 				previewImg: '',
 				previewVisible: false,
@@ -178,7 +232,7 @@
 		},
 		components: {
 			AddOrUpdate,
-			pingjiafankuiCrossAddOrUpdate},
+			},
 		methods: {
 			statChartClick() {
 				if(this.isAuth('jiaohuanjilu','交换量统计')) {
@@ -361,6 +415,9 @@
 					}
 				});
 			},
+			indexMethod(index) {
+				return (this.pageIndex - 1) * this.pageSize + index + 1;
+			},
 			search() {
 				this.pageIndex = 1;
 				this.getDataList();
@@ -495,6 +552,15 @@
 				}
 				window.open((location.href.split(this.$base.name).length>1 ? location.href.split(this.$base.name)[0] + this.$base.name + '/' + file :this.$base.url + file))
 			},
+			viewDetail(row) {
+				this.detailData = row;
+				this.showFlag = false;
+				this.detailFlag = true;
+			},
+			closeDetail() {
+				this.detailFlag = false;
+				this.showFlag = true;
+			},
 			// 删除
 			async deleteHandler(id ) {
 				var ids = id? [Number(id)]: this.dataListSelections.map(item => {
@@ -557,4 +623,36 @@
 			z-index: 1;
 		}
 	}
+
+$primary: #38bdf8;
+$purple: #7dd3fc;
+$green: #34d399;
+$border: rgba(14,165,233,0.15);
+$bg: #0f172a;
+$card-bg: #1e293b;
+
+.record-detail-page {
+	display: flex; flex-direction: column; gap: 14px;
+}
+.page-header {
+	display: flex; justify-content: flex-end; align-items: center; gap: 10px;
+	.status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; &.done { background: rgba(52,211,153,0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.25); } }
+	.back-btn { border-radius: 20px; border: 1px solid $border; color: #cbd5e1; font-size: 12px; padding: 5px 14px; background: transparent; &:hover { color: $primary; border-color: $primary; } }
+}
+.exchange-flow { display: flex; align-items: stretch; }
+.flow-card { flex: 1; min-width: 0; background: $card-bg; border-radius: 14px; border: 1px solid $border; padding: 20px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+.card-label { position: absolute; top: 0; left: 50%; transform: translateX(-50%); padding: 3px 14px; border-radius: 0 0 8px 8px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.applicant-card .card-label { background: linear-gradient(135deg, $primary, #6d5cfc); color: #fff; }
+.owner-card .card-label { background: linear-gradient(135deg, $purple, #8b6ffa); color: #fff; }
+.card-avatar { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 16px 0 8px; background: linear-gradient(135deg, #0ea5e9, #6d5cfc); .avatar-text { font-size: 24px; font-weight: 700; color: #fff; } &.owner { background: linear-gradient(135deg, #7c3aed, #38bdf8); } }
+.card-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.card-tags { display: flex; gap: 6px; justify-content: center; .mini-tag { font-size: 12px; color: #e2e8f0; background: $bg; padding: 4px 10px; border-radius: 4px; border: 1px solid rgba(14,165,233,0.12); display: inline-flex; align-items: center; gap: 3px; } }
+.provided-skill { margin-top: 10px; background: $bg; border-radius: 8px; padding: 8px 12px; border: 1px solid $border; .provided-label { font-size: 11px; color: #94a3b8; margin-bottom: 2px; } .provided-value { font-size: 13px; color: #e2e8f0; font-weight: 600; } }
+.flow-center { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 10px; flex-shrink: 0; width: 200px; align-self: center; gap: 10px; }
+.skill-item { width: 100%; padding: 10px 14px; border-radius: 10px; text-align: center; .skill-item-label { font-size: 11px; color: #cbd5e1; font-weight: 600; margin-bottom: 4px; } .skill-item-name { font-size: 13px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } &.left-skill { background: rgba(14,165,233,0.08); border: 1px solid rgba(14,165,233,0.2); .skill-item-name { color: #7dd3fc; } } &.right-skill { background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.2); .skill-item-name { color: #c4b5fd; } } }
+.exchange-badge { display: flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 20px; background: linear-gradient(135deg, rgba(52,211,153,0.1), rgba(14,165,233,0.08)); border: 1px solid rgba(52,211,153,0.2); i { font-size: 14px; color: $green; } span { font-size: 11px; font-weight: 600; color: $green; } }
+.detail-bottom { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+.remark-card { display: flex; gap: 12px; align-items: flex-start; background: $card-bg; border-radius: 10px; border: 1px solid $border; padding: 12px 16px; .remark-icon { width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, rgba(14,165,233,0.08), rgba(14,165,233,0.15)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; i { font-size: 16px; color: $primary; } } .remark-body { flex: 1; } .remark-title { font-size: 12px; color: #cbd5e1; margin-bottom: 2px; font-weight: 600; } .remark-text { font-size: 14px; color: #f1f5f9; line-height: 1.6; } }
+.media-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: $card-bg; border-radius: 10px; border: 1px solid $border; padding: 16px; }
+.time-info { font-size: 13px; color: #cbd5e1; display: flex; align-items: center; gap: 4px; padding: 10px 0; }
 </style>

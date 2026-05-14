@@ -62,8 +62,8 @@
 					<div class="tab-scroll-area">
 						<div class="tab-form-content">
 							<p class="section-tip">详细描述你的技能水平、教学方式、可提供的服务等</p>
-							<el-form-item prop="xuqiuxiangqing" class="editor-wrapper">
-								<editor v-model="ruleForm.xuqiuxiangqing" class="editor" myQuillEditor="xuqiuxiangqing" action="file/upload"></editor>
+							<el-form-item prop="xuqiuxiangqing" class="desc-textarea">
+								<el-input type="textarea" v-model="ruleForm.xuqiuxiangqing" placeholder="描述你的技能水平、教学方式、可提供的服务等" :rows="8" maxlength="2000" show-word-limit resize="vertical"></el-input>
 							</el-form-item>
 						</div>
 					</div>
@@ -358,28 +358,23 @@ $radius: 12px;
 	::v-deep .el-upload__tip { color: $text-dim; font-size: 11px; }
 }
 
-.editor-wrapper {
-	::v-deep .el-form-item__content { line-height: normal; }
-	::v-deep .editor {
-		margin: 0;
-		.ql-toolbar {
-			border-radius: $radius $radius 0 0; border-color: $border;
-			background: rgba(255,255,255,0.03); padding: 8px 12px;
-			.ql-stroke { stroke: $text-sub; }
-			.ql-fill { fill: $text-sub; }
-			.ql-picker-label { color: $text-sub; }
-			button:hover .ql-stroke { stroke: $primary; }
-			button:hover .ql-fill { fill: $primary; }
-			button.ql-active .ql-stroke { stroke: $primary; }
-			button.ql-active .ql-fill { fill: $primary; }
+.desc-textarea {
+	::v-deep .el-textarea__inner {
+		background: rgba(255,255,255,0.03) !important;
+		border: 1px solid $border !important;
+		border-radius: 8px !important;
+		color: $text-dark !important;
+		font-size: 13px !important;
+		line-height: 1.7 !important;
+		padding: 12px 14px !important;
+		transition: border-color 0.2s, box-shadow 0.2s !important;
+		&::placeholder { color: $text-dim !important; }
+		&:focus {
+			border-color: $primary !important;
+			box-shadow: 0 0 0 3px rgba(14,165,233,0.08) !important;
 		}
-		.ql-container {
-			border-radius: 0 0 $radius $radius; border-color: $border;
-			background: rgba(255,255,255,0.03); min-height: 220px; font-size: 13px; color: $text-dark;
-		}
-		.ql-editor { min-height: 220px; padding: 12px 14px; color: $text-dark; line-height: 1.7; }
-		.ql-editor.ql-blank::before { color: $text-dim; font-style: normal; }
 	}
+	::v-deep .el-input__count { background: transparent !important; color: $text-dim !important; }
 }
 
 .form-actions {

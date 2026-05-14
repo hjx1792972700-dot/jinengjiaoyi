@@ -35,15 +35,16 @@
 					:data="dataList"
 					:border='false'
 					v-loading="dataListLoading"
-					style="width: 100%;"
-					>
-					<el-table-column
-						:resizable='true' :sortable='true'
-						prop="allnode"
-						header-align="center"
-						align="center"
-						sortable
-						label="用户"
+				style="width: 100%;"
+				>
+				<el-table-column type="index" :index="indexMethod" label="序号" width="55" align="center"></el-table-column>
+				<el-table-column
+					:resizable='true' :sortable='true'
+					prop="allnode"
+					header-align="center"
+					align="center"
+					sortable
+					label="用户"
 						>
 						<template #default="scope">
 							<div style="display: flex;align-items: center;">
@@ -131,7 +132,7 @@
 				},
 				dataList: [],
 				pageIndex: 1,
-				pageSize: 15,
+				pageSize: 7,
 				totalPage: 0,
 				dataListLoading: false,
 				showFlag: false,
@@ -161,6 +162,9 @@
 				} else {
 					return row.ask
 				}
+			},
+			indexMethod(index) {
+				return (this.pageIndex - 1) * this.pageSize + index + 1;
 			},
 			search() {
 				this.pageIndex = 1

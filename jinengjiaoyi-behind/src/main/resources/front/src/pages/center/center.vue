@@ -22,11 +22,11 @@
 			<div class="nav-item" :class="activeName=='修改密码'?'is-active':''" @click="handleClick('修改密码')">
 				<el-icon class="nav-icon"><Lock /></el-icon><span>修改密码</span>
 			</div>
-			<template v-for="(item,index) in accountMenuItems" :key="'acc-'+index">
-				<div class="nav-item" :class="activeName==item.child[0].menu?'is-active':''" v-if="hasBack(item.menu,item.child[0].tableName)" @mouseenter="centerTabEnter(item.child[0].tableName)" @mouseleave="centerTabEnter('')" @click="menuClick(item.child[0],item.child.length)">
-					<el-icon class="nav-icon"><component :is="getMenuIcon(item.child[0].menu)" /></el-icon><span>{{item.child[0].menu}}</span>
-				</div>
-			</template>
+		<template v-for="(item,index) in accountMenuItems">
+			<div :key="'acc-'+index" class="nav-item" :class="activeName==item.child[0].menu?'is-active':''" v-if="hasBack(item.menu,item.child[0].tableName)" @mouseenter="centerTabEnter(item.child[0].tableName)" @mouseleave="centerTabEnter('')" @click="menuClick(item.child[0],item.child.length)">
+				<el-icon class="nav-icon"><component :is="getMenuIcon(item.child[0].menu)" /></el-icon><span>{{item.child[0].menu}}</span>
+			</div>
+		</template>
 
 		<!-- 技能交换 -->
 		<div class="nav-section-label" v-if="exchangeMenuItems.length">技能交换</div>
@@ -53,11 +53,11 @@
 
 			<!-- 我的内容 -->
 			<div class="nav-section-label">我的内容</div>
-			<template v-for="(item,index) in myContentMenuItems" :key="'my-'+index">
-				<div class="nav-item" :class="activeName==item.child[0].menu?'is-active':''" v-if="hasBack(item.menu,item.child[0].tableName)" @mouseenter="centerTabEnter(item.child[0].tableName)" @mouseleave="centerTabEnter('')" @click="menuClick(item.child[0],item.child.length)">
-					<el-icon class="nav-icon"><component :is="getMenuIcon(item.child[0].menu)" /></el-icon><span>{{item.child[0].menu}}</span>
-				</div>
-			</template>
+		<template v-for="(item,index) in myContentMenuItems">
+			<div :key="'my-'+index" class="nav-item" :class="activeName==item.child[0].menu?'is-active':''" v-if="hasBack(item.menu,item.child[0].tableName)" @mouseenter="centerTabEnter(item.child[0].tableName)" @mouseleave="centerTabEnter('')" @click="menuClick(item.child[0],item.child.length)">
+				<el-icon class="nav-icon"><component :is="getMenuIcon(item.child[0].menu)" /></el-icon><span>{{item.child[0].menu}}</span>
+			</div>
+		</template>
 			<div class="nav-item" :class="activeName=='我的发布'?'is-active':''" @click="handleClick('我的发布')">
 				<el-icon class="nav-icon"><EditPen /></el-icon><span>我的发布</span>
 			</div>
@@ -170,7 +170,7 @@
 				<!-- 聊天对话 (内联视图) -->
 				<div class="inline-chat-view" v-if="chatVisible">
 					<div class="inline-chat-header">
-						<div class="chat-back-btn" @click="clearChat"><el-icon><ArrowLeft /></el-icon> 返回</div>
+						<div class="chat-back-btn" @click="clearChat"><i class="el-icon-arrow-left"></i> 返回</div>
 						<div class="chat-partner-info">
 							<img :src="nowfpic?baseUrl + nowfpic:avatarDefault" class="chat-partner-avatar">
 							<span class="chat-partner-name">{{nowname}}</span>
@@ -209,13 +209,13 @@
 								{{ isRecording ? `录音中 ${recordDuration}秒` : '录音' }}
 							</el-button>
 							<el-upload accept=".jpg,.png" style="display:inline-block;" class="upload-demo" :action="uploadUrl" :on-success="uploadSuccess" :show-file-list="false">
-								<el-button size="mini" type="success" :icon="Picture">图片</el-button>
+								<el-button size="mini" type="success" icon="el-icon-picture">图片</el-button>
 							</el-upload>
 							<el-upload class="upload-demo" style="display:inline-block;" :action="uploadUrl" :on-success="uploadSuccess2" accept=".mp4" :show-file-list="false">
-								<el-button size="mini" type="success" :icon="VideoCamera">视频</el-button>
+								<el-button size="mini" type="success" icon="el-icon-video-camera">视频</el-button>
 							</el-upload>
 							<el-upload class="upload-demo" style="display:inline-block;" :action="uploadUrl" :on-success="uploadSuccess3" :show-file-list="false">
-								<el-button size="mini" type="success" :icon="FolderOpened">文件</el-button>
+								<el-button size="mini" type="success" icon="el-icon-folder-opened">文件</el-button>
 							</el-upload>
 						</div>
 					</div>
@@ -236,23 +236,22 @@
 				<div class="center-content-view" v-if="activeMenuTable=='jiaohuanjilu'">
 					<jiaohuanjilu-list :embedded="true"></jiaohuanjilu-list>
 				</div>
-				<div class="center-content-view" v-if="activeMenuTable=='pingjiafankui'">
-					<pingjiafankui-list :embedded="true"></pingjiafankui-list>
-				</div>
+
+
 				<div class="center-content-view" v-if="activeMenuTable=='storeup'">
 					<storeup-list :embedded="true" :key="'storeup-'+storeupTypeKey"></storeup-list>
 				</div>
 				<div class="center-content-view" v-if="activeMenuTable=='myForumList'">
 					<div class="publish-tabs">
 						<div class="pub-tab" :class="{active: publishTab==='skill'}" @click="publishTab='skill'">
-							<el-icon><Histogram /></el-icon> 我的技能
+							<i class="el-icon-histogram"></i> 我的技能
 						</div>
 						<div class="pub-tab" :class="{active: publishTab==='forum'}" @click="publishTab='forum'">
-							<el-icon><EditPen /></el-icon> 我的帖子
+							<i class="el-icon-edit"></i> 我的帖子
 						</div>
 						<div class="pub-actions">
 							<el-button v-if="publishTab==='skill'" size="small" type="primary" class="pub-add-btn" @click="$router.push('/main/skillAdd')">
-								<el-icon><Plus /></el-icon> 发布技能
+								<i class="el-icon-plus"></i> 发布技能
 							</el-button>
 						</div>
 					</div>
@@ -271,30 +270,6 @@
 	import timeMethod from '@/common/timeMethod'
 	import avatarDefault from '@/assets/avator.png'
 	import {
-		User,
-		Lock,
-		Promotion,
-		ChatSquare,
-		ChatDotRound,
-		EditPen,
-		ArrowLeft,
-		VideoPause,
-		Microphone,
-		Picture,
-		VideoCamera,
-		FolderOpened,
-		Histogram,
-		Plus,
-		Wallet,
-		CircleCheck,
-		List,
-		Star,
-		ChatLineRound,
-		Pointer,
-		Collection,
-		Grid,
-	} from '@element-plus/icons-vue'
-	import {
 		WebsocketMixin
 	} from '@/mixins/WebsocketMixin'
 	import HuiyuanchongzhiList from '../huiyuanchongzhi/list.vue'
@@ -302,41 +277,19 @@
 	import JiaohuanshenqingList from '../jiaohuanshenqing/list.vue'
 	import ReceivedApplyList from '../jiaohuanshenqing/receivedApply.vue'
 	import JiaohuanjiluList from '../jiaohuanjilu/list.vue'
-	import PingjiafankuiList from '../pingjiafankui/list.vue'
+
 	import StoreupList from '../storeup/list.vue'
 	import MyForumList from '../forum/myForumList.vue'
 	import MySkillList from '../jinengxuqiu/mySkillList.vue'
 	export default {
 		mixins: [WebsocketMixin],
 		components: {
-			User,
-			Lock,
-			Promotion,
-			ChatSquare,
-			ChatDotRound,
-			EditPen,
-			ArrowLeft,
-			VideoPause,
-			Microphone,
-			Picture,
-			VideoCamera,
-			FolderOpened,
-			Histogram,
-			Plus,
-			Wallet,
-			CircleCheck,
-			List,
-			Star,
-			ChatLineRound,
-			Pointer,
-			Collection,
-			Grid,
 			HuiyuanchongzhiList,
 			MyNeedList,
 			JiaohuanshenqingList,
 		ReceivedApplyList,
 			JiaohuanjiluList,
-			PingjiafankuiList,
+
 			StoreupList,
 			MyForumList,
 			MySkillList,
@@ -424,7 +377,7 @@
 			return this.menuList.filter(item => {
 				if (!item.child[0]) return false
 				const tn = item.child[0].tableName
-				return ['jinengxuqiu', 'jiaohuanshenqing', 'jiaohuanjilu', 'pingjiafankui'].includes(tn)
+				return ['jinengxuqiu', 'jiaohuanshenqing', 'jiaohuanjilu'].includes(tn)
 			})
 		},
 		myContentMenuItems() {
@@ -512,7 +465,7 @@
 				huiyuanchongzhi: '会员充值',
 				jinengxuqiu: '我的需求',
 				jiaohuanjilu: '交换记录',
-				pingjiafankui: '评价反馈',
+
 				xuexiziliao: '学习资料',
 				storeup: '收藏',
 			};
@@ -561,7 +514,7 @@
 			body.style.height = '100vh';
 		}
 	},
-	beforeUnmount() {
+	beforeDestroy() {
 		const footer = document.querySelector('.bottom-preview');
 		if (footer) footer.style.display = '';
 		const body = document.querySelector('.body-containers');
@@ -1189,7 +1142,7 @@
 				'我的需求': 'Histogram',
 				'交换申请': 'CircleCheck',
 				'交换记录': 'List',
-				'评价反馈': 'Star',
+
 				'我的评论': 'ChatLineRound',
 				'我的点赞': 'Pointer',
 				'我的收藏': 'Collection',
@@ -1287,19 +1240,21 @@ $sidebar-w: 220px;
 			align-items: center;
 			gap: 10px;
 			padding: 0 16px;
-			height: 36px;
+			height: 38px;
 			color: $text-sub;
 			font-size: 13px;
 			font-weight: 500;
 			cursor: pointer;
-			transition: all 0.25s;
+			transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 			position: relative;
 			white-space: nowrap;
+			margin: 1px 6px;
+			border-radius: 8px;
 
 			.nav-icon {
 				font-size: 15px;
 				opacity: 0.5;
-				transition: all 0.25s;
+				transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 				width: 18px;
 				text-align: center;
 			}
@@ -1324,21 +1279,31 @@ $sidebar-w: 220px;
 				.nav-icon { opacity: 1; color: $cyan; }
 			}
 
+			&:active {
+				transform: scale(0.97);
+			}
+
 			&.is-active {
 				color: #fff;
-				background: rgba(0,212,255,0.08);
+				background: linear-gradient(135deg, rgba(0,212,255,0.12), rgba(124,58,237,0.08));
 				.nav-icon { opacity: 1; color: $cyan; }
 				&::before {
 					content: '';
 					position: absolute;
 					left: 0;
-					top: 8px;
-					bottom: 8px;
+					top: 6px;
+					bottom: 6px;
 					width: 3px;
 					border-radius: 0 2px 2px 0;
 					background: linear-gradient(180deg, $cyan, $purple);
 					box-shadow: 0 0 8px rgba(0,212,255,0.4);
+					animation: sidebarGlow 2s ease-in-out infinite;
 				}
+			}
+
+			@keyframes sidebarGlow {
+				0%, 100% { box-shadow: 0 0 4px rgba(0,212,255,0.3); }
+				50% { box-shadow: 0 0 12px rgba(0,212,255,0.6); }
 			}
 
 			.sidebar-submenu {
@@ -1423,6 +1388,12 @@ $sidebar-w: 220px;
 	}
 	.center-content-view {
 		width: 100%;
+		animation: contentFadeIn 0.35s ease-out;
+	}
+
+	@keyframes contentFadeIn {
+		from { opacity: 0; transform: translateX(8px); }
+		to { opacity: 1; transform: translateX(0); }
 	}
 
 }
@@ -1582,6 +1553,13 @@ $sidebar-w: 220px;
 				border-radius: 10px;
 				width: 64px;
 				height: 64px;
+				overflow: hidden;
+				background-color: transparent;
+			}
+			::v-deep .el-upload-list__item-thumbnail {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
 			}
 			::v-deep .el-upload__tip {
 				color: $text-dim;
@@ -1617,14 +1595,29 @@ $sidebar-w: 220px;
 				font-size: 13px;
 				line-height: 36px;
 				height: 36px;
-				transition: all 0.3s;
+				transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 				box-shadow: 0 4px 16px rgba(0,212,255,0.2);
+				position: relative;
+				overflow: hidden;
 				.icon { color: #fff; }
 				.text { color: #fff; font-weight: 500; }
+				&::after {
+					content: '';
+					position: absolute;
+					inset: 0;
+					background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+					opacity: 0;
+					transition: opacity 0.3s;
+				}
 			}
 			.updateBtn:hover {
 				transform: translateY(-2px);
-				box-shadow: 0 8px 24px rgba(0,212,255,0.3);
+				box-shadow: 0 8px 24px rgba(0,212,255,0.35);
+				&::after { opacity: 1; }
+			}
+			.updateBtn:active {
+				transform: translateY(0) scale(0.97);
+				box-shadow: 0 2px 8px rgba(0,212,255,0.2);
 			}
 			.closeBtn {
 				cursor: pointer;
@@ -1669,7 +1662,13 @@ $sidebar-w: 220px;
 		justify-content: space-between;
 		align-items: center;
 		border-radius: 12px;
-		transition: all 0.3s;
+		transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+		animation: contentFadeIn 0.35s ease-out both;
+		&:nth-child(1) { animation-delay: 0s; }
+		&:nth-child(2) { animation-delay: 0.05s; }
+		&:nth-child(3) { animation-delay: 0.1s; }
+		&:nth-child(4) { animation-delay: 0.15s; }
+		&:nth-child(5) { animation-delay: 0.2s; }
 
 		.chat-left {
 			display: flex;

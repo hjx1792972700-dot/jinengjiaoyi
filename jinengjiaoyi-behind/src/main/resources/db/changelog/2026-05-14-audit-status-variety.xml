@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="diversify-audit-status-skill" author="system">
+        <comment>将部分已通过的技能记录改为待审核或已拒绝，使审核模块数据更真实</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+-- 技能 → 待审核
+UPDATE jinengxuqiu SET sfsh='待审核', shhf=''
+  WHERE id=20 AND leixing='技能';
+UPDATE jinengxuqiu SET sfsh='待审核', shhf=''
+  WHERE id=37 AND leixing='技能';
+UPDATE jinengxuqiu SET sfsh='待审核', shhf=''
+  WHERE id=32 AND leixing='技能';
+
+-- 技能 → 已拒绝
+UPDATE jinengxuqiu SET sfsh='否', shhf='技能描述不够详细，请补充具体教学方案和作品展示后重新提交'
+  WHERE id=36 AND leixing='技能';
+UPDATE jinengxuqiu SET sfsh='否', shhf='该技能分类下已有类似内容，建议调整技能方向或突出差异化优势'
+  WHERE id=33 AND leixing='技能';
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="diversify-audit-status-demand" author="system">
+        <comment>将部分已通过的需求记录改为待审核或已拒绝</comment>
+        <sql splitStatements="true" stripComments="false"><![CDATA[
+SET NAMES utf8mb4;
+
+-- 需求 → 待审核
+UPDATE jinengxuqiu SET sfsh='待审核', shhf=''
+  WHERE id=30 AND leixing='需求';
+UPDATE jinengxuqiu SET sfsh='待审核', shhf=''
+  WHERE id=31 AND leixing='需求';
+UPDATE jinengxuqiu SET sfsh='待审核', shhf=''
+  WHERE id=44 AND leixing='需求';
+
+-- 需求 → 已拒绝
+UPDATE jinengxuqiu SET sfsh='否', shhf='需求描述过于笼统，请补充具体学习目标和时间安排'
+  WHERE id=29 AND leixing='需求';
+UPDATE jinengxuqiu SET sfsh='否', shhf='与已有需求内容重复，建议直接在技能市场中搜索相关技能进行交换'
+  WHERE id=28 AND leixing='需求';
+        ]]></sql>
+    </changeSet>
+
+</databaseChangeLog>

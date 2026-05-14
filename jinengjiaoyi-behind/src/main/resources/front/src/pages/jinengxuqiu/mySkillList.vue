@@ -1,5 +1,31 @@
 <template>
 	<div class="my-skill-wrap" :class="{'dark-embedded': embedded}">
+		<!-- 审核状态筛选 -->
+		<div class="top-bar">
+			<div class="stat-chips">
+				<div class="chip" :class="{active: filterStatus==='all'}" @click="filterStatus='all'; page=1; getList()">
+					<el-icon><Grid /></el-icon>
+					<span class="chip-label">全部</span>
+					<span class="chip-num">{{stats.total}}</span>
+				</div>
+				<div class="chip" :class="{active: filterStatus==='待审核'}" @click="filterStatus='待审核'; page=1; getList()">
+					<el-icon><Clock /></el-icon>
+					<span class="chip-label">待审核</span>
+					<span class="chip-num">{{stats.pending}}</span>
+				</div>
+				<div class="chip" :class="{active: filterStatus==='是'}" @click="filterStatus='是'; page=1; getList()">
+					<el-icon><CircleCheck /></el-icon>
+					<span class="chip-label">已通过</span>
+					<span class="chip-num">{{stats.approved}}</span>
+				</div>
+				<div class="chip" :class="{active: filterStatus==='否'}" @click="filterStatus='否'; page=1; getList()">
+					<el-icon><CircleClose /></el-icon>
+					<span class="chip-label">未通过</span>
+					<span class="chip-num">{{stats.rejected}}</span>
+				</div>
+			</div>
+		</div>
+
 		<el-table :stripe="false" :border="true" :data="tableData" class="skill-table" v-loading="loading">
 			<el-table-column label="封面" prop="fengmian" width="80">
 				<template #default="scope">
@@ -22,7 +48,7 @@
 			</el-table-column>
 			<el-table-column label="审核状态" prop="sfsh" width="90">
 				<template #default="scope">
-					<span :class="scope.row.sfsh==='是'?'tag-pass':'tag-wait'">{{scope.row.sfsh==='是'?'已通过':'待审核'}}</span>
+					<span :class="scope.row.sfsh==='是'?'tag-pass':(scope.row.sfsh==='否'?'tag-fail':'tag-wait')">{{scope.row.sfsh==='是'?'已通过':(scope.row.sfsh==='否'?'未通过':'待审核')}}</span>
 				</template>
 			</el-table-column>
 			<el-table-column label="热度" width="120">
@@ -58,6 +84,8 @@ export default {
 			pageSize: 8,
 			loading: false,
 			baseUrl: '',
+			filterStatus: 'all',
+			stats: { total: 0, pending: 0, approved: 0, rejected: 0 },
 		}
 	},
 	created() {
@@ -81,6 +109,7 @@ export default {
 				yonghuzhanghao: user.yonghuzhanghao,
 				leixing: '技能'
 			};
+			if (this.filterStatus !== 'all') params.sfsh = this.filterStatus;
 			this.$http.get('jinengxuqiu/page', { params }).then(res => {
 				this.loading = false;
 				if (res.data.code == 0) {
@@ -88,6 +117,15 @@ export default {
 					this.total = Number(res.data.data.total);
 				}
 			}).catch(() => { this.loading = false; });
+			this.$http.get('jinengxuqiu/page', { params: { page: 1, limit: 999, yonghuzhanghao: user.yonghuzhanghao, leixing: '技能' } }).then(res => {
+				if (res.data.code == 0) {
+					let ls = res.data.data.list || [];
+					this.stats.total = ls.length;
+					this.stats.pending = ls.filter(i => i.sfsh === '待审核' || !i.sfsh).length;
+					this.stats.approved = ls.filter(i => i.sfsh === '是').length;
+					this.stats.rejected = ls.filter(i => i.sfsh === '否').length;
+				}
+			});
 		},
 		pageChange(val) {
 			this.page = val;
@@ -128,6 +166,43 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$cyan: #00d4ff;
+$glass: rgba(255,255,255,0.03);
+$glass-border: rgba(255,255,255,0.06);
+$text1: #f1f5f9;
+$text2: #94a3b8;
+$text3: #64748b;
+
+.top-bar {
+	display: flex; justify-content: space-between; align-items: center;
+	margin-bottom: 16px; gap: 16px; flex-wrap: wrap;
+}
+.stat-chips {
+	display: flex; gap: 8px; flex-wrap: wrap;
+}
+.chip {
+	display: flex; align-items: center; gap: 6px;
+	padding: 8px 16px; border-radius: 20px;
+	background: $glass; border: 1px solid $glass-border;
+	cursor: pointer; transition: all 0.25s; user-select: none;
+	.el-icon { font-size: 14px; color: $text3; transition: color 0.25s; vertical-align: middle; }
+	.chip-label { font-size: 13px; color: $text2; transition: color 0.25s; }
+	.chip-num {
+		font-size: 12px; font-weight: 700; color: $text3;
+		background: rgba(255,255,255,0.04); padding: 1px 8px; border-radius: 10px;
+		min-width: 20px; text-align: center; transition: all 0.25s;
+	}
+	&:hover { border-color: rgba($cyan, 0.25); background: rgba($cyan, 0.04);
+		.el-icon, .chip-label { color: $cyan; }
+	}
+	&.active {
+		background: rgba($cyan, 0.08); border-color: rgba($cyan, 0.3);
+		.el-icon { color: $cyan; }
+		.chip-label { color: $text1; font-weight: 600; }
+		.chip-num { background: rgba($cyan, 0.15); color: $cyan; }
+	}
+}
+
 .my-skill-wrap {
 	.cover-img {
 		width: 50px;
@@ -153,6 +228,14 @@ export default {
 		font-size: 12px;
 		background: rgba(251, 191, 36, 0.1);
 		color: #f59e0b;
+	}
+	.tag-fail {
+		display: inline-block;
+		padding: 2px 8px;
+		border-radius: 10px;
+		font-size: 12px;
+		background: rgba(239, 68, 68, 0.1);
+		color: #f87171;
 	}
 	.stat {
 		font-size: 12px;

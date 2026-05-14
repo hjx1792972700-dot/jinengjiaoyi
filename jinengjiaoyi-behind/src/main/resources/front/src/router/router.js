@@ -1,5 +1,13 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import { Message } from 'element-ui'
+
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+	return originalPush.call(this, location).catch(err => err)
+}
+
+Vue.use(VueRouter)
 
 import Index from '../pages/index.vue'
 import Home from '../pages/home/home.vue'
@@ -29,9 +37,7 @@ import jiaohuanshenqingAdd from '../pages/jiaohuanshenqing/add.vue'
 import jiaohuanjiluList from '../pages/jiaohuanjilu/list.vue'
 import jiaohuanjiluDetail from '../pages/jiaohuanjilu/detail.vue'
 import jiaohuanjiluAdd from '../pages/jiaohuanjilu/add.vue'
-import pingjiafankuiList from '../pages/pingjiafankui/list.vue'
-import pingjiafankuiDetail from '../pages/pingjiafankui/detail.vue'
-import pingjiafankuiAdd from '../pages/pingjiafankui/add.vue'
+
 import ziliaoleixingList from '../pages/ziliaoleixing/list.vue'
 import ziliaoleixingDetail from '../pages/ziliaoleixing/detail.vue'
 import ziliaoleixingAdd from '../pages/ziliaoleixing/add.vue'
@@ -106,9 +112,7 @@ const routes = [
 			{ path: 'jiaohuanjilu', component: jiaohuanjiluList },
 			{ path: 'jiaohuanjiluDetail', component: jiaohuanjiluDetail },
 			{ path: 'jiaohuanjiluAdd', component: jiaohuanjiluAdd },
-			{ path: 'pingjiafankui', component: pingjiafankuiList },
-			{ path: 'pingjiafankuiDetail', component: pingjiafankuiDetail },
-			{ path: 'pingjiafankuiAdd', component: pingjiafankuiAdd },
+
 			{ path: 'ziliaoleixing', component: ziliaoleixingList },
 			{ path: 'ziliaoleixingDetail', component: ziliaoleixingDetail },
 			{ path: 'ziliaoleixingAdd', component: ziliaoleixingAdd },
@@ -157,8 +161,8 @@ const routes = [
 	},
 ]
 
-const router = createRouter({
-	history: createWebHashHistory(),
+const router = new VueRouter({
+	mode: 'hash',
 	routes,
 })
 
@@ -168,7 +172,7 @@ router.beforeEach((to, from, next) => {
 	if (openPaths.includes(to.path)) {
 		next()
 	} else if (!token) {
-		ElMessage.warning({ message: '请先登录后再访问', duration: 2500, showClose: true })
+		Message.warning({ message: '请先登录后再访问', duration: 2500, showClose: true })
 		next('/index')
 	} else {
 		next()

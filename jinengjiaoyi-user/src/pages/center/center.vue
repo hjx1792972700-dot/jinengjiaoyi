@@ -236,9 +236,8 @@
 				<div class="center-content-view" v-if="activeMenuTable=='jiaohuanjilu'">
 					<jiaohuanjilu-list :embedded="true"></jiaohuanjilu-list>
 				</div>
-				<div class="center-content-view" v-if="activeMenuTable=='pingjiafankui'">
-					<pingjiafankui-list :embedded="true"></pingjiafankui-list>
-				</div>
+
+
 				<div class="center-content-view" v-if="activeMenuTable=='storeup'">
 					<storeup-list :embedded="true" :key="'storeup-'+storeupTypeKey"></storeup-list>
 				</div>
@@ -278,7 +277,7 @@
 	import JiaohuanshenqingList from '../jiaohuanshenqing/list.vue'
 	import ReceivedApplyList from '../jiaohuanshenqing/receivedApply.vue'
 	import JiaohuanjiluList from '../jiaohuanjilu/list.vue'
-	import PingjiafankuiList from '../pingjiafankui/list.vue'
+
 	import StoreupList from '../storeup/list.vue'
 	import MyForumList from '../forum/myForumList.vue'
 	import MySkillList from '../jinengxuqiu/mySkillList.vue'
@@ -290,7 +289,7 @@
 			JiaohuanshenqingList,
 		ReceivedApplyList,
 			JiaohuanjiluList,
-			PingjiafankuiList,
+
 			StoreupList,
 			MyForumList,
 			MySkillList,
@@ -378,7 +377,7 @@
 			return this.menuList.filter(item => {
 				if (!item.child[0]) return false
 				const tn = item.child[0].tableName
-				return ['jinengxuqiu', 'jiaohuanshenqing', 'jiaohuanjilu', 'pingjiafankui'].includes(tn)
+				return ['jinengxuqiu', 'jiaohuanshenqing', 'jiaohuanjilu'].includes(tn)
 			})
 		},
 		myContentMenuItems() {
@@ -466,7 +465,7 @@
 				huiyuanchongzhi: '会员充值',
 				jinengxuqiu: '我的需求',
 				jiaohuanjilu: '交换记录',
-				pingjiafankui: '评价反馈',
+
 				xuexiziliao: '学习资料',
 				storeup: '收藏',
 			};
@@ -1143,7 +1142,7 @@
 				'我的需求': 'Histogram',
 				'交换申请': 'CircleCheck',
 				'交换记录': 'List',
-				'评价反馈': 'Star',
+
 				'我的评论': 'ChatLineRound',
 				'我的点赞': 'Pointer',
 				'我的收藏': 'Collection',
@@ -1241,19 +1240,21 @@ $sidebar-w: 220px;
 			align-items: center;
 			gap: 10px;
 			padding: 0 16px;
-			height: 36px;
+			height: 38px;
 			color: $text-sub;
 			font-size: 13px;
 			font-weight: 500;
 			cursor: pointer;
-			transition: all 0.25s;
+			transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 			position: relative;
 			white-space: nowrap;
+			margin: 1px 6px;
+			border-radius: 8px;
 
 			.nav-icon {
 				font-size: 15px;
 				opacity: 0.5;
-				transition: all 0.25s;
+				transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 				width: 18px;
 				text-align: center;
 			}
@@ -1278,21 +1279,31 @@ $sidebar-w: 220px;
 				.nav-icon { opacity: 1; color: $cyan; }
 			}
 
+			&:active {
+				transform: scale(0.97);
+			}
+
 			&.is-active {
 				color: #fff;
-				background: rgba(0,212,255,0.08);
+				background: linear-gradient(135deg, rgba(0,212,255,0.12), rgba(124,58,237,0.08));
 				.nav-icon { opacity: 1; color: $cyan; }
 				&::before {
 					content: '';
 					position: absolute;
 					left: 0;
-					top: 8px;
-					bottom: 8px;
+					top: 6px;
+					bottom: 6px;
 					width: 3px;
 					border-radius: 0 2px 2px 0;
 					background: linear-gradient(180deg, $cyan, $purple);
 					box-shadow: 0 0 8px rgba(0,212,255,0.4);
+					animation: sidebarGlow 2s ease-in-out infinite;
 				}
+			}
+
+			@keyframes sidebarGlow {
+				0%, 100% { box-shadow: 0 0 4px rgba(0,212,255,0.3); }
+				50% { box-shadow: 0 0 12px rgba(0,212,255,0.6); }
 			}
 
 			.sidebar-submenu {
@@ -1377,6 +1388,12 @@ $sidebar-w: 220px;
 	}
 	.center-content-view {
 		width: 100%;
+		animation: contentFadeIn 0.35s ease-out;
+	}
+
+	@keyframes contentFadeIn {
+		from { opacity: 0; transform: translateX(8px); }
+		to { opacity: 1; transform: translateX(0); }
 	}
 
 }
@@ -1578,14 +1595,29 @@ $sidebar-w: 220px;
 				font-size: 13px;
 				line-height: 36px;
 				height: 36px;
-				transition: all 0.3s;
+				transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 				box-shadow: 0 4px 16px rgba(0,212,255,0.2);
+				position: relative;
+				overflow: hidden;
 				.icon { color: #fff; }
 				.text { color: #fff; font-weight: 500; }
+				&::after {
+					content: '';
+					position: absolute;
+					inset: 0;
+					background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+					opacity: 0;
+					transition: opacity 0.3s;
+				}
 			}
 			.updateBtn:hover {
 				transform: translateY(-2px);
-				box-shadow: 0 8px 24px rgba(0,212,255,0.3);
+				box-shadow: 0 8px 24px rgba(0,212,255,0.35);
+				&::after { opacity: 1; }
+			}
+			.updateBtn:active {
+				transform: translateY(0) scale(0.97);
+				box-shadow: 0 2px 8px rgba(0,212,255,0.2);
 			}
 			.closeBtn {
 				cursor: pointer;
@@ -1630,7 +1662,13 @@ $sidebar-w: 220px;
 		justify-content: space-between;
 		align-items: center;
 		border-radius: 12px;
-		transition: all 0.3s;
+		transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+		animation: contentFadeIn 0.35s ease-out both;
+		&:nth-child(1) { animation-delay: 0s; }
+		&:nth-child(2) { animation-delay: 0.05s; }
+		&:nth-child(3) { animation-delay: 0.1s; }
+		&:nth-child(4) { animation-delay: 0.15s; }
+		&:nth-child(5) { animation-delay: 0.2s; }
 
 		.chat-left {
 			display: flex;

@@ -17,7 +17,6 @@ import {
 import App from './App.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
 import FileUpload from '@/components/FileUpload.vue'
-import Editor from '@/components/Editor.vue'
 
 Vue.use(ElementUI)
 
@@ -32,7 +31,6 @@ Vue.prototype.getCurDate = getCurDate
 
 Vue.component('Breadcrumb', Breadcrumb)
 Vue.component('file-upload', FileUpload)
-Vue.component('editor', Editor)
 
 new Vue({
 	router,

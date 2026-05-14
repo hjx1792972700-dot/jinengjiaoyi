@@ -27,9 +27,11 @@ import com.annotation.IgnoreAuth;
 import com.annotation.SysLog;
 
 import com.entity.ForumtypeEntity;
+import com.entity.ForumEntity;
 import com.entity.view.ForumtypeView;
 
 import com.service.ForumtypeService;
+import com.service.ForumService;
 import com.utils.PageUtils;
 import com.utils.R;
 import com.utils.MPUtil;
@@ -49,6 +51,9 @@ import java.io.IOException;
 public class ForumtypeController {
     @Autowired
     private ForumtypeService forumtypeService;
+
+    @Autowired
+    private ForumService forumService;
 
 
 
@@ -197,6 +202,18 @@ public class ForumtypeController {
     @RequestMapping("/delete")
     @SysLog("删除论坛类型")
     public R delete(@RequestBody Long[] ids){
+        for (Long id : ids) {
+            ForumtypeEntity entity = forumtypeService.selectById(id);
+            if (entity != null) {
+                String name = entity.getTypename();
+                int count = forumService.selectCount(
+                    new EntityWrapper<ForumEntity>().eq("typename", name)
+                );
+                if (count > 0) {
+                    return R.error("论坛类型「" + name + "」下存在" + count + "条帖子记录，无法删除");
+                }
+            }
+        }
         forumtypeService.deleteBatchIds(Arrays.asList(ids));
         return R.ok();
     }

@@ -80,11 +80,20 @@ public class JinengxuqiuController {
 		if(tableName.equals("yonghu")) {
 			jinengxuqiu.setYonghuzhanghao((String)request.getSession().getAttribute("username"));
 		}
-        //设置查询条件
+
+        boolean isAuditSort = "true".equals(params.get("auditSort"));
+        if(isAuditSort) {
+            params.remove("auditSort");
+            params.remove("sort");
+            params.remove("order");
+        }
+
         EntityWrapper<JinengxuqiuEntity> ew = new EntityWrapper<JinengxuqiuEntity>();
 
+        if(isAuditSort) {
+            ew.last("ORDER BY FIELD(sfsh, '待审核', '否', '是'), id DESC");
+        }
 
-        //查询结果
 		PageUtils page = jinengxuqiuService.queryPage(params, MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, jinengxuqiu), params), params));
         Map<String, String> deSens = new HashMap<>();
         //给需要脱敏的字段脱敏

@@ -4,14 +4,14 @@
 		<!-- 列表页 -->
 		<template v-if="showFlag  &&!statType ">
 			<div class="admin-search">
-				<el-button class="btn-primary" size="small" :icon="Plus" v-if="isAuth('xuexiziliao','新增')" @click="addOrUpdateHandler()">新增</el-button>
+				<el-button class="btn-primary" size="small" icon="el-icon-plus" v-if="isAuth('xuexiziliao','新增')" @click="addOrUpdateHandler()">新增</el-button>
 				<div class="search-field">
 					<span class="field-label">资料标题</span>
 					<el-input v-model="searchForm.ziliaobiaoti" placeholder="资料标题" @keydown.enter="search()" clearable size="small"></el-input>
 				</div>
 				<div class="search-actions">
-					<el-button class="btn-primary" size="small" :icon="Search" @click="search()">查询</el-button>
-					<el-button class="btn-plain" size="small" :icon="Refresh" @click="searchForm.ziliaobiaoti='';search()">重置</el-button>
+					<el-button class="btn-primary" size="small" icon="el-icon-search" @click="search()">查询</el-button>
+					<el-button class="btn-plain" size="small" icon="el-icon-refresh" @click="searchForm.ziliaobiaoti='';search()">重置</el-button>
 				</div>
 			</div>
 
@@ -22,91 +22,87 @@
 					v-loading="dataListLoading"
 					style="width:100%"
 					@selection-change="selectionChangeHandler">
-				<el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
-				<el-table-column :resizable='true'
-					prop="ziliaobiaoti"
-					label="资料标题" min-width="120" show-overflow-tooltip>
+			<el-table-column type="index" :index="indexMethod" label="序号" width="50" align="center"></el-table-column>
+			<el-table-column :resizable='true'
+				prop="ziliaobiaoti"
+				label="资料标题" min-width="130" show-overflow-tooltip>
+				<template #default="scope">
+					{{scope.row.ziliaobiaoti}}
+				</template>
+			</el-table-column>
+			<el-table-column :resizable='true'
+				prop="ziliaoleixing"
+				label="分类" width="75" align="center">
+				<template #default="scope">
+					{{scope.row.ziliaoleixing}}
+				</template>
+			</el-table-column>
+			<el-table-column :resizable='true'
+				prop="jiage"
+				label="价格" width="60" align="center">
+				<template #default="scope">
+					<span v-if="scope.row.jiage > 0" style="color:#ef4444;font-weight:600;">¥{{scope.row.jiage}}</span>
+					<span v-else style="color:#10b981;font-weight:600;">免费</span>
+				</template>
+			</el-table-column>
+			<el-table-column :resizable='true' prop="ziliaofengmian" width="80" label="封面" align="center">
+				<template #default="scope">
+					<div v-if="scope.row.ziliaofengmian">
+						<img v-if="scope.row.ziliaofengmian.substring(0,4)=='http'&&scope.row.ziliaofengmian.split(',w').length>1" :src="scope.row.ziliaofengmian" width="50" height="50" style="object-fit:cover;border-radius:6px;cursor:pointer" @click="imgPreView(scope.row.ziliaofengmian)">
+						<img v-else-if="scope.row.ziliaofengmian.substring(0,4)=='http'" :src="scope.row.ziliaofengmian.split(',')[0]" width="50" height="50" style="object-fit:cover;border-radius:6px;cursor:pointer" @click="imgPreView(scope.row.ziliaofengmian.split(',')[0])">
+						<img v-else :src="$base.url+scope.row.ziliaofengmian.split(',')[0]" width="50" height="50" style="object-fit:cover;border-radius:6px;cursor:pointer" @click="imgPreView($base.url+scope.row.ziliaofengmian.split(',')[0])">
+					</div>
+					<div v-else style="color:#64748b;font-size:12px;">-</div>
+				</template>
+			</el-table-column>
+			<el-table-column :resizable='true' prop="ziliaoshipin" label="视频" width="55" align="center">
+				<template #default="scope">
+					<el-button v-if="scope.row.ziliaoshipin" link type="primary" size="mini" @click="preClick(scope.row.ziliaoshipin)">预览</el-button>
+					<span v-else style="color:#64748b;">-</span>
+				</template>
+			</el-table-column>
+			<el-table-column :resizable='true' prop="ziliaofujian" label="附件" width="55" align="center">
+				<template #default="scope">
+					<el-button v-if="scope.row.ziliaofujian" link type="primary" size="mini" @click="download(scope.row.ziliaofujian)">下载</el-button>
+					<span v-else style="color:#64748b;">-</span>
+				</template>
+			</el-table-column>
+			<el-table-column :resizable='true'
+				prop="fabushijian"
+				label="发布时间" width="95" align="center">
+				<template #default="scope">
+					{{scope.row.fabushijian}}
+				</template>
+			</el-table-column>
+			<el-table-column :resizable='true'
+				prop="clicknum"
+				label="点击" width="50" align="center">
+				<template #default="scope">
+					{{scope.row.clicknum}}
+				</template>
+			</el-table-column>
+			<el-table-column :resizable='true'
+				prop="discussnum"
+				label="评论" width="50" align="center">
+				<template #default="scope">
+					{{scope.row.discussnum}}
+				</template>
+			</el-table-column>
+			<el-table-column :resizable='true'
+				prop="storeupnum"
+				label="收藏" width="50" align="center">
+				<template #default="scope">
+					{{scope.row.storeupnum}}
+				</template>
+			</el-table-column>
+			<el-table-column label="操作" fixed="right" align="center" width="140">
 					<template #default="scope">
-						{{scope.row.ziliaobiaoti}}
-					</template>
-				</el-table-column>
-				<el-table-column :resizable='true'
-					prop="ziliaoleixing"
-					label="技能分类" min-width="90">
-					<template #default="scope">
-						{{scope.row.ziliaoleixing}}
-					</template>
-				</el-table-column>
-				<el-table-column :resizable='true'
-					prop="jiage"
-					label="价格" min-width="80" align="center">
-					<template #default="scope">
-						<span v-if="scope.row.jiage > 0" style="color:#ef4444;font-weight:600;">¥{{scope.row.jiage}}</span>
-						<span v-else style="color:#10b981;font-weight:600;">免费</span>
-					</template>
-				</el-table-column>
-				<el-table-column :resizable='true' prop="ziliaofengmian" width="100" label="封面">
-					<template #default="scope">
-						<div v-if="scope.row.ziliaofengmian">
-							<img v-if="scope.row.ziliaofengmian.substring(0,4)=='http'&&scope.row.ziliaofengmian.split(',w').length>1" :src="scope.row.ziliaofengmian" width="60" height="60" style="object-fit:cover;border-radius:6px;cursor:pointer" @click="imgPreView(scope.row.ziliaofengmian)">
-							<img v-else-if="scope.row.ziliaofengmian.substring(0,4)=='http'" :src="scope.row.ziliaofengmian.split(',')[0]" width="60" height="60" style="object-fit:cover;border-radius:6px;cursor:pointer" @click="imgPreView(scope.row.ziliaofengmian.split(',')[0])">
-							<img v-else :src="$base.url+scope.row.ziliaofengmian.split(',')[0]" width="60" height="60" style="object-fit:cover;border-radius:6px;cursor:pointer" @click="imgPreView($base.url+scope.row.ziliaofengmian.split(',')[0])">
+						<div style="display:flex;justify-content:center;gap:4px;flex-wrap:nowrap;">
+							<el-button size="mini" v-if="isAuth('xuexiziliao','查看')" type="success" plain @click="viewDetail(scope.row)">查看</el-button>
+							<el-button size="mini" v-if="isAuth('xuexiziliao','删除')" type="danger" plain @click="deleteWithCheck(scope.row)">删除</el-button>
 						</div>
-						<div v-else style="color:#64748b;font-size:12px;">无图片</div>
 					</template>
 				</el-table-column>
-				<el-table-column :resizable='true' prop="ziliaoshipin" label="视频" min-width="70" align="center">
-					<template #default="scope">
-						<el-button v-if="scope.row.ziliaoshipin" link type="primary" size="small" @click="preClick(scope.row.ziliaoshipin)">预览</el-button>
-						<span v-else style="color:#64748b;">无</span>
-					</template>
-				</el-table-column>
-				<el-table-column :resizable='true' prop="ziliaofujian" label="附件" min-width="70" align="center">
-					<template #default="scope">
-						<el-button v-if="scope.row.ziliaofujian" link type="primary" size="small" @click="download(scope.row.ziliaofujian)">下载</el-button>
-						<span v-else style="color:#64748b;">无</span>
-					</template>
-				</el-table-column>
-				<el-table-column :resizable='true'
-					prop="fabushijian"
-					label="发布时间" min-width="100">
-					<template #default="scope">
-						{{scope.row.fabushijian}}
-					</template>
-				</el-table-column>
-				<el-table-column :resizable='true'
-					prop="clicknum"
-					label="点击" min-width="65" align="center">
-					<template #default="scope">
-						{{scope.row.clicknum}}
-					</template>
-				</el-table-column>
-				<el-table-column :resizable='true'
-					prop="discussnum"
-					label="评论" min-width="65" align="center">
-					<template #default="scope">
-						{{scope.row.discussnum}}
-					</template>
-				</el-table-column>
-				<el-table-column :resizable='true'
-					prop="storeupnum"
-					label="收藏" min-width="65" align="center">
-					<template #default="scope">
-						{{scope.row.storeupnum}}
-					</template>
-				</el-table-column>
-				<el-table-column width="260" label="操作">
-						<template #default="scope">
-							<el-button size="small" v-if=" isAuth('xuexiziliao','查看')" type="success" plain @click="addOrUpdateHandler(scope.row.id,'info')">查看</el-button>
-							<el-button size="small" v-if=" isAuth('xuexiziliao','修改') " type="warning" plain @click="addOrUpdateHandler(scope.row.id)">修改</el-button>
-
-							<el-button size="small" v-if="isAuth('xuexiziliao','查看评论')" type="success" plain @click="disscussListHandler(scope.row.id)">查看评论</el-button>
-
-
-
-							<el-button size="small" v-if="isAuth('xuexiziliao','删除')" type="danger" plain @click="deleteHandler(scope.row.id)">删除</el-button>
-						</template>
-					</el-table-column>
 				</el-table>
 			</div>
 			<div class="admin-pagination">
@@ -125,6 +121,52 @@
 			></el-pagination>
 			</div>
 		</template>
+		<!-- 资料详情页 -->
+		<template v-if="detailFlag">
+			<div class="ziliao-detail-page">
+				<div class="detail-top-bar">
+					<el-button class="back-btn" size="small" @click="closeDetail">
+						<i class="el-icon-arrow-left"></i> 返回列表
+					</el-button>
+					<div class="top-bar-tags">
+						<span class="type-badge" v-if="detailData.ziliaoleixing">{{detailData.ziliaoleixing}}</span>
+						<span class="price-badge" v-if="detailData.jiage">¥{{detailData.jiage}}</span>
+						<span class="price-badge free" v-else>免费</span>
+					</div>
+				</div>
+
+				<div class="detail-hero">
+					<div class="hero-cover" v-if="detailData.ziliaofengmian">
+						<img v-if="detailData.ziliaofengmian.substring(0,4)=='http'" :src="detailData.ziliaofengmian.split(',')[0]" />
+						<img v-else :src="$base.url + detailData.ziliaofengmian.split(',')[0]" />
+					</div>
+					<div class="hero-info">
+						<h1 class="hero-title">{{detailData.ziliaobiaoti}}</h1>
+						<div class="hero-stats">
+							<div class="stat-box"><i class="el-icon-view"></i><span>{{detailData.clicknum||0}}</span><label>浏览</label></div>
+							<div class="stat-box"><i class="el-icon-chat-dot-round"></i><span>{{detailData.discussnum||0}}</span><label>评论</label></div>
+							<div class="stat-box"><i class="el-icon-star-on"></i><span>{{detailData.storeupnum||0}}</span><label>收藏</label></div>
+						</div>
+						<div class="hero-time" v-if="detailData.fabushijian"><i class="el-icon-time"></i> 发布于 {{detailData.fabushijian}}</div>
+						<div class="hero-actions" v-if="detailData.ziliaofujian">
+							<el-button class="dl-btn" size="small" @click="download(detailData.ziliaofujian)"><i class="el-icon-download"></i> 下载附件</el-button>
+						</div>
+					</div>
+				</div>
+
+				<div class="detail-content-card" v-if="detailData.ziliaoshipin">
+					<div class="content-header"><div class="content-icon"><i class="el-icon-video-camera"></i></div><span>视频资料</span></div>
+					<div class="content-body">
+						<video :src="$base.url + detailData.ziliaoshipin" controls style="width:100%;max-height:360px;border-radius:8px;"></video>
+					</div>
+				</div>
+
+				<div class="detail-content-card" v-if="detailData.ziliaoxiangqing">
+					<div class="content-header"><div class="content-icon"><i class="el-icon-document"></i></div><span>资料详情</span></div>
+					<div class="content-body ql-snow ql-editor" v-html="detailData.ziliaoxiangqing"></div>
+				</div>
+			</div>
+		</template>
 		<!-- 添加/修改页面  将父组件的search方法传递给子组件-->
 		<add-or-update v-if="addOrUpdateFlag" :parent="this" ref="addOrUpdate"></add-or-update>
 
@@ -139,7 +181,7 @@
 			</div>
 		</template>
 
-		<el-dialog title="预览图" v-model="previewVisible" width="480px" :close-on-click-modal="false">
+		<el-dialog title="预览图" :visible.sync="previewVisible" width="480px" :close-on-click-modal="false">
 			<img :src="previewImg" alt="" style="width: 100%;">
 		</el-dialog>
 	</div>
@@ -150,7 +192,6 @@
 	import chinaJson from "@/components/echarts/china.json";
 	import axios from 'axios';
 	import AddOrUpdate from "./add-or-update.vue";
-	import { Plus, Search, Refresh } from '@element-plus/icons-vue';
 	export default {
 		data() {
 			return {
@@ -162,11 +203,13 @@
 				form:{},
 				dataList: [],
 				pageIndex: 1,
-				pageSize: 10,
+				pageSize: 7,
 				totalPage: 0,
 				dataListLoading: false,
 				dataListSelections: [],
 				showFlag: true,
+				detailFlag: false,
+				detailData: {},
 				line: {"backgroundColor":"transparent","yAxis":{"axisLabel":{"borderType":"solid","rotate":0,"padding":0,"shadowOffsetX":0,"margin":15,"backgroundColor":"transparent","borderColor":"#000","shadowOffsetY":0,"color":"#333","shadowBlur":0,"show":true,"inside":false,"ellipsis":"...","overflow":"none","borderRadius":0,"borderWidth":0,"width":"","fontSize":12,"lineHeight":24,"shadowColor":"transparent","fontWeight":"normal","height":""},"axisTick":{"show":true,"length":5,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"inside":false},"splitLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#666","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":true},"minInterval":1,"axisLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":true},"splitArea":{"show":false,"areaStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"rgba(25,25,25,0.3)","opacity":1,"shadowBlur":10,"shadowColor":"rgba(0,0,0,.5)"}}},"xAxis":{"axisLabel":{"borderType":"solid","rotate":30,"padding":0,"shadowOffsetX":0,"margin":10,"backgroundColor":"transparent","borderColor":"#000","shadowOffsetY":0,"color":"#333","shadowBlur":0,"show":true,"inside":false,"ellipsis":"...","overflow":"truncate","borderRadius":0,"borderWidth":0,"width":120,"interval":0,"fontSize":12,"lineHeight":24,"shadowColor":"transparent","fontWeight":"normal","height":""},"axisTick":{"show":true,"length":5,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"inside":false},"splitLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":false},"axisLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":true},"splitArea":{"show":false,"areaStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"rgba(25,25,25,.3)","opacity":1,"shadowBlur":10,"shadowColor":"rgba(0,0,0,.5)"}}},"color":["#FBAE7D","#875F41","#FBC88C","#4FB7F1","#2CD89E","#89e6d8","#4495ac","#9a60b4","#ea7ccc"],"legend":{"padding":0,"itemGap":10,"shadowOffsetX":0,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"orient":"horizontal","shadowBlur":0,"bottom":"auto","itemHeight":14,"show":true,"icon":"roundRect","itemStyle":{"borderType":"solid","shadowOffsetX":0,"borderColor":"inherit","shadowOffsetY":0,"color":"inherit","shadowBlur":0,"borderWidth":0,"opacity":1,"shadowColor":"transparent"},"right":"auto","top":"auto","borderRadius":0,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"inherit","shadowBlur":0,"width":"auto","type":"inherit","opacity":1,"shadowColor":"transparent"},"left":"right","borderWidth":0,"width":"80%","itemWidth":20,"textStyle":{"textBorderWidth":0,"color":"inherit","textShadowColor":"transparent","ellipsis":"...","overflow":"none","fontSize":12,"lineHeight":24,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":500,"textBorderColor":"transparent","textShadowBlur":0},"shadowColor":"rgba(0,0,0,.3)","height":"auto"},"series":{"animationDuration":6000,"symbol":"image://http://codegen.caihongy.cn/20210106/4cacdcd9b8fd43529362329e06dbd938.jpg","label":{"color":"#725BFF","show":false,"position":"top"},"symbolSize":[15,15],"symbolOffset":[0,1],"animation":true},"tooltip":{"backgroundColor":"#123","textStyle":{"color":"#fff"}},"title":{"borderType":"solid","padding":0,"shadowOffsetX":0,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"shadowBlur":0,"bottom":"auto","show":true,"right":"auto","top":"auto","borderRadius":0,"left":"left","borderWidth":0,"textStyle":{"textBorderWidth":0,"color":"#333","textShadowColor":"transparent","fontSize":14,"lineHeight":24,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":600,"textBorderColor":"#666","textShadowBlur":0},"shadowColor":"transparent"}},
 				bar: {"backgroundColor":"transparent","yAxis":{"axisLabel":{"borderType":"solid","rotate":0,"padding":0,"shadowOffsetX":0,"margin":12,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"color":"#333","shadowBlur":0,"show":true,"inside":false,"ellipsis":"...","overflow":"none","borderRadius":0,"borderWidth":0,"width":"","fontSize":12,"lineHeight":24,"shadowColor":"transparent","fontWeight":"normal","height":""},"axisTick":{"show":true,"length":5,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"inside":false},"splitLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#666","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":true},"minInterval":1,"axisLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":true},"splitArea":{"show":false,"areaStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"rgba(25,25,25,0.3)","opacity":1,"shadowBlur":10,"shadowColor":"rgba(0,0,0,.5)"}}},"xAxis":{"axisLabel":{"borderType":"solid","rotate":30,"padding":0,"shadowOffsetX":0,"margin":10,"backgroundColor":"transparent","borderColor":"#000","shadowOffsetY":0,"color":"#333","shadowBlur":0,"show":true,"inside":false,"ellipsis":"...","overflow":"truncate","borderRadius":0,"borderWidth":0,"width":120,"interval":0,"fontSize":12,"lineHeight":24,"shadowColor":"transparent","fontWeight":"normal","height":""},"axisTick":{"show":true,"length":5,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"inside":false},"splitLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":false},"minInterval":1,"axisLine":{"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"cap":"butt","color":"#333","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"rgba(0,0,0,.5)"},"show":true},"splitArea":{"show":false,"areaStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"rgba(25,25,25,.3)","opacity":1,"shadowBlur":10,"shadowColor":"rgba(0,0,0,.5)"}}},"color":["#FBAE7D","#00E6A7","#FBAE7D","#845C3F","#AEB476","#559781","#B2F9F0","#2B83AD","#FFAA00","#000000"],"legend":{"padding":0,"itemGap":10,"shadowOffsetX":0,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"orient":"horizontal","shadowBlur":0,"bottom":"auto","itemHeight":14,"show":true,"icon":"roundRect","itemStyle":{"borderType":"solid","shadowOffsetX":0,"borderColor":"inherit","shadowOffsetY":0,"color":"inherit","shadowBlur":0,"borderWidth":0,"opacity":1,"shadowColor":"transparent"},"right":"auto","top":"auto","borderRadius":0,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"inherit","shadowBlur":0,"width":"auto","type":"inherit","opacity":1,"shadowColor":"transparent"},"left":"right","borderWidth":0,"width":"80%","itemWidth":20,"textStyle":{"textBorderWidth":0,"color":"inherit","textShadowColor":"transparent","ellipsis":"...","overflow":"none","fontSize":12,"lineHeight":12,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":500,"textBorderColor":"transparent","textShadowBlur":0},"shadowColor":"rgba(0,0,0,.3)","height":"auto"},"grid":{"right":"20","top":"60","left":"20","bottom":"20","containLabel":true},"series":{"barWidth":"13px","itemStyle":{"borderType":"solid","shadowOffsetX":0,"borderColor":"#f2f8d4","shadowOffsetY":0,"color":{"x":0,"y":0,"y2":1,"x2":0,"global":false,"colorStops":[{"offset":0,"color":"#FBAE7D"},{"offset":1,"color":"#875F41"}],"type":"linear"},"shadowBlur":0,"borderWidth":0,"barBorderRadius":[10,10,0,0],"opacity":1,"shadowColor":"#000"},"colorBy":"data","label":{"formatter":"","show":true,"position":"top"},"barCategoryGap":"30%"},"tooltip":{"backgroundColor":"#123","textStyle":{"color":"#fff"}},"title":{"borderType":"solid","padding":0,"shadowOffsetX":0,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"subtext":"","shadowBlur":0,"bottom":"auto","show":true,"right":"auto","subtextStyle":{"padding":[5,0,0,0],"borderColor":"red","color":"red","borderWidth":10},"top":"auto","borderRadius":0,"left":"left","borderWidth":0,"textStyle":{"textBorderWidth":0,"color":"#333","textShadowColor":"transparent","fontSize":14,"lineHeight":24,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":600,"textBorderColor":"#666","textShadowBlur":0},"shadowColor":"transparent"},"base":{"animate":false,"interval":2000}},
 				pie: {"tooltip":{"backgroundColor":"#123","textStyle":{"color":"#fff"}},"backgroundColor":"transparent","color":["#FBAE7D","#845C3F","#AEB476","#559781","#B2F9F0","#2B83AD","#9ADBC4","#FFAA00","#000000"],"title":{"borderType":"solid","padding":[5,0,0,0],"shadowOffsetX":0,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"shadowBlur":0,"bottom":"auto","show":true,"right":"auto","top":"auto","borderRadius":0,"left":"left","borderWidth":0,"textStyle":{"textBorderWidth":0,"color":"#333","textShadowColor":"transparent","fontSize":14,"lineHeight":14,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":600,"textBorderColor":"#666","textShadowBlur":0},"shadowColor":"transparent"},"legend":{"padding":[5,0,0,0],"itemGap":10,"shadowOffsetX":0,"backgroundColor":"transparent","borderColor":"#666","shadowOffsetY":0,"orient":"horizontal","shadowBlur":0,"bottom":"auto","itemHeight":2,"show":true,"icon":"roundRect","itemStyle":{"borderType":"solid","shadowOffsetX":0,"borderColor":"inherit","shadowOffsetY":0,"color":"inherit","shadowBlur":0,"borderWidth":0,"opacity":1,"shadowColor":"transparent"},"right":0,"top":"auto","borderRadius":0,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"inherit","shadowBlur":0,"width":"auto","type":"inherit","opacity":1,"shadowColor":"transparent"},"left":"right","borderWidth":0,"width":"80%","itemWidth":2,"textStyle":{"textBorderWidth":0,"color":"inherit","textShadowColor":"transparent","ellipsis":"...","overflow":"none","fontSize":12,"lineHeight":12,"textShadowOffsetX":0,"textShadowOffsetY":0,"textBorderType":"solid","fontWeight":500,"textBorderColor":"transparent","textShadowBlur":0},"shadowColor":"rgba(0,0,0,.3)","height":"auto"},"series":{"itemStyle":{"borderType":"solid","shadowOffsetX":0,"borderColor":"#666","shadowOffsetY":0,"color":"","shadowBlur":0,"borderWidth":0,"opacity":1,"shadowColor":"#FBAE7D"},"label":{"borderType":"solid","rotate":0,"padding":0,"textBorderWidth":0,"backgroundColor":"transparent","borderColor":"#666","color":"inherit","show":true,"textShadowColor":"transparent","distanceToLabelLine":5,"ellipsis":"...","overflow":"none","borderRadius":0,"borderWidth":0,"fontSize":12,"lineHeight":18,"textShadowOffsetX":0,"position":"outside","textShadowOffsetY":0,"textBorderType":"solid","textBorderColor":"#666","textShadowBlur":0},"labelLine":{"show":true,"length":10,"lineStyle":{"shadowOffsetX":0,"shadowOffsetY":0,"color":"#FBAE7D","shadowBlur":0,"width":1,"type":"solid","opacity":1,"shadowColor":"#FBAE7D"},"length2":14,"smooth":false}}},
@@ -212,11 +255,7 @@
 			}
 		},
 		components: {
-			AddOrUpdate,
-			Plus,
-			Search,
-			Refresh,
-		},
+			AddOrUpdate},
 		methods: {
 			htmlfilter(val) {
 				return String(val == null ? '' : val).replace(/<[^>]*>/g, '').replace(/undefined/g, '');
@@ -366,6 +405,9 @@
 					}
 				});
 			},
+			indexMethod(index) {
+				return (this.pageIndex - 1) * this.pageSize + index + 1;
+			},
 			search() {
 				this.pageIndex = 1;
 				this.getDataList();
@@ -416,6 +458,35 @@
 			// 多选
 			selectionChangeHandler(val) {
 				this.dataListSelections = val;
+			},
+			viewDetail(row) {
+				this.$http({ url: `xuexiziliao/info/${row.id}`, method: 'get' }).then(({ data }) => {
+					if (data && data.code === 0) {
+						this.detailData = data.data;
+						this.showFlag = false;
+						this.detailFlag = true;
+					}
+				});
+			},
+			closeDetail() {
+				this.detailFlag = false;
+				this.showFlag = true;
+			},
+			async deleteWithCheck(row) {
+				try {
+					const { data } = await this.$http({
+						url: 'ziliaogoumai/list',
+						method: 'get',
+						params: { page: 1, limit: 1, xuexiziliaoid: row.id }
+					});
+					if (data && data.code === 0 && data.data.list && data.data.list.length > 0) {
+						this.$message.error('该学习资料已有用户购买，无法删除');
+						return;
+					}
+					this.deleteHandler(row.id);
+				} catch(e) {
+					this.deleteHandler(row.id);
+				}
 			},
 			// 添加/修改
 			addOrUpdateHandler(id,type) {
@@ -585,6 +656,56 @@
 	.echarts1:hover {
 		transform: translate3d(0, -6px, 0);
 		z-index: 1;
+	}
+}
+
+$primary: #38bdf8;
+$accent: #6d5cfc;
+$green: #34d399;
+$border: rgba(14,165,233,0.12);
+$card-bg: #1e293b;
+$bg: #0f172a;
+
+.ziliao-detail-page { display: flex; flex-direction: column; gap: 16px; }
+
+.detail-top-bar {
+	display: flex; justify-content: space-between; align-items: center;
+	.back-btn { border-radius: 20px; border: 1px solid $border; color: #cbd5e1; font-size: 12px; padding: 6px 16px; background: transparent; transition: all .2s; &:hover { color: $primary; border-color: $primary; background: rgba(56,189,248,0.05); } }
+	.top-bar-tags { display: flex; gap: 8px; align-items: center; }
+	.type-badge { padding: 4px 14px; border-radius: 14px; font-size: 12px; font-weight: 600; background: rgba(0,180,216,0.12); color: #7dd3fc; border: 1px solid rgba(0,180,216,0.25); }
+	.price-badge { padding: 4px 14px; border-radius: 14px; font-size: 13px; font-weight: 700; background: rgba(248,113,113,0.1); color: #f87171; border: 1px solid rgba(248,113,113,0.25); &.free { background: rgba(52,211,153,0.1); color: $green; border-color: rgba(52,211,153,0.25); } }
+}
+
+.detail-hero {
+	display: flex; gap: 20px; background: $card-bg; border-radius: 14px; border: 1px solid $border; overflow: hidden;
+	.hero-cover {
+		width: 260px; min-height: 180px; flex-shrink: 0; overflow: hidden; position: relative;
+		img { width: 100%; height: 100%; object-fit: cover; display: block; }
+		&::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 60%, rgba(30,41,59,0.5)); }
+	}
+	.hero-info { flex: 1; padding: 22px 22px 22px 0; display: flex; flex-direction: column; justify-content: center; }
+}
+.hero-title { font-size: 20px; font-weight: 800; color: #f1f5f9; margin: 0 0 16px 0; line-height: 1.4; }
+.hero-stats {
+	display: flex; gap: 14px; margin-bottom: 14px;
+	.stat-box { display: flex; align-items: center; gap: 5px; padding: 6px 14px; border-radius: 8px; background: $bg; border: 1px solid $border;
+		i { font-size: 14px; color: $primary; } span { font-size: 15px; font-weight: 700; color: #f1f5f9; } label { font-size: 11px; color: #64748b; }
+	}
+}
+.hero-time { font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 4px; margin-bottom: 12px; }
+.hero-actions {
+	.dl-btn { border-radius: 20px; border: 1px solid rgba(52,211,153,0.3); color: $green; font-size: 12px; padding: 6px 18px; background: rgba(52,211,153,0.06); font-weight: 600; transition: all .2s; &:hover { background: rgba(52,211,153,0.12); border-color: $green; } }
+}
+
+.detail-content-card {
+	background: $card-bg; border-radius: 14px; border: 1px solid $border; overflow: hidden;
+	.content-header { display: flex; align-items: center; gap: 10px; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.04);
+		.content-icon { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(109,92,252,0.08)); display: flex; align-items: center; justify-content: center; i { font-size: 15px; color: $primary; } }
+		span { font-size: 14px; font-weight: 700; color: #e2e8f0; }
+	}
+	.content-body { padding: 20px 22px; font-size: 14px; color: #cbd5e1; line-height: 1.9; min-height: 60px;
+		img { max-width: 100%; border-radius: 8px; margin: 10px 0; }
+		p { margin: 0 0 10px 0; }
 	}
 }
 </style>

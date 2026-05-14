@@ -62,9 +62,14 @@
 					<div class="tab-scroll-area">
 						<div class="tab-form-content">
 							<p class="section-tip">详细描述你的技能水平、教学方式、可提供的服务等</p>
-							<el-form-item prop="xuqiuxiangqing" class="editor-wrapper">
-								<editor v-model="ruleForm.xuqiuxiangqing" class="editor" myQuillEditor="xuqiuxiangqing" action="file/upload"></editor>
-							</el-form-item>
+						<el-form-item prop="xuqiuxiangqing">
+							<el-input
+								type="textarea"
+								:rows="8"
+								v-model="ruleForm.xuqiuxiangqing"
+								placeholder="详细描述你的技能水平、教学方式、可提供的服务等...">
+							</el-input>
+						</el-form-item>
 						</div>
 					</div>
 				</el-tab-pane>

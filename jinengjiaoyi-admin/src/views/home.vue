@@ -123,8 +123,8 @@
 				<div class="quick-actions">
 					<div class="qa-btn" @click="$router.push('/jinengxuqiu')"><i class="el-icon-s-grid"></i>技能管理</div>
 					<div class="qa-btn" @click="$router.push('/forum')"><i class="el-icon-chat-dot-round"></i>社区管理</div>
-					<div class="qa-btn" @click="$router.push('/news')"><i class="el-icon-notebook"></i>公告管理</div>
-					<div class="qa-btn" @click="$router.push('/syslog')"><i class="el-icon-document-copy"></i>系统日志</div>
+					<div class="qa-btn" @click="$router.push('/news')"><i class="el-icon-s-order"></i>公告管理</div>
+					<div class="qa-btn" @click="$router.push('/messages')"><i class="el-icon-chat-line-round"></i>留言反馈</div>
 				</div>
 			</div>
 		</div>
@@ -174,7 +174,6 @@ export default {
 				{ label: '注册用户', value: '-', icon: 'user-solid', bg: 'linear-gradient(135deg,#3b82f6,#60a5fa)', glow: 'rgba(59,130,246,0.15)', path: '/yonghu', trend: '+3', trendDir: 'up' },
 				{ label: '技能市场', value: '-', icon: 's-goods', bg: 'linear-gradient(135deg,#06b6d4,#22d3ee)', glow: 'rgba(6,182,212,0.15)', path: '/jinengxuqiu', trend: '+5', trendDir: 'up' },
 				{ label: '交换记录', value: '-', icon: 's-promotion', bg: 'linear-gradient(135deg,#10b981,#34d399)', glow: 'rgba(16,185,129,0.15)', path: '/jiaohuanjilu', trend: '+2', trendDir: 'up' },
-				{ label: '评价反馈', value: '-', icon: 'star-on', bg: 'linear-gradient(135deg,#f59e0b,#fbbf24)', glow: 'rgba(245,158,11,0.15)', path: '/pingjiafankui', trend: '+4', trendDir: 'up' },
 				{ label: '学习资料', value: '-', icon: 'notebook-2', bg: 'linear-gradient(135deg,#ec4899,#f472b6)', glow: 'rgba(236,72,153,0.15)', path: '/xuexiziliao', trend: '+1', trendDir: 'up' },
 				{ label: '社区帖子', value: '-', icon: 'chat-dot-round', bg: 'linear-gradient(135deg,#8b5cf6,#a78bfa)', glow: 'rgba(139,92,246,0.15)', path: '/forum', trend: '+7', trendDir: 'up' },
 			],
@@ -182,7 +181,7 @@ export default {
 				{ label: '数据统计', desc: '查看平台核心数据和图表分析', icon: 's-data', path: '/statisticsDashboard', bg: 'linear-gradient(135deg,#7c3aed,#a78bfa)' },
 				{ label: '用户管理', desc: '管理注册用户、审核和权限', icon: 'user-solid', path: '/userManagement', bg: 'linear-gradient(135deg,#3b82f6,#60a5fa)' },
 				{ label: '业务管理', desc: '技能市场、交换、评价等业务', icon: 's-order', path: '/businessManagement', bg: 'linear-gradient(135deg,#06b6d4,#22d3ee)' },
-				{ label: '系统配置', desc: '公告、分类、敏感词等配置', icon: 's-tools', path: '/systemConfig', bg: 'linear-gradient(135deg,#10b981,#34d399)' },
+				{ label: '系统配置', desc: '公告、分类、留言等配置', icon: 's-tools', path: '/systemConfig', bg: 'linear-gradient(135deg,#10b981,#34d399)' },
 			],
 			todoList: [],
 			sysMetrics: [
@@ -239,41 +238,43 @@ export default {
 				if (res.data && res.data.code === 0) this.newsList = res.data.data.list
 			})
 		},
-		loadCounts() {
-			const apis = [
-				{ idx: 0, url: 'yonghu/count' },
-				{ idx: 1, url: 'jinengxuqiu/count' },
-				{ idx: 2, url: 'jiaohuanjilu/count' },
-				{ idx: 3, url: 'pingjiafankui/count' },
-				{ idx: 4, url: 'xuexiziliao/count' },
-				{ idx: 5, url: 'group/forum/typename' },
-			]
-			apis.forEach(item => {
-				if (item.idx === 5) {
-					this.$http({ url: item.url, method: 'get' }).then(({ data }) => {
-						if (data && data.code === 0) {
-							let total = data.data.reduce((sum, r) => sum + parseInt(r.total || 0), 0)
-							this.statList[item.idx].value = total
-						}
-					})
-				} else {
-					this.$http({ url: item.url, method: 'get' }).then(({ data }) => {
-						if (data && data.code === 0) {
-							this.statList[item.idx].value = data.data
-						}
-					})
+	loadCounts() {
+		const countApis = [
+			{ idx: 0, url: 'yonghu/count' },
+			{ idx: 2, url: 'jiaohuanjilu/count' },
+		]
+		countApis.forEach(item => {
+			this.$http({ url: item.url, method: 'get' }).then(({ data }) => {
+				if (data && data.code === 0) {
+					this.statList[item.idx].value = data.data
 				}
 			})
-		},
+		})
+		this.$http({ url: 'jinengxuqiu/page', method: 'get', params: { page: 1, limit: 1, sfsh: '是', leixing: '技能' } }).then(({ data }) => {
+			if (data && data.code === 0) {
+				this.statList[1].value = data.data.total
+			}
+		})
+		this.$http({ url: 'xuexiziliao/page', method: 'get', params: { page: 1, limit: 1 } }).then(({ data }) => {
+			if (data && data.code === 0) {
+				this.statList[3].value = data.data.total
+			}
+		})
+		this.$http({ url: 'forum/flist', method: 'get', params: { page: 1, limit: 1 } }).then(({ data }) => {
+			if (data && data.code === 0) {
+				this.statList[4].value = data.data.total
+			}
+		})
+	},
 		loadTodos() {
 			this.$http({ url: 'jinengxuqiu/page', method: 'get', params: { page: 1, limit: 1, leixing: '技能', sfsh: '待审核' } }).then(({ data }) => {
 				if (data && data.code === 0 && data.data.total > 0) {
-					this.todoList.push({ label: '待审核技能', value: data.data.total + ' 条', color: '#f59e0b', path: '/jinengxuqiu' })
+					this.todoList.push({ label: '待审核技能', value: data.data.total + ' 条', color: '#f59e0b', path: '/skillAudit' })
 				}
 			})
 			this.$http({ url: 'jinengxuqiu/page', method: 'get', params: { page: 1, limit: 1, leixing: '需求', sfsh: '待审核' } }).then(({ data }) => {
 				if (data && data.code === 0 && data.data.total > 0) {
-					this.todoList.push({ label: '待审核需求', value: data.data.total + ' 条', color: '#e879f9', path: '/jinengxuqiu' })
+					this.todoList.push({ label: '待审核需求', value: data.data.total + ' 条', color: '#e879f9', path: '/demandAudit' })
 				}
 			})
 			this.$http({ url: 'yonghu/page', method: 'get', params: { page: 1, limit: 1, sfsh: '待审核' } }).then(({ data }) => {
@@ -506,7 +507,7 @@ $radius: 14px;
 
 .hud-stats {
 	display: grid;
-	grid-template-columns: repeat(6, 1fr);
+	grid-template-columns: repeat(5, 1fr);
 	gap: 12px;
 }
 .stat-card {

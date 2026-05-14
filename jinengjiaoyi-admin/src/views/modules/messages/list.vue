@@ -26,7 +26,7 @@
 				:cell-style="{borderColor:'rgba(255,255,255,0.06)',color:'#cbd5e1',fontSize:'13px'}"
 				row-class-name="msg-table-row"
 			>
-			<el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
+			<el-table-column type="index" :index="indexMethod" label="序号" width="55" align="center"></el-table-column>
 			<el-table-column prop="username" label="用户" width="80" align="center">
 				<template #default="scope">
 					<span class="msg-user-name">{{scope.row.username}}</span>
@@ -110,7 +110,7 @@
 				},
 				dataList: [],
 				pageIndex: 1,
-				pageSize: 10,
+				pageSize: 7,
 				totalPage: 0,
 				dataListLoading: false,
 				dataListSelections: [],
@@ -141,6 +141,9 @@
 			imgPreView(url) {
 				this.previewImg = url
 				this.previewVisible = true
+			},
+			indexMethod(index) {
+				return (this.pageIndex - 1) * this.pageSize + index + 1;
 			},
 			search() {
 				this.pageIndex = 1;

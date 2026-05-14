@@ -27,9 +27,11 @@ import com.annotation.IgnoreAuth;
 import com.annotation.SysLog;
 
 import com.entity.ZiliaoleixingEntity;
+import com.entity.XuexiziliaoEntity;
 import com.entity.view.ZiliaoleixingView;
 
 import com.service.ZiliaoleixingService;
+import com.service.XuexiziliaoService;
 import com.utils.PageUtils;
 import com.utils.R;
 import com.utils.MPUtil;
@@ -49,6 +51,9 @@ import java.io.IOException;
 public class ZiliaoleixingController {
     @Autowired
     private ZiliaoleixingService ziliaoleixingService;
+
+    @Autowired
+    private XuexiziliaoService xuexiziliaoService;
 
 
 
@@ -197,6 +202,18 @@ public class ZiliaoleixingController {
     @RequestMapping("/delete")
     @SysLog("删除资料类型")
     public R delete(@RequestBody Long[] ids){
+        for (Long id : ids) {
+            ZiliaoleixingEntity entity = ziliaoleixingService.selectById(id);
+            if (entity != null) {
+                String name = entity.getZiliaoleixing();
+                int count = xuexiziliaoService.selectCount(
+                    new EntityWrapper<XuexiziliaoEntity>().eq("ziliaoleixing", name)
+                );
+                if (count > 0) {
+                    return R.error("资料类型「" + name + "」下存在" + count + "条学习资料记录，无法删除");
+                }
+            }
+        }
         ziliaoleixingService.deleteBatchIds(Arrays.asList(ids));
         return R.ok();
     }
